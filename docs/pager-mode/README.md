@@ -1,6 +1,23 @@
 # Meshtastic Pager Mode Fork
 
-This fork adds a small-screen-first `Pager Mode` to Meshtastic firmware with minimal invasive changes so the branch can be rebased onto newer upstream firmware versions more easily.
+> Unofficial small-screen Meshtastic fork for people who prefer a simple pager-style message view.
+
+This fork adds a small-screen-first `Pager Mode` to Meshtastic firmware with intentionally small and localized changes, so the branch can be rebased onto newer upstream firmware versions more easily.
+
+## Project Note
+
+This project was created by an interested user with AI-assisted development.
+
+- It is not an official Meshtastic release.
+- It does not claim ownership over upstream Meshtastic work.
+- It was built mainly for personal use and then shared in case it helps someone else.
+- Feel free to use it, modify it, or build on it.
+- If something does not work on your hardware, please treat it as a community fork and investigate accordingly.
+
+## Language
+
+- English: this file
+- Russian: [README.ru.md](README.ru.md)
 
 ## What This Fork Changes
 
@@ -10,6 +27,7 @@ This fork adds a small-screen-first `Pager Mode` to Meshtastic firmware with min
 - Exits pager mode with a long button press instead of normal short navigation.
 - Persists pager mode across reboot.
 - Simplifies pager rendering so the active screen focuses on message body text instead of sender metadata.
+- Improves large-message readability in pager view with bigger fallback text and vertical scrolling.
 - Enables Russian small-screen text rendering in this fork build flavor.
 
 ## Intended Devices
@@ -53,6 +71,15 @@ If you want to maintain multiple language-specific releases, the cleanest follow
 - `InkHUD` pager mode currently keeps changes intentionally small and close to existing applet behavior.
 - DM pager mode in `InkHUD` is bound to the currently selected sender rather than introducing a new full DM-thread subsystem.
 
+## Why It Exists
+
+The goal of this fork is modest:
+
+- keep small-screen messaging readable
+- avoid broad UI rewrites
+- preserve as much upstream behavior as possible
+- make future updates from upstream less painful
+
 ## Recommended Build Targets
 
 Examples:
@@ -64,6 +91,45 @@ pio run -e t-echo-inkhud
 ```
 
 Use the target that matches the actual hardware variant you plan to flash.
+
+## How Users Should Get Firmware
+
+For most users, the best path is **prebuilt releases**, not local compilation.
+
+### Recommended End-User Flow
+
+1. Open the repository `Releases` page on GitHub.
+2. Find the release note that mentions your board.
+3. Download the correct firmware file for your exact target.
+4. Flash it the same way you would flash normal Meshtastic firmware for that board.
+
+### Typical Release Artifacts
+
+Depending on the target, attach files like:
+
+- `firmware-<env>-<version>.bin`
+- `firmware-<env>-<version>.factory.bin` for ESP32 first installs
+- any target-specific files needed by the board family
+
+### When Users Need To Build From Source
+
+Building from source is only needed when:
+
+- there is no published binary for the target board
+- the user wants to modify the fork
+- the user is testing a development branch instead of a tagged release
+
+### Maintainer Recommendation
+
+If you want this fork to be easy for other people to use, publish GitHub Releases with ready-made binaries for the boards you personally tested.
+
+That way, most users can simply:
+
+- download
+- flash
+- test
+
+without installing Visual Studio Code, PlatformIO, or the full toolchain.
 
 ## Repository Layout For Publishing
 
@@ -103,3 +169,4 @@ Meshtastic Pager Mode fork
 - Large TFT targets are not specially adapted in this fork.
 - The Russian locale is enabled as a fork default, which is practical for this build but may be too opinionated for upstream.
 - `InkHUD` pager rendering was kept deliberately close to the original structure to reduce merge pain later.
+- This remains a hobby/community fork, so some edge cases may still need manual testing on real devices.

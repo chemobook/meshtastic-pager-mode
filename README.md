@@ -25,9 +25,29 @@
 
 This tree currently contains a custom Meshtastic firmware fork focused on a small-screen `Pager Mode` workflow for OLED and e-ink devices.
 
+- This is an unofficial community fork created by an interested hobbyist with AI-assisted development.
+- It is shared in good faith, primarily for personal use and experimentation, with no claim over upstream Meshtastic itself.
+- Use it freely, adapt it if it helps, and treat it as an `as-is` project that may still require device-specific testing and debugging.
 - Upstream Meshtastic documentation and build instructions still apply.
 - Fork-specific behavior, supported targets, Russian text support, and publishing notes are documented in [docs/pager-mode/README.md](docs/pager-mode/README.md).
+- Russian documentation for this fork is available in [docs/pager-mode/README.ru.md](docs/pager-mode/README.ru.md).
 - Large TFT-focused UI targets were intentionally left mostly untouched.
+
+## For Users
+
+Most people should **not** need to install Visual Studio Code or build this fork from source.
+
+The recommended workflow for end users is:
+
+1. Open the repository `Releases` page.
+2. Find the release that matches your hardware family.
+3. Download the prebuilt firmware binary for your exact board.
+4. Flash it using the normal Meshtastic firmware flashing workflow for that device family.
+
+If no ready-made binary exists for your board yet, then source builds are the fallback path.
+
+- English fork notes: [docs/pager-mode/README.md](docs/pager-mode/README.md)
+- Russian fork notes: [docs/pager-mode/README.ru.md](docs/pager-mode/README.ru.md)
 
 ## Overview
 
