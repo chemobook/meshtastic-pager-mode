@@ -5,6 +5,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUT_DIR="${ROOT_DIR}/release-work/firmware"
 OTA_URL_ESP32S3="https://github.com/meshtastic/esp32-unified-ota/releases/latest/download/mt-esp32s3-ota.bin"
+DEFAULT_RAW_BASE="https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main"
 
 usage() {
     cat <<'EOF'
@@ -13,6 +14,14 @@ Usage: ./bin/pager-package.sh <env> [<env>...]
 Example:
   ./bin/pager-package.sh heltec-v3 heltec-v4
 EOF
+}
+
+require_tool() {
+    local tool_name="$1"
+    if ! command -v "${tool_name}" >/dev/null 2>&1; then
+        echo "Required tool not found: ${tool_name}" >&2
+        exit 1
+    fi
 }
 
 if [[ $# -lt 1 ]]; then
@@ -42,6 +51,75 @@ download_if_missing() {
     fi
     echo "Downloading $(basename "${target_file}")"
     curl -L --fail --silent --show-error "${url}" -o "${target_file}"
+}
+
+write_web_installer_manifest() {
+    local env_name="$1"
+    local target_dir="$2"
+    local meta_json_path="$3"
+    local factory_name="$4"
+    local littlefs_name="$5"
+    local ota_helper_name="$6"
+    local raw_base="${PAGER_FLASHER_RAW_BASE:-${DEFAULT_RAW_BASE}}"
+    local version
+    local ota_offset
+    local littlefs_offset
+    local chip_family
+
+    require_tool jq
+
+    version="$(jq -r '.version' "${meta_json_path}")"
+    ota_offset="$(jq -r '.part[] | select(.subtype == "ota_1") | .offset' "${meta_json_path}")"
+    littlefs_offset="$(jq -r '.part[] | select(.subtype == "spiffs") | .offset' "${meta_json_path}")"
+    ota_offset="$((ota_offset))"
+    littlefs_offset="$((littlefs_offset))"
+
+    case "$(jq -r '.mcu' "${meta_json_path}")" in
+        esp32s3)
+            chip_family="ESP32-S3"
+            ;;
+        esp32c3)
+            chip_family="ESP32-C3"
+            ;;
+        esp32c6)
+            chip_family="ESP32-C6"
+            ;;
+        esp32)
+            chip_family="ESP32"
+            ;;
+        *)
+            echo "Unsupported MCU for web flasher manifest: $(jq -r '.mcu' "${meta_json_path}")" >&2
+            exit 1
+            ;;
+    esac
+
+    cat > "${target_dir}/web-installer.json" <<EOF
+{
+  "name": "Meshtastic Pager Mode Fork (${env_name})",
+  "version": "${version}",
+  "new_install_prompt_erase": false,
+  "builds": [
+    {
+      "chipFamily": "${chip_family}",
+      "improv": false,
+      "parts": [
+        {
+          "path": "${raw_base}/release-work/firmware/${env_name}/${factory_name}",
+          "offset": 0
+        },
+        {
+          "path": "${raw_base}/release-work/firmware/${env_name}/${ota_helper_name}",
+          "offset": ${ota_offset}
+        },
+        {
+          "path": "${raw_base}/release-work/firmware/${env_name}/${littlefs_name}",
+          "offset": ${littlefs_offset}
+        }
+      ]
+    }
+  ]
+}
+EOF
 }
 
 mkdir -p "${OUT_DIR}"
@@ -92,6 +170,15 @@ Update image: $(basename "${ota_bin}")
 LittleFS image: $(basename "${littlefs_bin}")
 Metadata: $(basename "${meta_json}")
 EOF
+
+    cp "${meta_json}" "${target_dir}/latest.mt.json"
+    write_web_installer_manifest \
+        "${env_name}" \
+        "${target_dir}" \
+        "${meta_json}" \
+        "$(basename "${factory_bin}")" \
+        "$(basename "${littlefs_bin}")" \
+        "mt-esp32s3-ota.bin"
 
     echo "Packaged ${env_name} -> ${target_dir}"
 done

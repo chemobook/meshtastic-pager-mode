@@ -6,6 +6,8 @@
 <p><strong>Unofficial Meshtastic fork with pager-mode changes for Heltec V3, Heltec V4 and other small-screen targets.</strong></p>
 
 <p>
+  <a href="https://chemobook.github.io/meshtastic-pager-mode/">Web Flasher</a>
+  ·
   <a href="#english">English</a>
   ·
   <a href="#русский">Русский</a>
@@ -56,6 +58,15 @@ Current release-oriented targets:
 - `heltec-v3`
 - `heltec-v4`
 
+### Web flasher
+
+Preferred user path:
+
+- Open [Pager Mode Web Flasher](https://chemobook.github.io/meshtastic-pager-mode/)
+- Use desktop Chrome or Edge
+- Choose `Heltec V3` or `Heltec V4`
+- Flash from the browser with the board-matching package
+
 ### Build it yourself
 
 Quick build:
@@ -83,6 +94,7 @@ Flash with the helper script:
 - This is not an official Meshtastic release.
 - Board selection still matters. Flash only the image that matches the hardware exactly.
 - Real-device testing is still required, especially for UI behavior and long-message handling.
+- The browser flasher currently supports only `heltec-v3` and `heltec-v4`.
 - The detailed English guide is in [docs/pager-mode/README.md](docs/pager-mode/README.md).
 
 ---
@@ -120,6 +132,15 @@ Flash with the helper script:
 - `heltec-v3`
 - `heltec-v4`
 
+### Веб-прошивальщик
+
+Основной путь для обычного пользователя:
+
+- Открыть [Pager Mode Web Flasher](https://chemobook.github.io/meshtastic-pager-mode/)
+- Использовать настольный Chrome или Edge
+- Выбрать `Heltec V3` или `Heltec V4`
+- Прошить устройство прямо из браузера
+
 ### Как собрать самому
 
 Быстрая сборка:
@@ -147,4 +168,5 @@ pio run -e heltec-v4
 - Это не официальный релиз Meshtastic.
 - Перед прошивкой важно точно проверить соответствие `env` и платы.
 - Проверка на реальном устройстве остаётся обязательной, особенно для UI и длинных сообщений.
+- Веб-прошивальщик сейчас поддерживает только `heltec-v3` и `heltec-v4`.
 - Подробная русская документация находится в [docs/pager-mode/README.ru.md](docs/pager-mode/README.ru.md).

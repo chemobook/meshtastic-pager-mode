@@ -8,9 +8,20 @@ This folder is the local export area for release-style artifacts built from this
 
 Ready-to-paste GitHub release notes for the current packaged build:
 
-- [RELEASE-NOTES-2.7.23.e214feb.md](</Users/chemobookche/Мой диск/github/meshtastic-pager-mode/release-work/RELEASE-NOTES-2.7.23.e214feb.md>)
-- [RELEASE-FORM-COMPACT-2.7.23.e214feb.md](</Users/chemobookche/Мой диск/github/meshtastic-pager-mode/release-work/RELEASE-FORM-COMPACT-2.7.23.e214feb.md>)
-- [RELEASE-ASSETS-CHECKLIST-2.7.23.e214feb.md](</Users/chemobookche/Мой диск/github/meshtastic-pager-mode/release-work/RELEASE-ASSETS-CHECKLIST-2.7.23.e214feb.md>)
+- [RELEASE-NOTES-2.7.23.e214feb.md](RELEASE-NOTES-2.7.23.e214feb.md)
+- [RELEASE-FORM-COMPACT-2.7.23.e214feb.md](RELEASE-FORM-COMPACT-2.7.23.e214feb.md)
+- [RELEASE-ASSETS-CHECKLIST-2.7.23.e214feb.md](RELEASE-ASSETS-CHECKLIST-2.7.23.e214feb.md)
+
+## Web flasher / Веб-прошивальщик
+
+Browser install page:
+
+- [Pager Mode Web Flasher](https://chemobook.github.io/meshtastic-pager-mode/)
+
+Supported boards on the web flasher:
+
+- `heltec-v3`
+- `heltec-v4`
 
 ## Expected targets / Ожидаемые цели
 

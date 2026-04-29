@@ -1,0 +1,25 @@
+{
+  "name": "Meshtastic Pager Mode Fork (heltec-v4)",
+  "version": "2.7.23.e214feb",
+  "new_install_prompt_erase": false,
+  "builds": [
+    {
+      "chipFamily": "ESP32-S3",
+      "improv": false,
+      "parts": [
+        {
+          "path": "https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/firmware-heltec-v4-2.7.23.e214feb.factory.bin",
+          "offset": 0
+        },
+        {
+          "path": "https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/mt-esp32s3-ota.bin",
+          "offset": 6619136
+        },
+        {
+          "path": "https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/littlefs-heltec-v4-2.7.23.e214feb.bin",
+          "offset": 13172736
+        }
+      ]
+    }
+  ]
+}

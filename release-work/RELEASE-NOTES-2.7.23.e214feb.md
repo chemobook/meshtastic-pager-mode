@@ -13,6 +13,12 @@ A large part of this fork was built with **AI assistance**. That is intentional 
 - `heltec-v3`
 - `heltec-v4`
 
+### Web flasher
+
+- Browser install page: [Pager Mode Web Flasher](https://chemobook.github.io/meshtastic-pager-mode/)
+- Currently exposed boards: `heltec-v3`, `heltec-v4`
+- Release packages: [Heltec V3](firmware/heltec-v3/) and [Heltec V4](firmware/heltec-v4/)
+
 ### Main fork features
 
 - Pager-style message reading for compact screens
@@ -69,6 +75,12 @@ Community-релиз для **Meshtastic Pager Mode Fork**.
 
 - `heltec-v3`
 - `heltec-v4`
+
+### Веб-прошивальщик
+
+- Страница для прошивки из браузера: [Pager Mode Web Flasher](https://chemobook.github.io/meshtastic-pager-mode/)
+- Сейчас на ней доступны только `heltec-v3` и `heltec-v4`
+- Пакеты релиза: [Heltec V3](firmware/heltec-v3/) и [Heltec V4](firmware/heltec-v4/)
 
 ### Что главное в этом форке
 

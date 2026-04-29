@@ -16,6 +16,7 @@
 1. Create a repository or fork on GitHub.
 2. Add a short description mentioning `Meshtastic pager mode fork for small screens`.
 3. Upload a logo, screenshots, or short demo clip if available.
+4. Enable GitHub Pages from `/docs` if you want the browser flasher page to be available over HTTPS.
 
 ## First Commit Structure
 
@@ -32,6 +33,12 @@ Typical files to attach from `.pio/build/<env>/`:
 - `firmware-<env>-<version>.bin`
 - `firmware-<env>-<version>.factory.bin` for ESP32 targets
 - `littlefs-<env>-<version>.bin` if you distribute filesystem images
+
+If you use the packaged `release-work/firmware/<env>/` folders, also keep:
+
+- `web-installer.json`
+- `latest.mt.json`
+- `mt-esp32s3-ota.bin`
 
 ## Good README Expectations
 
@@ -53,3 +60,4 @@ Each release should include:
 - user-visible changes
 - flashing notes
 - known issues
+- web flasher link if a browser install page is available

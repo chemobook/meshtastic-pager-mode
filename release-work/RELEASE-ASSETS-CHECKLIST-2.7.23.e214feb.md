@@ -8,7 +8,7 @@ Use this checklist when publishing the GitHub release for this fork.
 
 Source folder:
 
-- [release-work/firmware/heltec-v3](</Users/chemobookche/Мой диск/github/meshtastic-pager-mode/release-work/firmware/heltec-v3>)
+- [release-work/firmware/heltec-v3](firmware/heltec-v3/)
 
 Attach these files:
 
@@ -29,7 +29,7 @@ Recommended note:
 
 Source folder:
 
-- [release-work/firmware/heltec-v4](</Users/chemobookche/Мой диск/github/meshtastic-pager-mode/release-work/firmware/heltec-v4>)
+- [release-work/firmware/heltec-v4](firmware/heltec-v4/)
 
 Attach these files:
 
@@ -85,5 +85,5 @@ Recommended naming style in the release text:
 
 Use together with:
 
-- [RELEASE-NOTES-2.7.23.e214feb.md](</Users/chemobookche/Мой диск/github/meshtastic-pager-mode/release-work/RELEASE-NOTES-2.7.23.e214feb.md>)
-- [RELEASE-FORM-COMPACT-2.7.23.e214feb.md](</Users/chemobookche/Мой диск/github/meshtastic-pager-mode/release-work/RELEASE-FORM-COMPACT-2.7.23.e214feb.md>)
+- [RELEASE-NOTES-2.7.23.e214feb.md](RELEASE-NOTES-2.7.23.e214feb.md)
+- [RELEASE-FORM-COMPACT-2.7.23.e214feb.md](RELEASE-FORM-COMPACT-2.7.23.e214feb.md)

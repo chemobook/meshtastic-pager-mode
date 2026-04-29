@@ -62,6 +62,17 @@ The local build/export area for this fork is:
 
 - [../../release-work/README.md](../../release-work/README.md)
 
+## Preferred user path
+
+For most users, the easiest path is now the browser flasher:
+
+1. Open [Pager Mode Web Flasher](https://chemobook.github.io/meshtastic-pager-mode/).
+2. Use desktop Chrome or Edge.
+3. Select `Heltec V3` or `Heltec V4`.
+4. Flash from the browser and wait for the reboot.
+
+Only these two boards are currently exposed on the web flasher.
+
 To package current builds into that folder:
 
 ```bash
@@ -95,6 +106,7 @@ This wrapper sits on top of the existing `bin/device-install.sh` flow and makes 
 ## Usage notes
 
 - Use the exact board target that matches the hardware.
+- Prefer the web flasher for normal user installs on `heltec-v3` and `heltec-v4`.
 - Prefer testing pager-mode behavior on a real device before sharing a build.
 - Treat this branch as a fork with focused changes, not as a full replacement for upstream Meshtastic.
 
