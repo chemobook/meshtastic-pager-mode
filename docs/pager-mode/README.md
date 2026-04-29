@@ -2,20 +2,15 @@
 
 ![Pager Mode banner](assets/pager-mode-banner.svg)
 
-> Unofficial Meshtastic fork for people who want a more focused pager-style reading experience on small displays.
+> Unofficial Meshtastic fork with pager-mode changes for small displays and e-ink targets.
 
 ## Project note
 
 This is a **fork** of Meshtastic firmware, not an official upstream release.
 
-It was created by interested people without financial motivation and shared simply because it might help someone else:
+It is maintained as community work without commercial backing or financial motivation.
 
-- no company pitch
-- no monetization plan
-- no funding story
-- just a practical hobby/community fork
-
-A large part of the work here was produced with **AI assistance**. That is deliberate and openly acknowledged. The maintainer works in a different field, and AI made it possible to bridge the gap between an idea and a usable firmware branch.
+A large part of the work here was produced with **AI assistance**. That is deliberate and openly acknowledged. The maintainer works in a different field, so AI was used as a practical tool to get from idea to working firmware changes and documentation.
 
 ## Language
 
@@ -41,16 +36,14 @@ This fork is aimed at small displays:
 
 Large TFT-first layouts were intentionally not the main goal.
 
-## Why it exists
+## Scope
 
-The whole point is simple:
+- Keep the UI focused on message reading
+- Limit the change set to something maintainable
+- Preserve as much upstream behavior as possible
+- Make local build, packaging, and flashing easier for the boards used in this fork
 
-- make message reading easier
-- keep the branch practical to maintain
-- avoid breaking more upstream behavior than necessary
-- share the result openly with other users
-
-## Recommended build targets
+## Recommended targets
 
 Examples:
 
@@ -63,7 +56,7 @@ pio run -e t-echo-inkhud
 
 Use the target that matches your actual hardware.
 
-## Ready firmware in this workspace
+## Build, package, flash
 
 The local build/export area for this fork is:
 
@@ -76,8 +69,6 @@ To package current builds into that folder:
 ```
 
 That script copies the latest matching artifacts from `.pio/build/<env>/` into release-style folders and also fetches the ESP32-S3 OTA helper image when needed.
-
-## Build your own firmware
 
 ### Fast path
 
@@ -101,21 +92,11 @@ pio run -e heltec-v4
 
 This wrapper sits on top of the existing `bin/device-install.sh` flow and makes it easier to pick the right packaged image for `Heltec V3/V4`.
 
-## Typical user path
+## Usage notes
 
-For most users, the best experience is:
-
-1. Download a ready build from releases or from a prepared local package folder.
-2. Pick the correct file set for the exact board.
-3. Flash it with the normal Meshtastic method or the helper script from this fork.
-4. Test pager mode on real hardware.
-
-## Typical maintainer path
-
-1. Build the targets you care about.
-2. Flash and test at least one real device.
-3. Package the artifacts.
-4. Publish only the boards you actually verified.
+- Use the exact board target that matches the hardware.
+- Prefer testing pager-mode behavior on a real device before sharing a build.
+- Treat this branch as a fork with focused changes, not as a full replacement for upstream Meshtastic.
 
 ## Known limitations
 
