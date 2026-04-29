@@ -1,0 +1,663 @@
+/Users/chemobookche/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Processing heltec-wireless-paper-inkhud (board: heltec_wifi_lora_32_V3; platform: 
+platformio/espressif32@6.13.0; framework: arduino)
+--------------------------------------------------------------------------------
+Library Manager: Installing https://github.com/ZinggJM/GFX_Root/archive/3195764e352a0d2567c8d277ac408ca7293a99b0.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: GFX_Root@2.0.0 has been installed!
+Library Manager: Installing https://github.com/meshtastic/esp8266-oled-ssd1306/archive/6bfd1f135e1ebe37afd6050bb4b9964cea3fcfda.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: ESP8266 and ESP32 OLED driver for SSD1306 displays@4.4.1 has been installed!
+Library Manager: Installing https://github.com/meshtastic/OneButton/archive/fa352d668c53f290cfa480a5f79ad422cd828c70.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: OneButton@2.6.1 has been installed!
+Library Manager: Installing https://github.com/meshtastic/arduino-fsm/archive/7db3702bf0cfe97b783d6c72595e3f38e0b19159.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: arduino-fsm@2.2.0 has been installed!
+Library Manager: Installing https://github.com/meshtastic/TinyGPSPlus/archive/71a82db35f3b973440044c476d4bcdc673b104f4.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: TinyGPSPlus@1.0.3 has been installed!
+Library Manager: Installing https://github.com/meshtastic/ArduinoThread/archive/b841b0415721f1341ea41cccfb4adccfaf951567.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: ArduinoThread@0.0.0+20260430021638 has been installed!
+Library Manager: Installing https://github.com/nanopb/nanopb/archive/refs/tags/nanopb-0.4.9.1.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Nanopb@0.4.9+1 has been installed!
+Library Manager: Installing https://github.com/Erriez/ErriezCRC32/archive/refs/tags/1.0.1.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: ErriezCRC32@1.0.1 has been installed!
+Library Manager: Installing https://github.com/end2endzone/NonBlockingRTTTL/archive/refs/tags/1.4.0.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: NonBlockingRTTTL@1.4.0 has been installed!
+Library Manager: Installing https://github.com/thingsboard/pubsubclient/archive/refs/tags/v2.12.1.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: TBPubSubClient@2.12.1 has been installed!
+Library Manager: Installing https://github.com/arduino-libraries/NTPClient/archive/refs/tags/3.2.1.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: NTPClient@3.2.1 has been installed!
+Library Manager: Installing https://github.com/arcao/Syslog/archive/refs/tags/v2.0.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Syslog@2.0.0 has been installed!
+Library Manager: Installing https://github.com/adafruit/Adafruit_BusIO/archive/refs/tags/1.17.4.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit BusIO@1.17.4 has been installed!
+Library Manager: Installing https://github.com/adafruit/Adafruit_Sensor/archive/refs/tags/1.1.15.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit Unified Sensor@1.1.15 has been installed!
+Library Manager: Installing https://github.com/adafruit/Adafruit-GFX-Library/archive/refs/tags/1.12.6.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit GFX Library@1.12.6 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_NeoPixel/archive/refs/tags/1.15.4.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit NeoPixel@1.15.4 has been installed!
+Library Manager: Installing https://github.com/adafruit/Adafruit_SSD1306/archive/refs/tags/2.5.16.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit SSD1306@2.5.16 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_BMP280_Library/archive/refs/tags/3.0.0.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit BMP280 Library@3.0.0 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit-BMP085-Library/archive/refs/tags/1.2.4.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit BMP085 Library@1.2.4 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_BME280_Library/archive/refs/tags/2.3.0.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit BME280 Library@2.3.0 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_DPS310/archive/refs/tags/1.1.6.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit DPS310@1.1.6 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_SH110x/archive/refs/tags/2.1.14.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit SH110X@2.1.14 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_MCP9808_Library/archive/refs/tags/2.0.2.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit MCP9808 Library@2.0.2 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_INA260/archive/refs/tags/1.5.3.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit INA260 Library@1.5.3 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_INA219/archive/refs/tags/1.2.3.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit INA219@1.2.3 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_MPU6050/archive/refs/tags/2.2.9.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit MPU6050@2.2.9 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_LIS3DH/archive/refs/tags/1.3.0.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit LIS3DH@1.3.0 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_AHTX0/archive/refs/tags/2.0.6.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit AHTX0@2.0.6 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_LSM6DS/archive/refs/tags/4.7.4.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit LSM6DS@4.7.4 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_TSL2591_Library/archive/refs/tags/1.4.5.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit TSL2591 Library@1.4.5 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/EmotiBit/EmotiBit_MLX90632/archive/refs/tags/v1.0.8.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: EmotiBit MLX90632@1.0.8 has been installed!
+Library Manager: Installing https://github.com/adafruit/Adafruit-MLX90614-Library/archive/refs/tags/2.1.6.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit MLX90614 Library@2.1.6 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/sgtwilko/INA3221/archive/bb03d7e9bfcc74fc798838a54f4f99738f29fc6a.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: INA3221@1.0.1 has been installed!
+Library Manager: Installing https://github.com/mprograms/QMC5883LCompass/archive/refs/tags/v1.2.3.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: QMC5883LCompass@1.2.3 has been installed!
+Library Manager: Installing https://github.com/DFRobot/DFRobot_RTU/archive/refs/tags/V1.0.6.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: DFRobot_RTU@1.0.6 has been installed!
+Library Manager: Installing https://github.com/DFRobot/DFRobot_RainfallSensor/archive/38fea5e02b40a5430be6dab39a99a6f6347d667e.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: DFRobot_RainfallSensor@1.0.0 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/RobTillaart/INA226/archive/refs/tags/0.6.6.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: INA226@0.6.6 has been installed!
+Library Manager: Installing https://github.com/sparkfun/SparkFun_MAX3010x_Sensor_Library/archive/refs/tags/v1.1.2.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: SparkFun MAX3010x Pulse and Proximity Sensor Library@1.1.2 has been installed!
+Library Manager: Installing https://github.com/sparkfun/SparkFun_ICM-20948_ArduinoLibrary/archive/refs/tags/v1.3.2.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: SparkFun 9DoF IMU Breakout - ICM 20948 - Arduino Library@1.3.2 has been installed!
+Library Manager: Installing https://github.com/adafruit/Adafruit_LTR390/archive/refs/tags/1.1.2.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit LTR390 Library@1.1.2 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_PCT2075/archive/refs/tags/1.0.6.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit PCT2075@1.0.6 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/DFRobot/DFRobot_BMM150/archive/refs/tags/V1.0.0.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: DFRobot_BMM150@1.0.0 has been installed!
+Library Manager: Installing https://github.com/adafruit/Adafruit_TSL2561/archive/refs/tags/1.1.3.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit TSL2561@1.1.3 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/wollewald/BH1750_WE/archive/refs/tags/1.1.10.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: BH1750_WE@1.1.10 has been installed!
+Library Manager: Installing https://github.com/adafruit/Adafruit_BMP3XX/archive/refs/tags/2.1.6.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit BMP3XX Library@2.1.6 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_MAX1704X/archive/refs/tags/1.0.3.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit MAX1704X@1.0.3 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_SHTC3/archive/refs/tags/1.0.2.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit SHTC3 Library@1.0.2 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_LPS2X/archive/refs/tags/2.0.6.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit LPS2X@2.0.6 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_SHT31/archive/refs/tags/2.2.2.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit SHT31 Library@2.2.2 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_VEML7700/archive/refs/tags/2.1.6.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit VEML7700 Library@2.1.6 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/adafruit/Adafruit_SHT4X/archive/refs/tags/1.0.5.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Adafruit SHT4x Library@1.0.5 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/sparkfun/SparkFun_Qwiic_Scale_NAU7802_Arduino_Library/archive/refs/tags/v1.0.6.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: SparkFun Qwiic Scale NAU7802 Arduino Library@1.0.6 has been installed!
+Library Manager: Installing closedcube/ClosedCube OPT3001 @ 1.1.2
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70%
+Library Manager: ClosedCube OPT3001@1.1.2 has been installed!
+Library Manager: Installing https://github.com/meshtastic/DFRobot_LarkWeatherStation/archive/4de3a9cadef0f6a5220a8a906cf9775b02b0040d.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: DFRobot_LarkWeatherStation@1.0.0 has been installed!
+Library Manager: Installing https://github.com/Sensirion/arduino-core/archive/refs/tags/0.7.3.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Sensirion Core@0.7.3 has been installed!
+Library Manager: Installing https://github.com/Sensirion/arduino-i2c-scd4x/archive/refs/tags/1.1.0.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Sensirion I2C SCD4x@1.1.0 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/Sensirion/arduino-i2c-sfa3x/archive/refs/tags/1.0.0.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Sensirion I2C SFA3x@1.0.0 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/Sensirion/arduino-i2c-scd30/archive/refs/tags/1.0.0.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Sensirion I2C SCD30@1.0.0 has been installed!
+Library Manager: Resolving dependencies...
+Library Manager: Installing https://github.com/Sensirion/arduino-sht/archive/refs/tags/v1.2.6.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: arduino-sht@1.2.6 has been installed!
+Library Manager: Installing https://github.com/boschsensortec/Bosch-BSEC2-Library/archive/refs/tags/1.10.2610.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: bsec2@1.10.2610 has been installed!
+Library Manager: Installing https://github.com/boschsensortec/Bosch-BME68x-Library/archive/refs/tags/v1.3.40408.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: BME68x Sensor library@1.3.40408 has been installed!
+Library Manager: Installing https://github.com/jgromes/RadioLib/archive/refs/tags/7.6.0.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: RadioLib@7.6.0 has been installed!
+Library Manager: Installing https://github.com/meshtastic/esp32_https_server/archive/0c71f380390ad483ff134ad938e07f6cf1226c5b.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: esp32_https_server@1.0.0 has been installed!
+Library Manager: Installing h2zero/NimBLE-Arduino @ 1.4.3
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: NimBLE-Arduino@1.4.3 has been installed!
+Library Manager: Installing https://github.com/dbinfrago/libpax/archive/3cdc0371c375676a97967547f4065607d4c53fd1.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: libpax@1.1.0 has been installed!
+Library Manager: Installing lewisxhe/XPowersLib @ 0.3.3
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: XPowersLib@0.3.3 has been installed!
+Library Manager: Installing rweather/Crypto @ 0.4.0
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: Crypto@0.4.0 has been installed!
+Library Manager: Installing https://github.com/meshtastic/ESP32_Codec2/archive/633326c78ac251c059ab3a8c430fcdf25b41672f.zip
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: ESP32 Codec2@1.0.1 has been installed!
+/Users/chemobookche/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Verbose mode can be enabled via `-v, --verbose` option
+PROGNAME: firmware-heltec-wireless-paper-inkhud-2.7.23.4e8e7b9
+ESP32_FS_IMAGE_NAME: littlefs-heltec-wireless-paper-inkhud-2.7.23.4e8e7b9
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/heltec_wifi_lora_32_V3.html
+PLATFORM: Espressif 32 (6.13.0) > Heltec WiFi LoRa 32 (V3)
+HARDWARE: ESP32S3 240MHz, 320KB RAM, 8MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-builtin, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 3.20017.241212+sha.dcc1105b 
+ - tool-esptoolpy @ 2.41100.0 (4.11.0) 
+ - tool-mklittlefs @ 1.203.210628 (2.3) 
+ - toolchain-riscv32-esp @ 8.4.0+2021r2-patch5 
+ - toolchain-xtensa-esp32s3 @ 8.4.0+2021r2-patch5
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+[nanopb] No generation needed.
+Found 100 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- GFX_Root @ 2.0.0
+|-- ESP8266 and ESP32 OLED driver for SSD1306 displays @ 4.4.1
+|-- OneButton @ 2.6.1
+|-- arduino-fsm @ 2.2.0
+|-- TinyGPSPlus @ 1.0.3
+|-- ArduinoThread @ 0.0.0+20260430021638
+|-- Nanopb @ 0.4.9+1
+|-- ErriezCRC32 @ 1.0.1
+|-- NonBlockingRTTTL @ 1.4.0
+|-- TBPubSubClient @ 2.12.1
+|-- NTPClient @ 3.2.1
+|-- Syslog @ 2.0.0
+|-- Adafruit BusIO @ 1.17.4
+|-- Adafruit Unified Sensor @ 1.1.15
+|-- Adafruit GFX Library @ 1.12.6
+|-- Adafruit NeoPixel @ 1.15.4
+|-- Adafruit SSD1306 @ 2.5.16
+|-- Adafruit BMP280 Library @ 3.0.0
+|-- Adafruit BMP085 Library @ 1.2.4
+|-- Adafruit BME280 Library @ 2.3.0
+|-- Adafruit DPS310 @ 1.1.6
+|-- Adafruit SH110X @ 2.1.14
+|-- Adafruit MCP9808 Library @ 2.0.2
+|-- Adafruit INA260 Library @ 1.5.3
+|-- Adafruit INA219 @ 1.2.3
+|-- Adafruit MPU6050 @ 2.2.9
+|-- Adafruit LIS3DH @ 1.3.0
+|-- Adafruit AHTX0 @ 2.0.6
+|-- Adafruit LSM6DS @ 4.7.4
+|-- Adafruit TSL2591 Library @ 1.4.5
+|-- EmotiBit MLX90632 @ 1.0.8
+|-- Adafruit MLX90614 Library @ 2.1.6
+|-- INA3221 @ 1.0.1
+|-- QMC5883LCompass @ 1.2.3
+|-- DFRobot_RTU @ 1.0.6
+|-- DFRobot_RainfallSensor @ 1.0.0
+|-- INA226 @ 0.6.6
+|-- SparkFun MAX3010x Pulse and Proximity Sensor Library @ 1.1.2
+|-- SparkFun 9DoF IMU Breakout - ICM 20948 - Arduino Library @ 1.3.2
+|-- Adafruit LTR390 Library @ 1.1.2
+|-- Adafruit PCT2075 @ 1.0.6
+|-- DFRobot_BMM150 @ 1.0.0
+|-- Adafruit TSL2561 @ 1.1.3
+|-- BH1750_WE @ 1.1.10
+|-- Adafruit BMP3XX Library @ 2.1.6
+|-- Adafruit MAX1704X @ 1.0.3
+|-- Adafruit SHTC3 Library @ 1.0.2
+|-- Adafruit LPS2X @ 2.0.6
+|-- Adafruit SHT31 Library @ 2.2.2
+|-- Adafruit VEML7700 Library @ 2.1.6
+|-- Adafruit SHT4x Library @ 1.0.5
+|-- SparkFun Qwiic Scale NAU7802 Arduino Library @ 1.0.6
+|-- ClosedCube OPT3001 @ 1.1.2
+|-- DFRobot_LarkWeatherStation @ 1.0.0
+|-- Sensirion Core @ 0.7.3
+|-- Sensirion I2C SCD4x @ 1.1.0
+|-- Sensirion I2C SFA3x @ 1.0.0
+|-- Sensirion I2C SCD30 @ 1.0.0
+|-- arduino-sht @ 1.2.6
+|-- bsec2 @ 1.10.2610
+|-- BME68x Sensor library @ 1.3.40408
+|-- RadioLib @ 7.6.0
+|-- esp32_https_server @ 1.0.0
+|-- NimBLE-Arduino @ 1.4.3
+|-- libpax @ 1.1.0
+|-- XPowersLib @ 0.3.3
+|-- Crypto @ 0.4.0
+|-- ESP32 Codec2 @ 1.0.1
+|-- SD @ 2.0.0
+|-- SPI @ 2.0.0
+|-- WiFi @ 2.0.0
+|-- Wire @ 2.0.0
+|-- Preferences @ 2.0.0
+|-- WebServer @ 2.0.0
+|-- ESPmDNS @ 2.0.0
+|-- LittleFS @ 2.0.0
+|-- WiFiClientSecure @ 2.0.0
+|-- ESP32 Async UDP @ 2.0.0
+Building in release mode
+Using meshtastic platformio-custom.py, firmware version 2.7.23.4e8e7b9 on heltec-wireless-paper-inkhud
+Using flags:
+-DAPP_VERSION=2.7.23.4e8e7b9
+-DAPP_VERSION_SHORT=2.7.23
+-DAPP_ENV=heltec-wireless-paper-inkhud
+-DAPP_REPO=chemobook/meshtastic-pager-mode
+-DBUILD_EPOCH=1777492800
+-DUSERPREFS_RINGTONE_RTTTL=\"24:d=32,o=5,b=565:f6,p,f6,4p,p,f6,p,f6,2p,p,b6,p,b6,p,b6,p,b6,p,b,p,b,p,b,p,b,p,b,p,b,p,b,p,b,1p.,2p.,p\"
+-DUSERPREFS_TZ_STRING=\"tzplaceholder                                         \"
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/BluetoothCommon.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/DebugConfiguration.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/DisplayFormatters.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/FSCommon.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/Fusion/FusionAhrs.c.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/Fusion/FusionCompass.c.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/Fusion/FusionOffset.c.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/GpioLogic.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/MessageStore.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/Observer.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/Power.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/PowerFSM.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/PowerMon.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/RedirectablePrint.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/SPILock.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/SafeFile.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/SerialConsole.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/airtime.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/buzz/BuzzerFeedbackThread.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/buzz/buzz.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/concurrency/BinarySemaphoreFreeRTOS.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/concurrency/BinarySemaphorePosix.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/concurrency/InterruptableDelay.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/concurrency/Lock.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/concurrency/LockGuard.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/concurrency/NotifiedWorkerThread.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/concurrency/OSThread.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/detect/ScanI2C.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/detect/ScanI2CConsumer.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/detect/ScanI2CTwoWire.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/detect/reClockI2C.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/gps/GPS.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/gps/GPSUpdateScheduling.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/gps/GeoCoord.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/gps/NMEAWPL.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/gps/RTC.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/EInkDisplay2.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/EInkDynamicDisplay.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/EInkParallelDisplay.cpp.o
+src/detect/ScanI2CTwoWire.cpp: In member function 'virtual void ScanI2CTwoWire::scanPort(ScanI2C::I2CPort, uint8_t*, uint8_t)':
+src/detect/ScanI2CTwoWire.cpp:386:21: warning: this statement may fall through [-Wimplicit-fallthrough=]
+                     if (type == DPS310) {
+                     ^~
+src/detect/ScanI2CTwoWire.cpp:389:17: note: here
+                 default:
+                 ^~~~~~~
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/EmoteRenderer.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/Panel_sdl.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/Screen.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/ScreenGlobals.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/SharedUIDisplay.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/TFTColorRegions.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/TFTDisplay.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/TimeFormatters.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/VirtualKeyboard.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/draw/ClockRenderer.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/draw/CompassRenderer.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/draw/DebugRenderer.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/draw/MenuHandler.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/draw/MessageRenderer.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/draw/NodeListRenderer.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/draw/NotificationRenderer.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/draw/UIRenderer.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/emotes.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/fonts/EinkDisplayFonts.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/fonts/OLEDDisplayFontsCS.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/fonts/OLEDDisplayFontsGR.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/fonts/OLEDDisplayFontsPL.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/fonts/OLEDDisplayFontsRU.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/fonts/OLEDDisplayFontsUA.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Drivers/Backlight/LatchingBacklight.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Drivers/EInk/DEPG0213BNS800.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Drivers/EInk/DEPG0290BNS800.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Drivers/EInk/E0213A367.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Drivers/EInk/ED047TC1.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Drivers/EInk/EInk.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Drivers/EInk/GDEW0102T4.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Drivers/EInk/GDEY0154D67.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Drivers/EInk/GDEY0213B74.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Drivers/EInk/HINK_E0213A289.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Drivers/EInk/HINK_E042A87.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Drivers/EInk/LCMEN2R13ECC1.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Drivers/EInk/LCMEN2R13EFC1.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Drivers/EInk/SSD1682.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Drivers/EInk/SSD16XX.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Drivers/EInk/UC8175.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Drivers/EInk/ZJY122250_0213BAAMFGN.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Drivers/EInk/ZJY128296_029EAAMFGN.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/AppletFont.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/Bases/Map/MapApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/Bases/NodeList/NodeListApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/Examples/BasicExample/BasicExampleApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/Examples/NewMsgExample/NewMsgExampleApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/Examples/UserAppletInputExample/UserAppletInputExample.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/System/AlignStick/AlignStickApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/System/AppSwitcher/AppSwitcherApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/System/BatteryIcon/BatteryIconApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/System/Keyboard/KeyboardApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/System/Logo/LogoApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/System/Menu/MenuApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/System/Notification/NotificationApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/System/Notification/TouchStatusApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/System/Pairing/PairingApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/System/Placeholder/PlaceholderApplet.cpp.o
+src/graphics/niche/InkHUD/Applets/System/Keyboard/KeyboardApplet.cpp: In member function 'void NicheGraphics::InkHUD::KeyboardApplet::pageEmotes(bool)':
+src/graphics/niche/InkHUD/Applets/System/Keyboard/KeyboardApplet.cpp:470:23: warning: comparison is always false due to limited range of data type [-Wtype-limits]
+         if (emotePage < maxPage)
+             ~~~~~~~~~~^~~~~~~~~
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/System/Tips/TipsApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/User/AllMessage/AllMessageApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/User/DM/DMApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/User/FavoritesMap/FavoritesMapApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/User/Heard/HeardApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/User/Positions/PositionsApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/User/RecentsList/RecentsListApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Applets/User/ThreadedMessage/ThreadedMessageApplet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/DisplayHealth.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Events.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/InkHUD.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/MessageStore.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Persistence.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Renderer.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/Tile.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/InkHUD/WindowManager.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Inputs/TwoButton.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Inputs/TwoButtonExtended.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/niche/Utils/CannedMessageStore.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/graphics/tftSetup.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/BBQ10Keyboard.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/ButtonThread.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/CardputerKeyboard.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/ExpressLRSFiveWay.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/HackadayCommunicatorKeyboard.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/InputBroker.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/LinuxInput.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/LinuxInputImpl.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/MPR121Keyboard.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/RotaryEncoderImpl.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/RotaryEncoderInterruptBase.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/RotaryEncoderInterruptImpl1.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/SeesawRotary.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/SerialKeyboard.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/SerialKeyboardImpl.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/TCA8418Keyboard.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/TCA8418KeyboardBase.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/TDeckProKeyboard.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/TLoraPagerKeyboard.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/TouchScreenBase.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/TouchScreenImpl1.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/TrackballInterruptBase.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/TrackballInterruptImpl1.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/UpDownInterruptBase.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/UpDownInterruptImpl1.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/cardKbI2cImpl.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/i2cButton.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/kbI2cBase.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/kbMatrixBase.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/input/kbMatrixImpl.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/main.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/memGet.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/Channels.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/CryptoEngine.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/Default.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/FloodingRouter.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/HardwareRNG.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/InterfacesTemplates.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/LLCC68Interface.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/LR1110Interface.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/LR1120Interface.cpp.o
+src/main.cpp: In function 'void setup()':
+src/main.cpp:351:26: warning: unused variable 'screen_geometry' [-Wunused-variable]
+     OLEDDISPLAY_GEOMETRY screen_geometry = GEOMETRY_128_64;
+                          ^~~~~~~~~~~~~~~
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/LR1121Interface.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/LR11x0Interface.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/LoRaFEMInterface.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/MeshModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/MeshPacketQueue.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/MeshService.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/NextHopRouter.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/NodeDB.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/PacketCache.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/PacketHistory.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/PhoneAPI.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/ProtobufModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/RF95Interface.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/RadioInterface.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/RadioLibInterface.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/RadioLibRF95.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/ReliableRouter.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/Router.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/STM32WLE5JCInterface.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/SX1262Interface.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/SX1268Interface.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/SX126xInterface.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/SX1280Interface.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/SX128xInterface.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/StreamAPI.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/Throttle.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/TransmitHistory.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/TypeConversions.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/aes-ccm.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/api/PacketAPI.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/api/ServerAPI.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/api/WiFiServerAPI.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/api/ethServerAPI.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/compression/unishox2.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/admin.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/apponly.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/atak.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/cannedmessages.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/channel.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/clientonly.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/config.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/connection_status.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/device_ui.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/deviceonly.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/interdevice.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/localonly.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/mesh.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/module_config.pb.cpp.o
+src/mesh/aes-ccm.cpp: In function 'int constant_time_compare(const void*, const void*, size_t)':
+src/mesh/aes-ccm.cpp:24:76: warning: type qualifiers ignored on cast result type [-Wignored-qualifiers]
+     const volatile uint8_t *volatile a = (const volatile uint8_t *volatile)a_;
+                                                                            ^~
+src/mesh/aes-ccm.cpp:25:76: warning: type qualifiers ignored on cast result type [-Wignored-qualifiers]
+     const volatile uint8_t *volatile b = (const volatile uint8_t *volatile)b_;
+                                                                            ^~
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/mqtt.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/paxcount.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/portnums.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/powermon.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/remote_hardware.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/rtttl.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/storeforward.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/telemetry.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/generated/meshtastic/xmodem.pb.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/http/ContentHandler.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/http/ContentHelper.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/http/WebServer.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/mesh-pb-constants.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/mesh/wifi/WiFiAPClient.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/meshUtils.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/AdminModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/AtakPluginModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/CannedMessageModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/DetectionSensorModule.cpp.o
+In file included from .pio/libdeps/heltec-wireless-paper-inkhud/esp32_https_server/src/HTTPServer.hpp:11,
+                 from .pio/libdeps/heltec-wireless-paper-inkhud/esp32_https_server/src/HTTPSServer.hpp:16,
+                 from src/mesh/http/ContentHandler.cpp:40:
+/Users/chemobookche/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32s3/include/lwip/lwip/src/include/lwip/netdb.h:75: warning: "NO_DATA" redefined
+ #define NO_DATA         211
+ 
+In file included from .pio/libdeps/heltec-wireless-paper-inkhud/DFRobot_BMM150/DFRobot_BMM150.h:13,
+                 from src/motion/BMM150Sensor.h:10,
+                 from src/motion/AccelerometerThread.h:16,
+                 from src/main.h:69,
+                 from src/mesh/http/ContentHandler.cpp:6:
+.pio/libdeps/heltec-wireless-paper-inkhud/DFRobot_BMM150/bmm150_defs.h:430: note: this is the location of the previous definition
+ #define NO_DATA                          -32768
+ 
+In file included from .pio/libdeps/heltec-wireless-paper-inkhud/esp32_https_server/src/HTTPServer.hpp:11,
+                 from .pio/libdeps/heltec-wireless-paper-inkhud/esp32_https_server/src/HTTPSServer.hpp:16,
+                 from src/mesh/http/WebServer.cpp:45:
+/Users/chemobookche/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32s3/include/lwip/lwip/src/include/lwip/netdb.h:75: warning: "NO_DATA" redefined
+ #define NO_DATA         211
+ 
+In file included from .pio/libdeps/heltec-wireless-paper-inkhud/DFRobot_BMM150/DFRobot_BMM150.h:13,
+                 from src/motion/BMM150Sensor.h:10,
+                 from src/motion/AccelerometerThread.h:16,
+                 from src/main.h:69,
+                 from src/mesh/http/WebServer.cpp:5:
+.pio/libdeps/heltec-wireless-paper-inkhud/DFRobot_BMM150/bmm150_defs.h:430: note: this is the location of the previous definition
+ #define NO_DATA                          -32768
+ 
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/DropzoneModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/ExternalNotificationModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/GenericThreadModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/KeyVerificationModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/Modules.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/NeighborInfoModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/NodeInfoModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/OnScreenKeyboardModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/PositionModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/PowerStressModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/RangeTestModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/RemoteHardwareModule.cpp.o
+src/modules/KeyVerificationModule.cpp: In member function 'virtual bool KeyVerificationModule::handleReceivedProtobuf(const meshtastic_MeshPacket&, meshtastic_KeyVerification*)':
+src/modules/KeyVerificationModule.cpp:89:32: warning: unused variable 'optionsArray' [-Wunused-variable]
+             static const char *optionsArray[] = {"Reject", "Accept"};
+                                ^~~~~~~~~~~~
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/ReplyBotModule.cpp.o
+src/modules/KeyVerificationModule.cpp: At global scope:
+src/modules/KeyVerificationModule.cpp:89:32: warning: 'optionsArray' defined but not used [-Wunused-variable]
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/ReplyModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/RoutingModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/SerialModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/StatusLEDModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/StatusMessageModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/StoreForwardModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/SystemCommandsModule.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/Telemetry/AirQualityTelemetry.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/Telemetry/DeviceTelemetry.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/Telemetry/EnvironmentTelemetry.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/Telemetry/HealthTelemetry.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/Telemetry/HostMetrics.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/Telemetry/PowerTelemetry.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/Telemetry/Sensor/AHT10.cpp.o
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/Telemetry/Sensor/BH1750Sensor.cpp.o
+src/modules/SystemCommandsModule.cpp: In member function 'int SystemCommandsModule::handleInputEvent(const InputEvent*)':
+src/modules/SystemCommandsModule.cpp:99:25: warning: unused variable 'msg' [-Wunused-variable]
+             const char *msg =
+                         ^~~
+Compiling .pio/build/heltec-wireless-paper-inkhud/src/modules/Telemetry/Sensor/BME280Sensor.cpp.o
