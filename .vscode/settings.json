@@ -5,6 +5,22 @@
   "files.insertFinalNewline": false,
   "files.trimFinalNewlines": false,
   "cmake.configureOnOpen": false,
+  "files.watcherExclude": {
+    "**/.git/**": true,
+    "**/.pio/**": true,
+    "**/.platformio/**": true,
+    "**/.cache/**": true
+  },
+  "files.exclude": {
+    "**/.pio": true,
+    "**/.platformio": true,
+    "**/.cache": true
+  },
+  "search.exclude": {
+    "**/.pio": true,
+    "**/.platformio": true,
+    "**/.cache": true
+  },
   "[cpp]": {
     "editor.defaultFormatter": "trunk.io"
   },
