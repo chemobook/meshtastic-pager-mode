@@ -1,67 +1,168 @@
-<div align="center" markdown="1">
+<div align="center">
 
-<img src=".github/meshtastic_logo.png" alt="Meshtastic Logo" width="80"/>
-<h1>Meshtastic Firmware</h1>
+<img src=".github/meshtastic_logo.png" alt="Meshtastic logo" width="88" />
+<h1>Meshtastic Pager Mode Fork</h1>
+
+<p><strong>Community-made fork for small screens, created with care, curiosity, and a lot of AI-assisted work.</strong></p>
+
+<p>
+  <a href="#english">English</a>
+  ·
+  <a href="#русский">Русский</a>
+  ·
+  <a href="docs/pager-mode/README.md">Detailed EN guide</a>
+  ·
+  <a href="docs/pager-mode/README.ru.md">Подробный RU гайд</a>
+</p>
 
 ![GitHub release downloads](https://img.shields.io/github/downloads/meshtastic/firmware/total)
 [![CI](https://img.shields.io/github/actions/workflow/status/meshtastic/firmware/main_matrix.yml?branch=master&label=actions&logo=github&color=yellow)](https://github.com/meshtastic/firmware/actions/workflows/ci.yml)
 [![CLA assistant](https://cla-assistant.io/readme/badge/meshtastic/firmware)](https://cla-assistant.io/meshtastic/firmware)
-[![Fiscal Contributors](https://opencollective.com/meshtastic/tiers/badge.svg?label=Fiscal%20Contributors&color=deeppink)](https://opencollective.com/meshtastic/)
-[![Vercel](https://img.shields.io/static/v1?label=Powered%20by&message=Vercel&style=flat&logo=vercel&color=000000)](https://vercel.com?utm_source=meshtastic&utm_campaign=oss)
-
-<a href="https://trendshift.io/repositories/5524" target="_blank"><img src="https://trendshift.io/api/badge/repositories/5524" alt="meshtastic%2Ffirmware | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
 </div>
 
-</div>
+![Pager Mode banner](docs/pager-mode/assets/pager-mode-banner.svg)
 
-<div align="center">
-	<a href="https://meshtastic.org">Website</a>
-	-
-	<a href="https://meshtastic.org/docs/">Documentation</a>
-</div>
+## English
 
-## Fork Notice
+This repository is an **unofficial fork** of the Meshtastic firmware focused on a cleaner **Pager Mode** experience for compact devices such as **Heltec V3**, **Heltec V4**, and other small-screen or e-ink targets.
 
-This tree currently contains a custom Meshtastic firmware fork focused on a small-screen `Pager Mode` workflow for OLED and e-ink devices.
+It was made by interested people for other people:
 
-- This is an unofficial community fork created by an interested hobbyist with AI-assisted development.
-- It is shared in good faith, primarily for personal use and experimentation, with no claim over upstream Meshtastic itself.
-- Use it freely, adapt it if it helps, and treat it as an `as-is` project that may still require device-specific testing and debugging.
-- Upstream Meshtastic documentation and build instructions still apply.
-- Fork-specific behavior, supported targets, Russian text support, and publishing notes are documented in [docs/pager-mode/README.md](docs/pager-mode/README.md).
-- Russian documentation for this fork is available in [docs/pager-mode/README.ru.md](docs/pager-mode/README.ru.md).
-- Large TFT-focused UI targets were intentionally left mostly untouched.
+- no venture funding
+- no hidden commercial agenda
+- no financial motivation
+- just a practical community fork shared in case it helps someone
 
-## For Users
+An important note about authorship: a large part of the implementation and documentation in this fork was created with **AI assistance**. That is intentional. The maintainer works in a different professional field, and AI made it possible to turn an idea into a usable firmware fork without pretending to be a full-time embedded firmware engineer.
 
-Most people should **not** need to install Visual Studio Code or build this fork from source.
+### What this fork is
 
-The recommended workflow for end users is:
+- A fork of upstream Meshtastic, not a replacement for it
+- A hobby/community branch built in good faith
+- A small-screen-first firmware direction
+- A place where readability and message focus matter more than feature sprawl
 
-1. Open the repository `Releases` page.
-2. Find the release that matches your hardware family.
-3. Download the prebuilt firmware binary for your exact board.
-4. Flash it using the normal Meshtastic firmware flashing workflow for that device family.
+### What this fork changes
 
-If no ready-made binary exists for your board yet, then source builds are the fallback path.
+- Adds and refines `Pager Mode` for compact displays
+- Keeps message reading simple and foregrounded
+- Preserves as much upstream Meshtastic behavior as possible
+- Enables Russian-friendly small-screen usage in this forked flavor
 
-- English fork notes: [docs/pager-mode/README.md](docs/pager-mode/README.md)
-- Russian fork notes: [docs/pager-mode/README.ru.md](docs/pager-mode/README.ru.md)
+![Pager Mode overview](docs/pager-mode/assets/pager-mode-overview.svg)
 
-## Overview
+### Ready firmware
 
-This repository contains the official device firmware for Meshtastic, an open-source LoRa mesh networking project designed for long-range, low-power communication without relying on internet or cellular infrastructure. The firmware supports various hardware platforms, including ESP32, nRF52, RP2040/RP2350, and Linux-based devices.
+Ready firmware packages for this workspace are collected in [release-work/README.md](release-work/README.md) after local builds.
 
-Meshtastic enables text messaging, location sharing, and telemetry over a decentralized mesh network, making it ideal for outdoor adventures, emergency preparedness, and remote operations.
+Current prepared targets:
 
-### Get Started
+- `heltec-v3`
+- `heltec-v4`
 
-- 🔧 **[Building Instructions](https://meshtastic.org/docs/development/firmware/build)** – Learn how to compile the firmware from source.
-- ⚡ **[Flashing Instructions](https://meshtastic.org/docs/getting-started/flashing-firmware/)** – Install or update the firmware on your device.
+### Build it yourself
 
-Join our community and help improve Meshtastic! 🚀
+If you want your own build, the short path is:
 
-## Stats
+```bash
+pio run -e heltec-v3
+pio run -e heltec-v4
+```
 
-![Alt](https://repobeats.axiom.co/api/embed/8025e56c482ec63541593cc5bd322c19d5c0bdcf.svg "Repobeats analytics image")
+If you want packaged release-style artifacts in one place:
+
+```bash
+./bin/pager-package.sh heltec-v3 heltec-v4
+```
+
+If you want a friendlier flashing helper for this fork:
+
+```bash
+./bin/pager-flash.sh --board heltec-v3 --port /dev/tty.usbmodemXXXX
+./bin/pager-flash.sh --board heltec-v4 --port /dev/tty.usbmodemXXXX
+```
+
+### Why the README is so explicit
+
+Because users deserve honesty:
+
+- this is a fork
+- this is community work
+- this is not an official Meshtastic release
+- some parts were heavily AI-assisted
+- real-device testing still matters
+
+For full English notes, screenshots, build hints, and release workflow, see [docs/pager-mode/README.md](docs/pager-mode/README.md).
+
+---
+
+## Русский
+
+Этот репозиторий — **неофициальный форк** прошивки Meshtastic, сделанный с упором на более удобный **Pager Mode** для компактных устройств вроде **Heltec V3**, **Heltec V4** и других small-screen / e-ink плат.
+
+Этот проект появился не ради бизнеса, а по-человечески:
+
+- без инвесторов
+- без монетизации
+- без финансовой выгоды
+- просто как полезный community fork для других людей
+
+Важно честно сказать и про разработку: значительная часть кода и документации в этом форке была создана с помощью **искусственного интеллекта**. Это не попытка что-то скрыть, а нормальный рабочий подход. Я сам работаю в другой области, и именно AI помог довести идею до рабочего состояния.
+
+### Что это за проект
+
+- Это форк upstream Meshtastic, а не отдельная замена оригиналу
+- Это любительская и общественная работа
+- Это ветка с фокусом на маленькие экраны
+- Это попытка сделать чтение сообщений удобнее и спокойнее
+
+### Что меняет форк
+
+- Добавляет и дорабатывает `Pager Mode` для компактных экранов
+- Делает чтение сообщений более простым и заметным
+- Старается сохранить максимум совместимости с upstream
+- В этом варианте сборки уделяет внимание русскому small-screen использованию
+
+### Готовые прошивки
+
+Готовые локально собранные артефакты складываются в [release-work/README.md](release-work/README.md).
+
+Подготовленные цели:
+
+- `heltec-v3`
+- `heltec-v4`
+
+### Как собрать самому
+
+Быстрый путь:
+
+```bash
+pio run -e heltec-v3
+pio run -e heltec-v4
+```
+
+Если хотите собрать и сразу разложить файлы по удобным папкам:
+
+```bash
+./bin/pager-package.sh heltec-v3 heltec-v4
+```
+
+Если хотите прошивать через более дружелюбный форковый скрипт:
+
+```bash
+./bin/pager-flash.sh --board heltec-v3 --port /dev/tty.usbmodemXXXX
+./bin/pager-flash.sh --board heltec-v4 --port /dev/tty.usbmodemXXXX
+```
+
+### Почему README такой подробный
+
+Потому что пользователю лучше сразу сказать правду:
+
+- это форк
+- это некоммерческая работа
+- это не официальный релиз Meshtastic
+- AI здесь действительно много помогал
+- проверка на реальном железе всё равно важна
+
+Подробная русская документация находится в [docs/pager-mode/README.ru.md](docs/pager-mode/README.ru.md).

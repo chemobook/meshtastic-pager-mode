@@ -1,0 +1,43 @@
+<svg width="1600" height="640" viewBox="0 0 1600 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="640" rx="28" fill="#F4F7FA"/>
+  <rect x="60" y="70" width="1480" height="500" rx="28" fill="white" stroke="#D7E1E9"/>
+
+  <text x="100" y="145" fill="#173042" font-family="Verdana, Geneva, sans-serif" font-size="42" font-weight="700">Fork flow: build, package, flash, read messages</text>
+  <text x="100" y="188" fill="#4D6576" font-family="Verdana, Geneva, sans-serif" font-size="24">A small-screen workflow for this Meshtastic community fork</text>
+
+  <g>
+    <rect x="110" y="245" width="290" height="240" rx="24" fill="#0E2A3C"/>
+    <text x="145" y="302" fill="#D3F4FF" font-family="Verdana, Geneva, sans-serif" font-size="22" font-weight="700">1. Build</text>
+    <text x="145" y="346" fill="white" font-family="Verdana, Geneva, sans-serif" font-size="28" font-weight="700">heltec-v3</text>
+    <text x="145" y="388" fill="#A9C6D6" font-family="Verdana, Geneva, sans-serif" font-size="22">pio run -e heltec-v3</text>
+    <text x="145" y="430" fill="#A9C6D6" font-family="Verdana, Geneva, sans-serif" font-size="22">factory + OTA + littlefs</text>
+  </g>
+
+  <g>
+    <rect x="455" y="245" width="290" height="240" rx="24" fill="#123A53"/>
+    <text x="490" y="302" fill="#D3F4FF" font-family="Verdana, Geneva, sans-serif" font-size="22" font-weight="700">2. Build</text>
+    <text x="490" y="346" fill="white" font-family="Verdana, Geneva, sans-serif" font-size="28" font-weight="700">heltec-v4</text>
+    <text x="490" y="388" fill="#A9C6D6" font-family="Verdana, Geneva, sans-serif" font-size="22">pio run -e heltec-v4</text>
+    <text x="490" y="430" fill="#A9C6D6" font-family="Verdana, Geneva, sans-serif" font-size="22">same fork, newer board</text>
+  </g>
+
+  <g>
+    <rect x="800" y="245" width="290" height="240" rx="24" fill="#17524D"/>
+    <text x="835" y="302" fill="#E0FFF3" font-family="Verdana, Geneva, sans-serif" font-size="22" font-weight="700">3. Package</text>
+    <text x="835" y="346" fill="white" font-family="Verdana, Geneva, sans-serif" font-size="28" font-weight="700">pager-package.sh</text>
+    <text x="835" y="388" fill="#C4EBDD" font-family="Verdana, Geneva, sans-serif" font-size="22">Copies ready files into</text>
+    <text x="835" y="418" fill="#C4EBDD" font-family="Verdana, Geneva, sans-serif" font-size="22">release-work/firmware/</text>
+  </g>
+
+  <g>
+    <rect x="1145" y="245" width="290" height="240" rx="24" fill="#5B3A19"/>
+    <text x="1180" y="302" fill="#FFE6C4" font-family="Verdana, Geneva, sans-serif" font-size="22" font-weight="700">4. Flash</text>
+    <text x="1180" y="346" fill="white" font-family="Verdana, Geneva, sans-serif" font-size="28" font-weight="700">pager-flash.sh</text>
+    <text x="1180" y="388" fill="#F5D7B2" font-family="Verdana, Geneva, sans-serif" font-size="22">A friendlier wrapper for</text>
+    <text x="1180" y="418" fill="#F5D7B2" font-family="Verdana, Geneva, sans-serif" font-size="22">device-install.sh</text>
+  </g>
+
+  <path d="M400 365H455" stroke="#AFC3D0" stroke-width="8" stroke-linecap="round"/>
+  <path d="M745 365H800" stroke="#AFC3D0" stroke-width="8" stroke-linecap="round"/>
+  <path d="M1090 365H1145" stroke="#AFC3D0" stroke-width="8" stroke-linecap="round"/>
+</svg>

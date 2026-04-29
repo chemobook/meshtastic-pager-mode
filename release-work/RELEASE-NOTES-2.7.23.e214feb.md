@@ -1,0 +1,113 @@
+# Meshtastic Pager Mode Fork `2.7.23.e214feb`
+
+## English
+
+Community release for the **Meshtastic Pager Mode Fork**.
+
+This is an **unofficial fork** of Meshtastic, created by interested people without financial motivation and shared simply because it may be useful to others.
+
+A large part of this fork was built with **AI assistance**. That is intentional and openly stated: the maintainer works in a different field, and AI helped turn the idea into a usable firmware branch.
+
+### Included targets
+
+- `heltec-v3`
+- `heltec-v4`
+
+### Main fork features
+
+- Pager-style message reading for compact screens
+- Small-screen-first focus
+- Better long-message readability
+- Russian-friendly small-screen flavor in this fork
+- Minimal-fork mindset to keep future upstream rebases more realistic
+
+### Included files
+
+For each board package you will find:
+
+- `firmware-<env>-2.7.23.e214feb.bin`
+- `firmware-<env>-2.7.23.e214feb.factory.bin`
+- `firmware-<env>-2.7.23.e214feb.mt.json`
+- `littlefs-<env>-2.7.23.e214feb.bin`
+- `bootloader.bin`
+- `partitions.bin`
+- `mt-esp32s3-ota.bin`
+
+### Flashing notes
+
+- Use the package that matches your exact board.
+- `factory.bin` is the safer choice for first full installs.
+- `bin` is the normal update image.
+- This fork also includes a helper script:
+
+```bash
+./bin/pager-flash.sh --board heltec-v3 --port /dev/tty.usbmodemXXXX
+./bin/pager-flash.sh --board heltec-v4 --port /dev/tty.usbmodemXXXX
+```
+
+### Important note
+
+This is not an official Meshtastic release. Please treat it as a community fork and test on real hardware before depending on it in important situations.
+
+### Known limitations
+
+- Focus is on small-screen devices, not large TFT-first layouts
+- Real-device testing still matters
+- Some upstream warnings remain during build, but both packaged targets build successfully
+
+---
+
+## Русский
+
+Community-релиз для **Meshtastic Pager Mode Fork**.
+
+Это **неофициальный форк** Meshtastic, созданный заинтересованными людьми без какой-либо финансовой выгоды и выложенный просто потому, что он может пригодиться другим.
+
+Значительная часть этого форка была сделана с помощью **искусственного интеллекта**. Это сказано честно и специально: автор проекта работает в другой области, а AI помог превратить идею в рабочую ветку прошивки.
+
+### Какие цели входят в релиз
+
+- `heltec-v3`
+- `heltec-v4`
+
+### Что главное в этом форке
+
+- Pager-режим для чтения сообщений на компактных экранах
+- Фокус на small-screen устройствах
+- Более удобное чтение длинных сообщений
+- Более дружелюбный вариант для русского small-screen использования
+- Минимально-инвазивный подход, чтобы потом было проще подтягивать upstream
+
+### Какие файлы входят
+
+Для каждой платы подготовлены:
+
+- `firmware-<env>-2.7.23.e214feb.bin`
+- `firmware-<env>-2.7.23.e214feb.factory.bin`
+- `firmware-<env>-2.7.23.e214feb.mt.json`
+- `littlefs-<env>-2.7.23.e214feb.bin`
+- `bootloader.bin`
+- `partitions.bin`
+- `mt-esp32s3-ota.bin`
+
+### Замечания по прошивке
+
+- Выбирайте пакет строго под свою плату.
+- `factory.bin` удобнее использовать для первой полной прошивки.
+- Обычный `bin` подходит для update-сценария.
+- В форке есть helper-скрипт:
+
+```bash
+./bin/pager-flash.sh --board heltec-v3 --port /dev/tty.usbmodemXXXX
+./bin/pager-flash.sh --board heltec-v4 --port /dev/tty.usbmodemXXXX
+```
+
+### Важная пометка
+
+Это не официальный релиз Meshtastic. Лучше воспринимать его как community fork и обязательно проверять работу на реальном железе, прежде чем полагаться на него в важных сценариях.
+
+### Известные ограничения
+
+- Основной фокус на маленьких экранах, а не на больших TFT-интерфейсах
+- Проверка на реальных устройствах всё ещё обязательна
+- Во время сборки остаются некоторые upstream warning’и, но обе подготовленные цели успешно собираются
