@@ -17,7 +17,10 @@ A large part of this fork was built with **AI assistance**. That is intentional 
 
 - Browser install page: [Pager Mode Web Flasher](https://chemobook.github.io/meshtastic-pager-mode/)
 - Currently exposed boards: `heltec-v3`, `heltec-v4`
-- Release packages: [Heltec V3](firmware/heltec-v3/) and [Heltec V4](firmware/heltec-v4/)
+- Release packages:
+  [Heltec V3](https://github.com/chemobook/meshtastic-pager-mode/tree/main/release-work/firmware/heltec-v3)
+  and
+  [Heltec V4](https://github.com/chemobook/meshtastic-pager-mode/tree/main/release-work/firmware/heltec-v4)
 
 ### Main fork features
 
@@ -34,16 +37,22 @@ For each board package you will find:
 - `firmware-<env>-2.7.23.e214feb.bin`
 - `firmware-<env>-2.7.23.e214feb.factory.bin`
 - `firmware-<env>-2.7.23.e214feb.mt.json`
+- `latest.mt.json`
+- `web-installer.json`
 - `littlefs-<env>-2.7.23.e214feb.bin`
 - `bootloader.bin`
 - `partitions.bin`
 - `mt-esp32s3-ota.bin`
+- `BUILD-INFO.txt`
 
 ### Flashing notes
 
+- Use desktop Chrome or Edge for the browser flasher.
 - Use the package that matches your exact board.
 - `factory.bin` is the safer choice for first full installs.
 - `bin` is the normal update image.
+- If the board is not detected, first replace the USB cable and close other serial tools.
+- If Windows still does not see the board, install the driver from the [official Meshtastic ESP32 serial driver guide](https://meshtastic.org/docs/getting-started/serial-drivers/esp32/).
 - This fork also includes a helper script:
 
 ```bash
@@ -80,7 +89,10 @@ Community-релиз для **Meshtastic Pager Mode Fork**.
 
 - Страница для прошивки из браузера: [Pager Mode Web Flasher](https://chemobook.github.io/meshtastic-pager-mode/)
 - Сейчас на ней доступны только `heltec-v3` и `heltec-v4`
-- Пакеты релиза: [Heltec V3](firmware/heltec-v3/) и [Heltec V4](firmware/heltec-v4/)
+- Пакеты релиза:
+  [Heltec V3](https://github.com/chemobook/meshtastic-pager-mode/tree/main/release-work/firmware/heltec-v3)
+  и
+  [Heltec V4](https://github.com/chemobook/meshtastic-pager-mode/tree/main/release-work/firmware/heltec-v4)
 
 ### Что главное в этом форке
 
@@ -97,16 +109,22 @@ Community-релиз для **Meshtastic Pager Mode Fork**.
 - `firmware-<env>-2.7.23.e214feb.bin`
 - `firmware-<env>-2.7.23.e214feb.factory.bin`
 - `firmware-<env>-2.7.23.e214feb.mt.json`
+- `latest.mt.json`
+- `web-installer.json`
 - `littlefs-<env>-2.7.23.e214feb.bin`
 - `bootloader.bin`
 - `partitions.bin`
 - `mt-esp32s3-ota.bin`
+- `BUILD-INFO.txt`
 
 ### Замечания по прошивке
 
+- Для веб-прошивки лучше использовать настольный Chrome или Edge.
 - Выбирайте пакет строго под свою плату.
 - `factory.bin` удобнее использовать для первой полной прошивки.
 - Обычный `bin` подходит для update-сценария.
+- Если плата не определяется, сначала замените USB-кабель и закройте другие serial-программы.
+- Если Windows всё ещё не видит устройство, поставьте драйвер из [официальной инструкции Meshtastic для ESP32](https://meshtastic.org/docs/getting-started/serial-drivers/esp32/).
 - В форке есть helper-скрипт:
 
 ```bash

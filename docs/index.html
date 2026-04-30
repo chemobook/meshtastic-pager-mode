@@ -528,6 +528,10 @@
               <li>Wait for the browser flasher to finish and let the device reboot.</li>
               <li>After first boot, configure the node in the Meshtastic app as usual.</li>
             </ol>
+            <p class="subtle">
+              Browser flashing requires Web Serial. For the fewest problems, use current
+              desktop Chrome or Edge.
+            </p>
           </div>
           <div class="info-card">
             <h3>Как прошивать</h3>
@@ -539,6 +543,10 @@
               <li>Дождись завершения прошивки и перезагрузки устройства.</li>
               <li>После первой загрузки настрой узел через обычное приложение Meshtastic.</li>
             </ol>
+            <p class="subtle">
+              Для веб-прошивки нужен Web Serial. Самый надёжный вариант сейчас:
+              настольный Chrome или Edge.
+            </p>
           </div>
         </div>
       </section>
@@ -556,10 +564,18 @@
           <div class="info-card">
             <h3>Troubleshooting</h3>
             <ul>
-              <li>If no serial device appears, reconnect the cable and close other serial apps.</li>
-              <li>If the install fails, retry from the same browser page before changing tools.</li>
-              <li>If the board was flashed with the wrong target, stop and re-flash with the correct one.</li>
+              <li>If no serial port appears, first replace the USB cable with a known data cable.</li>
+              <li>If Windows does not see the board, install the required ESP32 USB serial driver.</li>
+              <li>If Linux sees the board but the browser cannot open it, check serial permissions and close terminal tools.</li>
+              <li>If the install fails once, retry from the same page before switching to another tool.</li>
+              <li>If the wrong target was selected, stop and re-flash only with the correct board package.</li>
             </ul>
+            <p class="subtle">
+              Driver reference:
+              <a href="https://meshtastic.org/docs/getting-started/serial-drivers/esp32/">
+                Meshtastic ESP32 serial drivers
+              </a>
+            </p>
           </div>
         </div>
       </section>

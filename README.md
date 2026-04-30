@@ -66,6 +66,8 @@ Preferred user path:
 - Use desktop Chrome or Edge
 - Choose `Heltec V3` or `Heltec V4`
 - Flash from the browser with the board-matching package
+- If the board is not detected, first replace the USB cable and close other serial tools
+- If Windows still does not see the device, install the ESP32 USB serial driver from the [official Meshtastic guide](https://meshtastic.org/docs/getting-started/serial-drivers/esp32/)
 
 ### Build it yourself
 
@@ -140,6 +142,8 @@ Flash with the helper script:
 - Использовать настольный Chrome или Edge
 - Выбрать `Heltec V3` или `Heltec V4`
 - Прошить устройство прямо из браузера
+- Если устройство не находится, сначала заменить USB-кабель и закрыть программы, которые держат COM-порт
+- Если Windows всё ещё не видит плату, поставить USB serial driver для ESP32 по [официальной инструкции Meshtastic](https://meshtastic.org/docs/getting-started/serial-drivers/esp32/)
 
 ### Как собрать самому
 

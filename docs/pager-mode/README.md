@@ -70,6 +70,8 @@ For most users, the easiest path is now the browser flasher:
 2. Use desktop Chrome or Edge.
 3. Select `Heltec V3` or `Heltec V4`.
 4. Flash from the browser and wait for the reboot.
+5. If no port appears, replace the USB cable first and close other serial tools.
+6. If Windows still does not see the board, install the ESP32 USB serial driver from the [official Meshtastic guide](https://meshtastic.org/docs/getting-started/serial-drivers/esp32/).
 
 Only these two boards are currently exposed on the web flasher.
 
@@ -107,6 +109,7 @@ This wrapper sits on top of the existing `bin/device-install.sh` flow and makes 
 
 - Use the exact board target that matches the hardware.
 - Prefer the web flasher for normal user installs on `heltec-v3` and `heltec-v4`.
+- Browser flashing depends on Web Serial, so Safari and most mobile browsers are not the primary path.
 - Prefer testing pager-mode behavior on a real device before sharing a build.
 - Treat this branch as a fork with focused changes, not as a full replacement for upstream Meshtastic.
 
