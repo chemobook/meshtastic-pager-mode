@@ -12,6 +12,7 @@ Unofficial community Meshtastic fork for small-screen devices with Pager Mode im
 - Reduced unnecessary battery drain while pager mode is active
 - Pager mode no longer restores itself after reboot
 - Long press now opens message actions for pager-mode control
+- Pager-mode autoscroll no longer runs into the header and now uses steadier line spacing
 - Prepared ready firmware packages for `heltec-v3`
 - Prepared ready firmware packages for `heltec-v4`
 - Added bilingual project and release documentation
@@ -35,6 +36,7 @@ Unofficial community Meshtastic fork for small-screen devices with Pager Mode im
 - Уменьшен лишний расход батареи при активном pager mode
 - Pager mode больше не восстанавливается автоматически после перезагрузки
 - Длинное нажатие теперь открывает действия сообщения для управления pager mode
+- Автопрокрутка pager mode больше не упирается в шапку и работает ровнее по строкам
 - Подготовлены готовые прошивки для `heltec-v3`
 - Подготовлены готовые прошивки для `heltec-v4`
 - Добавлена двуязычная документация проекта и релиза

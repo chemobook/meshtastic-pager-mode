@@ -362,6 +362,8 @@ static inline int getRenderedLineWidth(OLEDDisplay *display, const std::string &
     return graphics::EmoteRenderer::analyzeLine(display, line, 0, emotes, emoteCount).width;
 }
 
+static std::vector<int> calculatePagerLineHeights(const std::vector<std::string> &lines, int fallbackHeight);
+
 struct MessageBlock {
     size_t start;
     size_t end;
@@ -540,8 +542,10 @@ void drawPagerFocusedMessage(OLEDDisplay *display, int16_t x, int16_t y, const c
 
     constexpr int LEFT_MARGIN = 2;
     constexpr int RIGHT_MARGIN = 2;
-    const int contentTop = getTextPositions(display)[1];
-    const int contentBottom = SCREEN_HEIGHT - FONT_HEIGHT_SMALL;
+    constexpr int TOP_PADDING = 2;
+    constexpr int BOTTOM_PADDING = 1;
+    const int contentTop = getTextPositions(display)[1] + TOP_PADDING;
+    const int contentBottom = SCREEN_HEIGHT - FONT_HEIGHT_SMALL - BOTTOM_PADDING;
     const int availableWidth = SCREEN_WIDTH - LEFT_MARGIN - RIGHT_MARGIN;
     const int availableHeight = std::max(0, contentBottom - contentTop);
     const int visibleHeight = availableHeight;
@@ -589,18 +593,23 @@ void drawPagerFocusedMessage(OLEDDisplay *display, int16_t x, int16_t y, const c
     for (const unsigned char *p = reinterpret_cast<const unsigned char *>(messageText); *p; ++p)
         mixSignature(*p);
 
-    if (pagerSignature != newSignature || cachedLines != wrappedLines || cachedHeights.size() != wrappedLines.size()) {
+    std::vector<int> pagerHeights = calculatePagerLineHeights(wrappedLines, lineHeight);
+
+    if (pagerSignature != newSignature || cachedLines != wrappedLines || cachedHeights != pagerHeights) {
         pagerSignature = newSignature;
         cachedLines = wrappedLines;
-        cachedHeights.assign(wrappedLines.size(), lineHeight);
+        cachedHeights = pagerHeights;
         resetScrollState();
         didReset = true;
     } else {
         cachedLines = wrappedLines;
-        cachedHeights.assign(wrappedLines.size(), lineHeight);
+        cachedHeights = pagerHeights;
     }
 
-    int totalHeight = static_cast<int>(wrappedLines.size()) * lineHeight;
+    int totalHeight = 0;
+    for (int h : cachedHeights)
+        totalHeight += h;
+
     if (totalHeight <= visibleHeight) {
         scrollY = 0.0f;
         waitingToReset = false;
@@ -646,10 +655,12 @@ void drawPagerFocusedMessage(OLEDDisplay *display, int16_t x, int16_t y, const c
     if (totalHeight < availableHeight)
         cursorY += (availableHeight - totalHeight) / 2;
 
-    for (const auto &line : wrappedLines) {
-        if (cursorY + lineHeight > contentTop && cursorY < contentBottom)
-            graphics::UIRenderer::drawStringWithEmotes(display, LEFT_MARGIN, cursorY, line, lineHeight, 1, true);
-        cursorY += lineHeight;
+    for (size_t idx = 0; idx < wrappedLines.size(); ++idx) {
+        const int rowHeight = (idx < cachedHeights.size()) ? cachedHeights[idx] : lineHeight;
+        if (cursorY >= contentTop && cursorY + rowHeight <= contentBottom) {
+            graphics::UIRenderer::drawStringWithEmotes(display, LEFT_MARGIN, cursorY, wrappedLines[idx], lineHeight, 1, true);
+        }
+        cursorY += rowHeight;
     }
 
     drawMessageScrollbar(display, visibleHeight, totalHeight, finalScroll, contentTop);
@@ -1305,6 +1316,25 @@ std::vector<int> calculateLineHeights(const std::vector<std::string> &lines, con
             }
         }
 
+        rowHeights.push_back(lineHeight);
+    }
+
+    return rowHeights;
+}
+
+static std::vector<int> calculatePagerLineHeights(const std::vector<std::string> &lines, int fallbackHeight)
+{
+    constexpr int PAGER_LINE_GAP = 1;
+
+    std::vector<int> rowHeights;
+    rowHeights.reserve(lines.size());
+
+    for (size_t idx = 0; idx < lines.size(); ++idx) {
+        const auto metrics = graphics::EmoteRenderer::analyzeLine(nullptr, lines[idx], fallbackHeight, emotes, numEmotes);
+        int lineHeight = std::max(fallbackHeight, metrics.tallestHeight);
+        if (idx + 1 < lines.size()) {
+            lineHeight += PAGER_LINE_GAP;
+        }
         rowHeights.push_back(lineHeight);
     }
 

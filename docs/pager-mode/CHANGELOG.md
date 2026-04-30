@@ -20,6 +20,8 @@ Initial public pager-mode fork based on Meshtastic `2.7.23`.
 - Long press in pager mode now opens the message action menu instead of forcing an immediate exit
 - Short press in pager mode no longer kicks the user out of the focused thread view
 - Matching pager-mode messages no longer wake the screen and reset the timeout if the display is already off
+- Pager-mode autoscroll keeps message text out of the battery header area
+- Pager-mode scrolling now uses steadier per-line spacing on long messages
 - Russian text rendering is enabled for the small-screen fork build flavor
 - `InkHUD` font selection now respects local language encoding macros
 
