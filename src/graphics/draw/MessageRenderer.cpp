@@ -790,6 +790,9 @@ void drawTextMessageFrame(OLEDDisplay *display, OLEDDisplayUiState *state, int16
     }
 
     if (pagerModeEnabled) {
+        // Pager mode is already scoped to a single DM or channel, so leave the
+        // header title blank to preserve space for battery/time indicators.
+        titleStr[0] = '\0';
         drawPagerFocusedMessage(display, x, y, titleStr, filtered.back());
         return;
     }

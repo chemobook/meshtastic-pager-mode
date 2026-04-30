@@ -28,6 +28,7 @@ A large part of this fork was built with **AI assistance**. That is intentional 
 - Small-screen-first focus
 - Better long-message readability
 - Reduced unnecessary battery drain while pager mode is active on busy networks
+- Pager mode header is simplified to leave more room for battery and time on small displays
 - Russian-friendly small-screen flavor in this fork
 - Minimal-fork mindset to keep future upstream rebases more realistic
 
@@ -102,6 +103,7 @@ Community-релиз для **Meshtastic Pager Mode Fork**.
 - Фокус на small-screen устройствах
 - Более удобное чтение длинных сообщений
 - Уменьшен лишний расход батареи в pager mode на шумных сетях
+- Верхняя строка pager mode упрощена, чтобы освободить место под заряд и время
 - Более дружелюбный вариант для русского small-screen использования
 - Минимально-инвазивный подход, чтобы потом было проще подтягивать upstream
 
