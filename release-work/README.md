@@ -12,6 +12,11 @@ Ready-to-paste GitHub release notes for the current packaged build:
 - [RELEASE-FORM-COMPACT-2.7.23.e214feb.md](RELEASE-FORM-COMPACT-2.7.23.e214feb.md)
 - [RELEASE-ASSETS-CHECKLIST-2.7.23.e214feb.md](RELEASE-ASSETS-CHECKLIST-2.7.23.e214feb.md)
 
+Current release text already mentions:
+
+- reduced unnecessary battery drain while pager mode is active
+- testing is still ongoing on real devices
+
 ## Web flasher / Веб-прошивальщик
 
 Browser install page:

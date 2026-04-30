@@ -9,11 +9,13 @@ Unofficial community Meshtastic fork for small-screen devices with Pager Mode im
 ## Changelog Bullets
 
 - Added and refined Pager Mode behavior for compact-screen usage
+- Reduced unnecessary battery drain while pager mode is active
 - Prepared ready firmware packages for `heltec-v3`
 - Prepared ready firmware packages for `heltec-v4`
 - Added bilingual project and release documentation
 - Added a friendlier fork-specific flash helper for `Heltec V3 / V4`
 - Kept the fork openly marked as unofficial, community-made, and AI-assisted
+- Testing is still ongoing on real devices
 
 ## Short Russian Variant
 
@@ -28,8 +30,10 @@ Unofficial community Meshtastic fork for small-screen devices with Pager Mode im
 ### Changelog Bullets
 
 - Добавлен и доработан Pager Mode для компактных экранов
+- Уменьшен лишний расход батареи при активном pager mode
 - Подготовлены готовые прошивки для `heltec-v3`
 - Подготовлены готовые прошивки для `heltec-v4`
 - Добавлена двуязычная документация проекта и релиза
 - Добавлен более дружелюбный helper-скрипт для прошивки `Heltec V3 / V4`
 - Форк явно отмечен как неофициальный, community-based и AI-assisted
+- Тестирование на реальных устройствах всё ещё продолжается

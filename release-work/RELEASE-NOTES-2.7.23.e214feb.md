@@ -27,6 +27,7 @@ A large part of this fork was built with **AI assistance**. That is intentional 
 - Pager-style message reading for compact screens
 - Small-screen-first focus
 - Better long-message readability
+- Reduced unnecessary battery drain while pager mode is active on busy networks
 - Russian-friendly small-screen flavor in this fork
 - Minimal-fork mindset to keep future upstream rebases more realistic
 
@@ -68,6 +69,7 @@ This is not an official Meshtastic release. Please treat it as a community fork 
 
 - Focus is on small-screen devices, not large TFT-first layouts
 - Real-device testing still matters
+- Testing is still ongoing, especially around pager-mode power behavior on real devices
 - Some upstream warnings remain during build, but both packaged targets build successfully
 
 ---
@@ -99,6 +101,7 @@ Community-релиз для **Meshtastic Pager Mode Fork**.
 - Pager-режим для чтения сообщений на компактных экранах
 - Фокус на small-screen устройствах
 - Более удобное чтение длинных сообщений
+- Уменьшен лишний расход батареи в pager mode на шумных сетях
 - Более дружелюбный вариант для русского small-screen использования
 - Минимально-инвазивный подход, чтобы потом было проще подтягивать upstream
 
@@ -140,4 +143,5 @@ Community-релиз для **Meshtastic Pager Mode Fork**.
 
 - Основной фокус на маленьких экранах, а не на больших TFT-интерфейсах
 - Проверка на реальных устройствах всё ещё обязательна
+- Тестирование всё ещё продолжается, особенно вокруг энергопотребления pager mode на реальном железе
 - Во время сборки остаются некоторые upstream warning’и, но обе подготовленные цели успешно собираются
