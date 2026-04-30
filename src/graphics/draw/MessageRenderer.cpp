@@ -665,7 +665,7 @@ void drawPagerFocusedMessage(OLEDDisplay *display, int16_t x, int16_t y, const c
         uint32_t now = millis();
         float delta = (now - lastTime) / 400.0f;
         lastTime = now;
-        const float scrollSpeed = 1.7f;
+        const float scrollSpeed = 3.4f;
         const int scrollStop = std::max(0, totalHeight - visibleHeight);
 
         if (scrollStartDelay == 0)
@@ -985,7 +985,7 @@ void drawTextMessageFrame(OLEDDisplay *display, OLEDDisplayUiState *state, int16
     uint32_t now = millis();
     float delta = (now - lastTime) / 400.0f;
     lastTime = now;
-    const float scrollSpeed = 2.0f;
+    const float scrollSpeed = 4.0f;
 
     if (scrollStartDelay == 0)
         scrollStartDelay = now;

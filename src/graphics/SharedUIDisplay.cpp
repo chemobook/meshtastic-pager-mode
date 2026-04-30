@@ -66,8 +66,6 @@ ScreenResolution currentResolution = ScreenResolution::Low;
 // === Internal State ===
 bool isBoltVisibleShared = true;
 uint32_t lastBlinkShared = 0;
-bool isMailIconVisible = true;
-uint32_t lastMailBlink = 0;
 
 static inline bool useClockHeaderAccentTheme(uint32_t themeId)
 {
@@ -346,11 +344,7 @@ void drawCommonHeader(OLEDDisplay *display, int16_t x, int16_t y, const char *ti
         if (currentResolution == ScreenResolution::High) {
             snprintf(dateLine, sizeof(dateLine), "%s", datetimeStr);
         } else {
-            if (hasUnreadMessage) {
-                snprintf(dateLine, sizeof(dateLine), "%s", &datetimeStr[5]);
-            } else {
-                snprintf(dateLine, sizeof(dateLine), "%s", &datetimeStr[2]);
-            }
+            snprintf(dateLine, sizeof(dateLine), "%s", &datetimeStr[2]);
         }
 
         if (config.display.use_12h_clock) {
@@ -371,57 +365,9 @@ void drawCommonHeader(OLEDDisplay *display, int16_t x, int16_t y, const char *ti
         statusRightStartX = timeX - (useHorizontalBattery ? 22 : 16);
 #endif
 
-        // === Show Mail or Mute Icon to the Left of Time ===
+        // === Show Mute Icon to the Left of Time ===
         int iconRightEdge = timeX - 2;
-
-        bool showMail = false;
-
-#ifndef USE_EINK
-        if (hasUnreadMessage) {
-            if (now - lastMailBlink > 500) {
-                isMailIconVisible = !isMailIconVisible;
-                lastMailBlink = now;
-            }
-            showMail = isMailIconVisible;
-        }
-#else
-        if (hasUnreadMessage) {
-            showMail = true;
-        }
-#endif
-
-        if (showMail) {
-            if (useHorizontalBattery) {
-                int iconW = 16, iconH = 12;
-                int iconX = iconRightEdge - iconW;
-                int iconY = textY + (FONT_HEIGHT_SMALL - iconH) / 2 - 1;
-                if (useInvertedHeaderStyle) {
-                    display->setColor(WHITE);
-                    display->fillRect(iconX - 1, iconY - 1, iconW + 3, iconH + 2);
-                    display->setColor(BLACK);
-                } else {
-                    display->setColor(BLACK);
-                    display->fillRect(iconX - 1, iconY - 1, iconW + 3, iconH + 2);
-                    display->setColor(WHITE);
-                }
-                display->drawRect(iconX, iconY, iconW + 1, iconH);
-                display->drawLine(iconX, iconY, iconX + iconW / 2, iconY + iconH - 4);
-                display->drawLine(iconX + iconW, iconY, iconX + iconW / 2, iconY + iconH - 4);
-            } else {
-                int iconX = iconRightEdge - (mail_width - 2);
-                int iconY = textY + (FONT_HEIGHT_SMALL - mail_height) / 2;
-                if (useInvertedHeaderStyle) {
-                    display->setColor(WHITE);
-                    display->fillRect(iconX - 1, iconY - 1, mail_width + 2, mail_height + 2);
-                    display->setColor(BLACK);
-                } else {
-                    display->setColor(BLACK);
-                    display->fillRect(iconX - 1, iconY - 1, mail_width + 2, mail_height + 2);
-                    display->setColor(WHITE);
-                }
-                display->drawXbm(iconX, iconY, mail_width, mail_height, mail);
-            }
-        } else if (externalNotificationModule->getMute()) {
+        if (externalNotificationModule->getMute()) {
             if (currentResolution == ScreenResolution::High) {
                 int iconX = iconRightEdge - mute_symbol_big_width;
                 int iconY = textY + (FONT_HEIGHT_SMALL - mute_symbol_big_height) / 2;
@@ -466,41 +412,12 @@ void drawCommonHeader(OLEDDisplay *display, int16_t x, int16_t y, const char *ti
         }
 
     } else {
-        // === No Time Available: Mail/Mute Icon Moves to Far Right ===
+        // === No Time Available: Mute Icon Moves to Far Right ===
         int iconRightEdge = screenW - xOffset;
 #if GRAPHICS_TFT_COLORING_ENABLED
         statusRightStartX = screenW - (useHorizontalBattery ? 22 : 12);
 #endif
-        bool showMail = false;
-
-#ifndef USE_EINK
-        if (hasUnreadMessage) {
-            if (now - lastMailBlink > 500) {
-                isMailIconVisible = !isMailIconVisible;
-                lastMailBlink = now;
-            }
-            showMail = isMailIconVisible;
-        }
-#else
-        if (hasUnreadMessage) {
-            showMail = true;
-        }
-#endif
-
-        if (showMail) {
-            if (useHorizontalBattery) {
-                int iconW = 16, iconH = 12;
-                int iconX = iconRightEdge - iconW;
-                int iconY = textY + (FONT_HEIGHT_SMALL - iconH) / 2 - 1;
-                display->drawRect(iconX, iconY, iconW + 1, iconH);
-                display->drawLine(iconX, iconY, iconX + iconW / 2, iconY + iconH - 4);
-                display->drawLine(iconX + iconW, iconY, iconX + iconW / 2, iconY + iconH - 4);
-            } else {
-                int iconX = iconRightEdge - mail_width;
-                int iconY = textY + (FONT_HEIGHT_SMALL - mail_height) / 2;
-                display->drawXbm(iconX, iconY, mail_width, mail_height, mail);
-            }
-        } else if (externalNotificationModule->getMute()) {
+        if (externalNotificationModule->getMute()) {
             if (currentResolution == ScreenResolution::High) {
                 int iconX = iconRightEdge - mute_symbol_big_width;
                 int iconY = textY + (FONT_HEIGHT_SMALL - mute_symbol_big_height) / 2;
