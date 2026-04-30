@@ -1,30 +1,30 @@
 {
-  "version": "2.7.23.e6d1017",
+  "version": "2.7.23.7eb9a64",
   "build_epoch": 1777492800,
-  "platformioTarget": "heltec-v4",
+  "platformioTarget": "heltec-v3",
   "mcu": "esp32s3",
   "repo": "chemobook/meshtastic-pager-mode",
   "files": [
     {
-      "name": "firmware-heltec-v4-2.7.23.e6d1017.elf",
-      "md5": "81e07161d976fbfead613d5780768f8e",
-      "bytes": 22444652
+      "name": "firmware-heltec-v3-2.7.23.7eb9a64.elf",
+      "md5": "dfad7c9166ae933d56b97b1494a5a4ef",
+      "bytes": 22353872
     },
     {
-      "name": "firmware-heltec-v4-2.7.23.e6d1017.bin",
-      "md5": "d31e140dbd9cc1093d42261f43802d56",
-      "bytes": 2127072,
+      "name": "firmware-heltec-v3-2.7.23.7eb9a64.bin",
+      "md5": "74c9aa21171f271e3efcf8feaf50b55b",
+      "bytes": 2109280,
       "part_name": "app0"
     },
     {
-      "name": "firmware-heltec-v4-2.7.23.e6d1017.factory.bin",
-      "md5": "4614e0ed86ecb8c023ecda2538ffa46c",
-      "bytes": 2192608
+      "name": "firmware-heltec-v3-2.7.23.7eb9a64.factory.bin",
+      "md5": "e88f90028a155fd0bfdbad625579fb3e",
+      "bytes": 2174816
     },
     {
-      "name": "littlefs-heltec-v4-2.7.23.e6d1017.bin",
-      "md5": "9c13f54aaac2604c02923178d530c020",
-      "bytes": 3538944,
+      "name": "littlefs-heltec-v3-2.7.23.7eb9a64.bin",
+      "md5": "ad7dbc6a724a09bedebde9650412942f",
+      "bytes": 1572864,
       "part_name": "spiffs"
     }
   ],
@@ -52,46 +52,46 @@
       "type": "app",
       "subtype": "ota_0",
       "offset": "0x10000",
-      "size": "0x640000",
+      "size": "0x330000",
       "flags": ""
     },
     {
       "name": "app1",
       "type": "app",
       "subtype": "ota_1",
-      "offset": "0x650000",
-      "size": "0x640000",
+      "offset": "0x340000",
+      "size": "0x330000",
       "flags": ""
     },
     {
       "name": "spiffs",
       "type": "data",
       "subtype": "spiffs",
-      "offset": "0xc90000",
-      "size": "0x360000",
+      "offset": "0x670000",
+      "size": "0x180000",
       "flags": ""
     },
     {
       "name": "coredump",
       "type": "data",
       "subtype": "coredump",
-      "offset": "0xFF0000",
+      "offset": "0x7F0000",
       "size": "0x10000",
       "flags": ""
     }
   ],
-  "hwModel": 110,
-  "hwModelSlug": "HELTEC_V4",
+  "hwModel": 43,
+  "hwModelSlug": "HELTEC_V3",
   "architecture": "esp32-s3",
   "activelySupported": true,
-  "displayName": "Heltec V4",
+  "displayName": "Heltec V3",
   "supportLevel": 1,
   "images": [
-    "heltec_v4.svg"
+    "heltec-v3.svg",
+    "heltec-v3-case.svg"
   ],
   "tags": [
     "Heltec"
   ],
-  "requiresDfu": true,
-  "partitionScheme": "16MB"
+  "partitionScheme": "8MB"
 }

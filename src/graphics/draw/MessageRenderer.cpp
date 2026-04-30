@@ -153,12 +153,50 @@ static uint32_t currentPeer = 0;
 namespace
 {
 constexpr const char *PAGER_MODE_FILENAME = "/prefs/pager_mode.dat";
+constexpr uint32_t PAGER_MODE_MAGIC = 0x50414752; // "PAGR"
+constexpr uint8_t PAGER_MODE_VERSION = 1;
+
+struct PagerModeStateFile {
+    uint32_t magic;
+    uint8_t version;
+    uint8_t enabled;
+    int8_t mode;
+    int8_t channel;
+    uint32_t peer;
+};
 
 static bool pagerStateLoaded = false;
 static bool pagerModeEnabled = false;
 static ThreadMode pagerThreadMode = ThreadMode::ALL;
 static int pagerChannel = -1;
 static uint32_t pagerPeer = 0;
+static bool pagerRestorePending = false;
+
+void savePagerModePersistedState()
+{
+#ifdef FSCom
+    spiLock->lock();
+    FSCom.mkdir("/prefs");
+    spiLock->unlock();
+
+    PagerModeStateFile state{};
+    state.magic = PAGER_MODE_MAGIC;
+    state.version = PAGER_MODE_VERSION;
+    state.enabled = pagerModeEnabled ? 1 : 0;
+    state.mode = static_cast<int8_t>(pagerThreadMode);
+    state.channel = static_cast<int8_t>(pagerChannel);
+    state.peer = pagerPeer;
+
+    auto file = SafeFile(PAGER_MODE_FILENAME, true);
+    spiLock->lock();
+    file.write((uint8_t *)&state, sizeof(state));
+    spiLock->unlock();
+
+    if (!file.close()) {
+        LOG_WARN("Failed to persist pager mode state");
+    }
+#endif
+}
 
 void clearPagerModePersistedState()
 {
@@ -187,8 +225,61 @@ void loadPagerModeState()
         return;
 
     pagerStateLoaded = true;
+    pagerModeEnabled = false;
+    pagerThreadMode = ThreadMode::ALL;
+    pagerChannel = -1;
+    pagerPeer = 0;
+    pagerRestorePending = false;
 
-    clearPagerModePersistedState();
+#ifdef FSCom
+    spiLock->lock();
+    if (!FSCom.exists(PAGER_MODE_FILENAME))
+    {
+        spiLock->unlock();
+        return;
+    }
+
+    auto file = FSCom.open(PAGER_MODE_FILENAME, FILE_O_READ);
+    if (!file) {
+        spiLock->unlock();
+        LOG_WARN("Failed to open pager mode state");
+        return;
+    }
+
+    PagerModeStateFile state{};
+    const auto bytesRead = file.read((uint8_t *)&state, sizeof(state));
+    file.close();
+    spiLock->unlock();
+
+    if (bytesRead != sizeof(state) || state.magic != PAGER_MODE_MAGIC || state.version != PAGER_MODE_VERSION) {
+        LOG_WARN("Pager mode state invalid, clearing persisted state");
+        clearPagerModePersistedState();
+        return;
+    }
+
+    if (!state.enabled)
+        return;
+
+    if (state.mode != static_cast<int8_t>(ThreadMode::CHANNEL) && state.mode != static_cast<int8_t>(ThreadMode::DIRECT)) {
+        LOG_WARN("Pager mode state has invalid thread mode, clearing persisted state");
+        clearPagerModePersistedState();
+        return;
+    }
+
+    if ((state.mode == static_cast<int8_t>(ThreadMode::CHANNEL) && state.channel < 0) ||
+        (state.mode == static_cast<int8_t>(ThreadMode::DIRECT) && state.peer == 0)) {
+        LOG_WARN("Pager mode state has invalid target, clearing persisted state");
+        clearPagerModePersistedState();
+        return;
+    }
+
+    pagerModeEnabled = true;
+    pagerThreadMode = static_cast<ThreadMode>(state.mode);
+    pagerChannel = state.channel;
+    pagerPeer = state.peer;
+    pagerRestorePending = true;
+    applyPagerModeToCurrentThread();
+#endif
 }
 
 bool pagerModeMatchesMessage(const StoredMessage &sm, const meshtastic_MeshPacket &packet)
@@ -282,6 +373,7 @@ void setPagerModeEnabled(bool enabled)
         pagerThreadMode = ThreadMode::ALL;
         pagerChannel = -1;
         pagerPeer = 0;
+        pagerRestorePending = false;
         clearPagerModePersistedState();
         return;
     }
@@ -293,8 +385,9 @@ void setPagerModeEnabled(bool enabled)
     pagerThreadMode = currentMode;
     pagerChannel = currentChannel;
     pagerPeer = currentPeer;
+    pagerRestorePending = true;
     applyPagerModeToCurrentThread();
-    clearPagerModePersistedState();
+    savePagerModePersistedState();
 }
 
 void togglePagerMode()
@@ -305,7 +398,11 @@ void togglePagerMode()
 bool restorePagerMode()
 {
     loadPagerModeState();
-    return false;
+    const bool shouldRestore = pagerModeEnabled && pagerRestorePending;
+    if (shouldRestore)
+        applyPagerModeToCurrentThread();
+    pagerRestorePending = false;
+    return shouldRestore;
 }
 
 // Accessors for menuHandler
@@ -361,8 +458,6 @@ static inline int getRenderedLineWidth(OLEDDisplay *display, const std::string &
 {
     return graphics::EmoteRenderer::analyzeLine(display, line, 0, emotes, emoteCount).width;
 }
-
-static std::vector<int> calculatePagerLineHeights(const std::vector<std::string> &lines, int fallbackHeight);
 
 struct MessageBlock {
     size_t start;
@@ -538,8 +633,6 @@ void drawPagerFocusedMessage(OLEDDisplay *display, int16_t x, int16_t y, const c
     display->clear();
     display->setTextAlignment(TEXT_ALIGN_LEFT);
 
-    graphics::drawCommonHeader(display, x, y, titleStr);
-
     constexpr int LEFT_MARGIN = 2;
     constexpr int RIGHT_MARGIN = 2;
     constexpr int TOP_PADDING = 2;
@@ -593,22 +686,18 @@ void drawPagerFocusedMessage(OLEDDisplay *display, int16_t x, int16_t y, const c
     for (const unsigned char *p = reinterpret_cast<const unsigned char *>(messageText); *p; ++p)
         mixSignature(*p);
 
-    std::vector<int> pagerHeights = calculatePagerLineHeights(wrappedLines, lineHeight);
-
-    if (pagerSignature != newSignature || cachedLines != wrappedLines || cachedHeights != pagerHeights) {
+    if (pagerSignature != newSignature || cachedLines != wrappedLines || cachedHeights.size() != wrappedLines.size()) {
         pagerSignature = newSignature;
         cachedLines = wrappedLines;
-        cachedHeights = pagerHeights;
+        cachedHeights.assign(wrappedLines.size(), lineHeight);
         resetScrollState();
         didReset = true;
     } else {
         cachedLines = wrappedLines;
-        cachedHeights = pagerHeights;
+        cachedHeights.assign(wrappedLines.size(), lineHeight);
     }
 
-    int totalHeight = 0;
-    for (int h : cachedHeights)
-        totalHeight += h;
+    int totalHeight = static_cast<int>(wrappedLines.size()) * lineHeight;
 
     if (totalHeight <= visibleHeight) {
         scrollY = 0.0f;
@@ -655,14 +744,13 @@ void drawPagerFocusedMessage(OLEDDisplay *display, int16_t x, int16_t y, const c
     if (totalHeight < availableHeight)
         cursorY += (availableHeight - totalHeight) / 2;
 
-    for (size_t idx = 0; idx < wrappedLines.size(); ++idx) {
-        const int rowHeight = (idx < cachedHeights.size()) ? cachedHeights[idx] : lineHeight;
-        if (cursorY >= contentTop && cursorY + rowHeight <= contentBottom) {
-            graphics::UIRenderer::drawStringWithEmotes(display, LEFT_MARGIN, cursorY, wrappedLines[idx], lineHeight, 1, true);
-        }
-        cursorY += rowHeight;
+    for (const auto &line : wrappedLines) {
+        if (cursorY + lineHeight > contentTop && cursorY < contentBottom)
+            graphics::UIRenderer::drawStringWithEmotes(display, LEFT_MARGIN, cursorY, line, lineHeight, 1, true);
+        cursorY += lineHeight;
     }
 
+    graphics::drawCommonHeader(display, x, y, titleStr);
     drawMessageScrollbar(display, visibleHeight, totalHeight, finalScroll, contentTop);
     graphics::drawCommonFooter(display, x, y);
 }
@@ -1316,25 +1404,6 @@ std::vector<int> calculateLineHeights(const std::vector<std::string> &lines, con
             }
         }
 
-        rowHeights.push_back(lineHeight);
-    }
-
-    return rowHeights;
-}
-
-static std::vector<int> calculatePagerLineHeights(const std::vector<std::string> &lines, int fallbackHeight)
-{
-    constexpr int PAGER_LINE_GAP = 1;
-
-    std::vector<int> rowHeights;
-    rowHeights.reserve(lines.size());
-
-    for (size_t idx = 0; idx < lines.size(); ++idx) {
-        const auto metrics = graphics::EmoteRenderer::analyzeLine(nullptr, lines[idx], fallbackHeight, emotes, numEmotes);
-        int lineHeight = std::max(fallbackHeight, metrics.tallestHeight);
-        if (idx + 1 < lines.size()) {
-            lineHeight += PAGER_LINE_GAP;
-        }
         rowHeights.push_back(lineHeight);
     }
 

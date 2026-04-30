@@ -976,6 +976,10 @@ int32_t Screen::runOnce()
             EINK_ADD_FRAMEFLAG(dispdev, COSMETIC); // E-Ink: Explicitly use full-refresh for next frame
             if (NotificationRenderer::current_notification_type != notificationTypeEnum::text_input) {
                 setFrames();
+                if (graphics::MessageRenderer::restorePagerMode()) {
+                    ui->switchToFrame(framesetInfo.positions.textMessage);
+                    setFastFramerate();
+                }
             }
             break;
         case Cmd::NOOP:
