@@ -24,6 +24,7 @@ ProcessMessage TextMessageModule::handleReceived(const meshtastic_MeshPacket &mp
     // We only store/display messages destined for us.
     devicestate.rx_text_message = mp;
     devicestate.has_rx_text_message = true;
+    bool shouldWakeScreen = shouldWakeOnReceivedMessage();
     IF_SCREEN(
         // Guard against running in MeshtasticUI or with no screen
         if (config.display.displaymode != meshtastic_Config_DisplayConfig_DisplayMode_COLOR) {
@@ -33,10 +34,12 @@ ProcessMessage TextMessageModule::handleReceived(const meshtastic_MeshPacket &mp
             // Pass message to renderer (banner + thread switching + scroll reset)
             // Use the global Screen singleton to retrieve the current OLED display
             auto *display = screen ? screen->getDisplayDevice() : nullptr;
-            graphics::MessageRenderer::handleNewMessage(display, sm, mp);
+            shouldWakeScreen = graphics::MessageRenderer::handleNewMessage(display, sm, mp);
         })
-    // Only trigger screen wake if configuration allows it
-    if (shouldWakeOnReceivedMessage()) {
+
+    // Keep PowerFSM wake behavior aligned with the UI filter logic.
+    // In pager mode, unrelated messages should not silently keep resetting the screen timeout.
+    if (shouldWakeScreen) {
         powerFSM.trigger(EVENT_RECEIVED_MSG);
     }
 

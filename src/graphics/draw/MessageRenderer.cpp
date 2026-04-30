@@ -1362,16 +1362,17 @@ std::vector<int> calculateLineHeights(const std::vector<std::string> &lines, con
     return rowHeights;
 }
 
-void handleNewMessage(OLEDDisplay *display, const StoredMessage &sm, const meshtastic_MeshPacket &packet)
+bool handleNewMessage(OLEDDisplay *display, const StoredMessage &sm, const meshtastic_MeshPacket &packet)
 {
     loadPagerModeState();
     const bool pagerMatch = pagerModeMatchesMessage(sm, packet);
+    bool shouldWakeScreen = false;
 
     if (packet.from != 0) {
         hasUnreadMessage = true;
 
         if (pagerModeEnabled && !pagerMatch)
-            return;
+            return false;
 
         if (!pagerModeEnabled) {
             // Determine if message belongs to a muted channel
@@ -1424,7 +1425,7 @@ void handleNewMessage(OLEDDisplay *display, const StoredMessage &sm, const mesht
             } else {
                 // Skip muted channels unless it's an alert
                 if (isChannelMuted)
-                    return;
+                    return false;
 
                 if (truncatedLongName[0]) {
                     if (currentResolution == ScreenResolution::UltraLow) {
@@ -1464,10 +1465,14 @@ void handleNewMessage(OLEDDisplay *display, const StoredMessage &sm, const mesht
             bool inThread = (getThreadMode() != ThreadMode::ALL);
 
             if (shouldWakeOnReceivedMessage()) {
+                shouldWakeScreen = true;
                 screen->setOn(true);
             }
 
             screen->showSimpleBanner(banner, inThread ? 1000 : 3000);
+        } else if (shouldWakeOnReceivedMessage()) {
+            // In pager mode we only arrive here for a matching DM/channel.
+            shouldWakeScreen = true;
         }
     }
 
@@ -1485,6 +1490,8 @@ void handleNewMessage(OLEDDisplay *display, const StoredMessage &sm, const mesht
         // Reset scroll for a clean start
         resetScrollState();
     }
+
+    return shouldWakeScreen;
 }
 
 void setThreadFor(const StoredMessage &sm, const meshtastic_MeshPacket &packet)

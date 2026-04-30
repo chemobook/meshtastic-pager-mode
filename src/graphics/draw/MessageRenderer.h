@@ -57,8 +57,9 @@ void nudgeScroll(int8_t direction);
 // Helper to auto-select the correct thread mode from a message
 void setThreadFor(const StoredMessage &sm, const meshtastic_MeshPacket &packet);
 
-// Handles a new incoming/outgoing message: banner, wake, thread select, scroll reset
-void handleNewMessage(OLEDDisplay *display, const StoredMessage &sm, const meshtastic_MeshPacket &packet);
+// Handles a new incoming/outgoing message: banner, wake, thread select, scroll reset.
+// Returns true when the message should also wake/reset the PowerFSM screen timer.
+bool handleNewMessage(OLEDDisplay *display, const StoredMessage &sm, const meshtastic_MeshPacket &packet);
 
 // Pager mode locks the message UI onto the current thread until the user long-presses to exit.
 bool isPagerModeEnabled();
