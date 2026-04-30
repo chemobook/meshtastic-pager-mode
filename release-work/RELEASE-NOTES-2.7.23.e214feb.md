@@ -29,6 +29,8 @@ A large part of this fork was built with **AI assistance**. That is intentional 
 - Better long-message readability
 - Reduced unnecessary battery drain while pager mode is active on busy networks
 - Pager mode header is simplified to leave more room for battery and time on small displays
+- Pager mode no longer restores itself after reboot
+- Long press now opens message actions instead of forcing an immediate pager-mode exit
 - Russian-friendly small-screen flavor in this fork
 - Minimal-fork mindset to keep future upstream rebases more realistic
 
@@ -104,6 +106,8 @@ Community-релиз для **Meshtastic Pager Mode Fork**.
 - Более удобное чтение длинных сообщений
 - Уменьшен лишний расход батареи в pager mode на шумных сетях
 - Верхняя строка pager mode упрощена, чтобы освободить место под заряд и время
+- Pager mode больше не восстанавливается автоматически после перезагрузки
+- Длинное нажатие теперь открывает действия сообщения, а не выключает pager mode сразу
 - Более дружелюбный вариант для русского small-screen использования
 - Минимально-инвазивный подход, чтобы потом было проще подтягивать upstream
 

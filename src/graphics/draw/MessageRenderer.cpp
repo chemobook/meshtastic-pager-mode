@@ -152,16 +152,7 @@ static uint32_t currentPeer = 0;
 
 namespace
 {
-constexpr uint32_t PAGER_MODE_VERSION = 1;
 constexpr const char *PAGER_MODE_FILENAME = "/prefs/pager_mode.dat";
-
-struct __attribute__((packed)) PagerModeRecord {
-    uint32_t version;
-    uint8_t enabled;
-    uint8_t mode;
-    int16_t channel;
-    uint32_t peer;
-};
 
 static bool pagerStateLoaded = false;
 static bool pagerModeEnabled = false;
@@ -169,25 +160,13 @@ static ThreadMode pagerThreadMode = ThreadMode::ALL;
 static int pagerChannel = -1;
 static uint32_t pagerPeer = 0;
 
-void savePagerModeState()
+void clearPagerModePersistedState()
 {
 #ifdef FSCom
-    spiLock->lock();
-    FSCom.mkdir("/prefs");
-    spiLock->unlock();
-
-    SafeFile f(PAGER_MODE_FILENAME, true);
-    PagerModeRecord rec = {};
-    rec.version = PAGER_MODE_VERSION;
-    rec.enabled = pagerModeEnabled ? 1 : 0;
-    rec.mode = static_cast<uint8_t>(pagerThreadMode);
-    rec.channel = static_cast<int16_t>(pagerChannel);
-    rec.peer = pagerPeer;
-
-    spiLock->lock();
-    f.write(reinterpret_cast<const uint8_t *>(&rec), sizeof(rec));
-    spiLock->unlock();
-    f.close();
+    concurrency::LockGuard guard(spiLock);
+    if (FSCom.exists(PAGER_MODE_FILENAME)) {
+        FSCom.remove(PAGER_MODE_FILENAME);
+    }
 #endif
 }
 
@@ -209,36 +188,7 @@ void loadPagerModeState()
 
     pagerStateLoaded = true;
 
-#ifdef FSCom
-    concurrency::LockGuard guard(spiLock);
-
-    if (!FSCom.exists(PAGER_MODE_FILENAME))
-        return;
-
-    auto f = FSCom.open(PAGER_MODE_FILENAME, FILE_O_READ);
-    if (!f)
-        return;
-
-    PagerModeRecord rec = {};
-    if (f.readBytes(reinterpret_cast<char *>(&rec), sizeof(rec)) == sizeof(rec) && rec.version == PAGER_MODE_VERSION &&
-        rec.enabled) {
-        if (rec.mode == static_cast<uint8_t>(ThreadMode::CHANNEL)) {
-            pagerModeEnabled = true;
-            pagerThreadMode = ThreadMode::CHANNEL;
-            pagerChannel = rec.channel;
-            pagerPeer = 0;
-        } else if (rec.mode == static_cast<uint8_t>(ThreadMode::DIRECT)) {
-            pagerModeEnabled = true;
-            pagerThreadMode = ThreadMode::DIRECT;
-            pagerChannel = -1;
-            pagerPeer = rec.peer;
-        }
-    }
-
-    f.close();
-#endif
-
-    applyPagerModeToCurrentThread();
+    clearPagerModePersistedState();
 }
 
 bool pagerModeMatchesMessage(const StoredMessage &sm, const meshtastic_MeshPacket &packet)
@@ -332,7 +282,7 @@ void setPagerModeEnabled(bool enabled)
         pagerThreadMode = ThreadMode::ALL;
         pagerChannel = -1;
         pagerPeer = 0;
-        savePagerModeState();
+        clearPagerModePersistedState();
         return;
     }
 
@@ -344,7 +294,7 @@ void setPagerModeEnabled(bool enabled)
     pagerChannel = currentChannel;
     pagerPeer = currentPeer;
     applyPagerModeToCurrentThread();
-    savePagerModeState();
+    clearPagerModePersistedState();
 }
 
 void togglePagerMode()
@@ -355,11 +305,7 @@ void togglePagerMode()
 bool restorePagerMode()
 {
     loadPagerModeState();
-    if (!pagerModeEnabled)
-        return false;
-
-    applyPagerModeToCurrentThread();
-    return true;
+    return false;
 }
 
 // Accessors for menuHandler
@@ -1473,9 +1419,12 @@ bool handleNewMessage(OLEDDisplay *display, const StoredMessage &sm, const mesht
             }
 
             screen->showSimpleBanner(banner, inThread ? 1000 : 3000);
-        } else if (shouldWakeOnReceivedMessage()) {
-            // In pager mode we only arrive here for a matching DM/channel.
-            shouldWakeScreen = true;
+        } else {
+            // In pager mode, a matching message should update the focused thread
+            // without repeatedly waking the screen and resetting the timeout.
+            if (screen && screen->isScreenOn()) {
+                screen->runNow();
+            }
         }
     }
 

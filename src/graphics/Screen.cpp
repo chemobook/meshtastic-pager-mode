@@ -789,11 +789,6 @@ void Screen::setup()
     messageStore.loadFromFlash();
     LOG_INFO("MessageStore loaded from flash");
 
-    if (framesetInfo.positions.textMessage != 255 && graphics::MessageRenderer::restorePagerMode()) {
-        ui->switchToFrame(framesetInfo.positions.textMessage);
-        setFastFramerate();
-    }
-
     // Notify modules that support UI events
     MeshModule::observeUIEvents(&uiFrameEventObserver);
 }
@@ -1851,11 +1846,14 @@ int Screen::handleInputEvent(const InputEvent *event)
     if (ui->getUiState()->currentFrame == framesetInfo.positions.textMessage) {
         if (graphics::MessageRenderer::isPagerModeEnabled()) {
             if (event->inputEvent == INPUT_BROKER_SELECT || event->inputEvent == INPUT_BROKER_SELECT_LONG) {
-                graphics::MessageRenderer::setPagerModeEnabled(false);
-                showSimpleBanner("Pager Mode\nOff", 1200);
-                setFastFramerate();
+                menuHandler::messageResponseMenu();
+                return 0;
             }
-            return 0;
+
+            if (event->inputEvent == INPUT_BROKER_USER_PRESS || event->inputEvent == INPUT_BROKER_ALT_PRESS ||
+                event->inputEvent == INPUT_BROKER_LEFT || event->inputEvent == INPUT_BROKER_RIGHT) {
+                return 0;
+            }
         }
 
         if (event->inputEvent == INPUT_BROKER_UP) {

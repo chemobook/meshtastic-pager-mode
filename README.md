@@ -41,8 +41,8 @@ It is a community fork maintained without commercial backing or financial motiva
 - Adds and refines `Pager Mode` for compact displays
 - Carries the same idea into `InkHUD` on supported e-ink targets
 - Keeps the device focused on the selected DM or channel while pager mode is active
-- Uses long press to exit pager mode
-- Persists pager mode across reboot
+- Uses long press to open message actions, including enable/disable for pager mode
+- Returns to the normal start screen after reboot instead of restoring pager mode automatically
 - Keeps message reading simple and foregrounded
 - Improves readability of long messages
 - Preserves as much upstream Meshtastic behavior as possible
@@ -119,8 +119,8 @@ Flash with the helper script:
 - Добавляет и дорабатывает `Pager Mode` для компактных экранов
 - Переносит ту же идею в `InkHUD` для поддерживаемых e-ink устройств
 - Фиксирует устройство на выбранном DM или канале, пока активен pager mode
-- Позволяет выйти из pager mode длинным нажатием
-- Сохраняет состояние pager mode после перезагрузки
+- Открывает действия сообщения длинным нажатием, включая включение и выключение pager mode
+- После перезагрузки возвращает устройство на обычный стартовый экран, а не восстанавливает pager mode автоматически
 - Делает чтение сообщений более простым и заметным
 - Делает длинные сообщения более читаемыми
 - Старается сохранить максимум совместимости с upstream

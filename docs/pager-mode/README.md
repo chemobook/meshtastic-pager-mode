@@ -22,8 +22,8 @@ A large part of the work here was produced with **AI assistance**. That is delib
 - Adds `Pager Mode` to the classic small-screen UI
 - Carries the same idea into `InkHUD` on supported e-ink targets
 - Keeps the device focused on the selected DM or channel while pager mode is active
-- Uses long press to exit pager mode
-- Persists pager mode across reboot
+- Uses long press to open message actions, including enable/disable for pager mode
+- Returns to the normal start screen after reboot instead of restoring pager mode automatically
 - Improves readability of long messages
 - Keeps the changes intentionally smaller than a full UI redesign
 

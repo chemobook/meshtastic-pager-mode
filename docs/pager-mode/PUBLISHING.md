@@ -6,8 +6,8 @@
 2. Flash and test at least one OLED device and one e-ink device if both are part of the release.
 3. Confirm:
    - pager mode can be enabled
-   - pager mode survives reboot
-   - long press exits pager mode
+   - pager mode does not survive reboot
+   - long press opens message actions and allows pager mode to be disabled from there
    - long messages remain readable
    - Russian text renders correctly on the intended target
 
