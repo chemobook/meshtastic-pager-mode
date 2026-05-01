@@ -61,11 +61,19 @@ InputBroker *inputBroker = nullptr;
 namespace
 {
 static bool pagerWakePressConsumed = false;
+static bool pagerShutdownHoldStartedWithScreenOff = false;
 
-static void wakePagerFromInitialPress()
+static void handlePagerInitialPress()
 {
 #if HAS_SCREEN
-    if (!screen || screen->isScreenOn())
+    if (!screen) {
+        pagerShutdownHoldStartedWithScreenOff = false;
+        return;
+    }
+
+    const bool screenWasOff = !screen->isScreenOn();
+    pagerShutdownHoldStartedWithScreenOff = screenWasOff;
+    if (!screenWasOff)
         return;
 
     powerFSM.trigger(EVENT_INPUT);
@@ -138,6 +146,18 @@ int InputBroker::handleInputEvent(const InputEvent *event)
         if (event->inputEvent != INPUT_BROKER_NONE) {
             pagerWakePressConsumed = false;
         }
+    }
+
+    if (event && event->source && strcmp(event->source, "UserButton") == 0 && pagerShutdownHoldStartedWithScreenOff) {
+        if (event->inputEvent == INPUT_BROKER_SELECT || event->inputEvent == INPUT_BROKER_SELECT_LONG) {
+            return 0;
+        }
+
+        if (event->inputEvent == INPUT_BROKER_SHUTDOWN) {
+            pagerShutdownHoldStartedWithScreenOff = false;
+        }
+    } else if (event && event->source && strcmp(event->source, "UserButton") == 0 && event->inputEvent == INPUT_BROKER_SHUTDOWN) {
+        return 0;
     }
 #endif
 
@@ -354,7 +374,8 @@ void InputBroker::Init()
         userConfig.longPressTime = 500;
         userConfig.longLongPress = INPUT_BROKER_SHUTDOWN;
 #ifdef MESHTASTIC_PAGER_OS
-        userConfig.onPress = []() { wakePagerFromInitialPress(); };
+        userConfig.longLongPressTime = 7000;
+        userConfig.onPress = []() { handlePagerInitialPress(); };
 #endif
         UserButtonThread->initButton(userConfig);
     } else
