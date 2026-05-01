@@ -1132,8 +1132,6 @@ void drawTextMessageFrame(OLEDDisplay *display, OLEDDisplayUiState *state, int16
 
     if (pagerDisplayState != PagerDisplayState::IDLE && activeMessageIndex != SIZE_MAX && activeMessageIndex < pagerQueue.size()) {
         drawPagerMarquee(display);
-    } else if (screen && screen->isScreenOn()) {
-        drawBanner(display, "no messages");
     }
 
     if (pagerDisplayState == PagerDisplayState::BANNER) {

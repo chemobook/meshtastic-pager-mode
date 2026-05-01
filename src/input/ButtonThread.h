@@ -130,6 +130,7 @@ class ButtonThread : public Observable<const InputEvent *>, public concurrency::
     bool leadUpPlayed = false;
     uint32_t lastLeadUpNoteTime = 0;
     bool leadUpSequenceActive = false;
+    bool longLongPressFired = false;
 
     static void wakeOnIrq(int irq, int mode);
 };
