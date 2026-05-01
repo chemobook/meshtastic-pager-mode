@@ -21,7 +21,6 @@
 #include "main.h"
 #include "meshUtils.h"
 #include <algorithm>
-#include <cmath>
 #include <deque>
 #include <string>
 #include <vector>
@@ -159,6 +158,8 @@ namespace
 struct PagerQueueMessage {
     uint32_t sender = 0;
     uint32_t arrivalMs = 0;
+    uint8_t channelIndex = 0;
+    MessageType type = MessageType::BROADCAST;
     std::string text;
     bool unread = true;
 };
@@ -303,6 +304,17 @@ static std::string currentSenderShortName()
         return "";
 
     const auto &msg = pagerQueue[activeMessageIndex];
+    if (msg.type == MessageType::BROADCAST) {
+        const char *channelName = channels.getName(msg.channelIndex);
+        if (channelName && channelName[0]) {
+            return std::string("#") + channelName;
+        }
+
+        char fallbackChannel[12];
+        snprintf(fallbackChannel, sizeof(fallbackChannel), "CH%u", static_cast<unsigned>(msg.channelIndex));
+        return fallbackChannel;
+    }
+
     meshtastic_NodeInfoLite *node = nodeDB->getMeshNode(msg.sender);
     if (node && node->has_user && node->user.short_name[0]) {
         return node->user.short_name;
@@ -318,6 +330,8 @@ static void pushPagerMessage(const StoredMessage &sm)
     PagerQueueMessage msg;
     msg.sender = sm.sender;
     msg.arrivalMs = millis();
+    msg.channelIndex = sm.channelIndex;
+    msg.type = sm.type;
     msg.text = MessageStore::getText(sm);
     msg.unread = true;
 
@@ -382,16 +396,20 @@ static void advancePagerTimeline(OLEDDisplay *display)
 
 static void drawPagerFooter(OLEDDisplay *display, const std::string &sender)
 {
-    const int footerHeight = FONT_HEIGHT_SMALL + 1;
+    const int footerHeight = FONT_HEIGHT_SMALL + 3;
     const int footerTop = SCREEN_HEIGHT - footerHeight;
-    display->setColor(BLACK);
-    display->fillRect(0, footerTop, SCREEN_WIDTH, footerHeight);
     display->setColor(WHITE);
+    display->fillRect(0, footerTop, SCREEN_WIDTH, footerHeight);
+    display->setColor(BLACK);
+    display->drawHorizontalLine(0, footerTop, SCREEN_WIDTH);
     display->setFont(FONT_SMALL);
     display->setTextAlignment(TEXT_ALIGN_LEFT);
     if (!sender.empty()) {
-        display->drawString(1, footerTop, sender.c_str());
+        char footerText[48];
+        UIRenderer::truncateStringWithEmotes(display, sender.c_str(), footerText, sizeof(footerText), SCREEN_WIDTH - 4);
+        display->drawString(2, footerTop + 1, footerText);
     }
+    display->setColor(WHITE);
 }
 
 static void drawBanner(OLEDDisplay *display, const char *text)
@@ -421,8 +439,9 @@ static void drawIdleMessage(OLEDDisplay *display)
 static void drawPagerMarquee(OLEDDisplay *display)
 {
     const uint32_t now = millis();
+    const int footerHeight = FONT_HEIGHT_SMALL + 3;
     const int contentTop = getTextPositions(display)[1] + 1;
-    const int contentBottom = SCREEN_HEIGHT - FONT_HEIGHT_SMALL - 1;
+    const int contentBottom = SCREEN_HEIGHT - footerHeight - 1;
     const int contentHeight = std::max(0, contentBottom - contentTop);
     const int textY = contentTop + std::max(0, (contentHeight - FONT_HEIGHT_LARGE) / 2) - 1;
 
@@ -430,18 +449,12 @@ static void drawPagerMarquee(OLEDDisplay *display)
     display->setTextAlignment(TEXT_ALIGN_LEFT);
 
     const char *text = currentMessageText();
-    const int textWidth = std::max(1, UIRenderer::measureStringWithEmotes(display, text));
-    const int gapWidth = 10;
-    const float cycleWidth = static_cast<float>(textWidth + gapWidth);
     const float elapsedMs = static_cast<float>(now - activePassStartMs);
     const float traveled = (elapsedMs / 1000.0f) * PAGER_SCROLL_PIXELS_PER_SEC;
-    const float cycleOffset = (cycleWidth > 0.0f) ? std::fmod(traveled, cycleWidth) : 0.0f;
     const int startX = display->getWidth() - 2;
-    const int textX = startX - static_cast<int>(cycleOffset);
-    const int nextTextX = textX + static_cast<int>(cycleWidth);
+    const int textX = startX - static_cast<int>(traveled);
 
     UIRenderer::drawStringWithEmotes(display, textX, textY, text, FONT_HEIGHT_LARGE, 1, true);
-    UIRenderer::drawStringWithEmotes(display, nextTextX, textY, text, FONT_HEIGHT_LARGE, 1, true);
 }
 } // namespace
 
