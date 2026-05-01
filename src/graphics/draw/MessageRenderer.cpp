@@ -264,6 +264,16 @@ static void showIdleAndSleepLater(uint32_t delayMs)
     }
 }
 
+static void showIdleWithoutSleeping()
+{
+    pagerDisplayState = PagerDisplayState::IDLE;
+    activeMessageIndex = SIZE_MAX;
+    activePassStartMs = 0;
+    activePassPauseUntilMs = 0;
+    sleepAfterPause = false;
+    requestFastRefresh();
+}
+
 static void startAutoPlayback(size_t index)
 {
     if (index == SIZE_MAX || index >= pagerQueue.size())
@@ -470,7 +480,7 @@ void handleClearAllButton()
     pagerQueue.clear();
     messageStore.clearAllMessages();
     syncUnreadIndicator();
-    showIdleAndSleepLater(0);
+    showIdleWithoutSleeping();
 }
 
 bool hasUnreadMessages()
@@ -1122,6 +1132,8 @@ void drawTextMessageFrame(OLEDDisplay *display, OLEDDisplayUiState *state, int16
 
     if (pagerDisplayState != PagerDisplayState::IDLE && activeMessageIndex != SIZE_MAX && activeMessageIndex < pagerQueue.size()) {
         drawPagerMarquee(display);
+    } else if (screen && screen->isScreenOn()) {
+        drawBanner(display, "no messages");
     }
 
     if (pagerDisplayState == PagerDisplayState::BANNER) {
