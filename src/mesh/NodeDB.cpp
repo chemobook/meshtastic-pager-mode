@@ -599,7 +599,11 @@ void NodeDB::installDefaultConfig(bool preserveKey = false)
         config.device.role = USERPREFS_CONFIG_DEVICE_ROLE;
     }
 #else
+  #ifdef MESHTASTIC_PAGER_OS
+    config.device.role = meshtastic_Config_DeviceConfig_Role_CLIENT_MUTE;
+  #else
     config.device.role = meshtastic_Config_DeviceConfig_Role_CLIENT; // Default to client.
+  #endif
 #endif
 
 #ifdef USERPREFS_CONFIG_LORA_REGION
