@@ -1015,6 +1015,11 @@ int32_t Screen::runOnce()
         }
     }
 #endif
+#ifdef MESHTASTIC_PAGER_OS
+    if (graphics::MessageRenderer::wantsFastRefresh()) {
+        desiredFramerate = 30;
+    }
+#endif
 
     if (targetFramerate != desiredFramerate && ui->getUiState()->frameState == FIXED) {
         // oldFrameState = ui->getUiState()->frameState;
@@ -1139,6 +1144,24 @@ void Screen::setFrames(FrameFocus focus)
     indicatorIcons.clear();
 
     size_t numframes = 0;
+
+#ifdef MESHTASTIC_PAGER_OS
+    fsi.positions.textMessage = numframes;
+    normalFrames[numframes++] = graphics::MessageRenderer::drawTextMessageFrame;
+    fsi.frameCount = numframes;
+    this->frameCount = numframes;
+
+    ui->setFrames(normalFrames, numframes);
+    ui->disableAllIndicators();
+
+    static OverlayCallback pagerOverlays[] = {NotificationRenderer::drawBannercallback};
+    ui->setOverlays(pagerOverlays, sizeof(pagerOverlays) / sizeof(pagerOverlays[0]));
+    ui->switchToFrame(fsi.positions.textMessage);
+
+    this->framesetInfo = fsi;
+    setFastFramerate();
+    return;
+#endif
 
     // If we have a critical fault, show it first
     fsi.positions.fault = numframes;
@@ -1848,6 +1871,19 @@ int Screen::handleInputEvent(const InputEvent *event)
     }
     // UP/DOWN in message screen scrolls through message threads
     if (ui->getUiState()->currentFrame == framesetInfo.positions.textMessage) {
+#ifdef MESHTASTIC_PAGER_OS
+        if (event->inputEvent == INPUT_BROKER_USER_PRESS) {
+            graphics::MessageRenderer::handlePrimaryButton();
+            return 0;
+        }
+
+        if (event->inputEvent == INPUT_BROKER_SELECT || event->inputEvent == INPUT_BROKER_SELECT_LONG) {
+            graphics::MessageRenderer::handleClearAllButton();
+            return 0;
+        }
+
+        return 0;
+#endif
         if (graphics::MessageRenderer::isPagerModeEnabled()) {
             if (event->inputEvent == INPUT_BROKER_SELECT || event->inputEvent == INPUT_BROKER_SELECT_LONG) {
                 menuHandler::messageResponseMenu();

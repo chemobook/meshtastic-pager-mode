@@ -67,6 +67,15 @@ void setPagerModeEnabled(bool enabled);
 void togglePagerMode();
 bool restorePagerMode();
 
+#ifdef MESHTASTIC_PAGER_OS
+void handleWakeRequest();
+void handlePrimaryButton();
+void handleClearAllButton();
+bool hasUnreadMessages();
+bool wantsFastRefresh();
+uint32_t unreadLedIntervalMs();
+#endif
+
 // Clear Message Line Cache from Message Renderer
 void clearMessageCache();
 

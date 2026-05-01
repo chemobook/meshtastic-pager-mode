@@ -1,6 +1,7 @@
 #include "StatusLEDModule.h"
 #include "MeshService.h"
 #include "configuration.h"
+#include "graphics/draw/MessageRenderer.h"
 #include <Arduino.h>
 
 /*
@@ -72,6 +73,25 @@ int StatusLEDModule::handleInputEvent(const InputEvent *event)
 
 int32_t StatusLEDModule::runOnce()
 {
+#ifdef MESHTASTIC_PAGER_OS
+    if (!graphics::MessageRenderer::hasUnreadMessages()) {
+        CHARGE_LED_state = LED_STATE_OFF;
+#ifdef LED_POWER
+        digitalWrite(LED_POWER, CHARGE_LED_state);
+#endif
+        return 250;
+    }
+
+    my_interval = graphics::MessageRenderer::unreadLedIntervalMs();
+    if (my_interval == 0)
+        my_interval = 250;
+    CHARGE_LED_state = !CHARGE_LED_state;
+
+#ifdef LED_POWER
+    digitalWrite(LED_POWER, CHARGE_LED_state);
+#endif
+    return my_interval;
+#endif
     my_interval = 1000;
 
     if (power_state == charging) {

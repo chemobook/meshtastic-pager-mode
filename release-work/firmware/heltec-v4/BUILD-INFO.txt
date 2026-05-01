@@ -1,7 +1,7 @@
 Fork: Meshtastic Pager Mode
 PlatformIO env: heltec-v4
-Packaged at: 2026-04-30T18:48:16Z
-Factory image: firmware-heltec-v4-2.7.23.7eb9a64.factory.bin
-Update image: firmware-heltec-v4-2.7.23.7eb9a64.bin
-LittleFS image: littlefs-heltec-v4-2.7.23.7eb9a64.bin
-Metadata: firmware-heltec-v4-2.7.23.7eb9a64.mt.json
+Packaged at: 2026-05-01T12:09:34Z
+Factory image: firmware-heltec-v4-2.7.23.0a7e6f7.factory.bin
+Update image: firmware-heltec-v4-2.7.23.0a7e6f7.bin
+LittleFS image: littlefs-heltec-v4-2.7.23.0a7e6f7.bin
+Metadata: firmware-heltec-v4-2.7.23.0a7e6f7.mt.json

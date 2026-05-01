@@ -2,6 +2,7 @@
 #include "PowerFSM.h" // needed for event trigger
 #include "configuration.h"
 #include "graphics/Screen.h"
+#include "graphics/draw/MessageRenderer.h"
 #include "modules/ExternalNotificationModule.h"
 
 #if ARCH_PORTDUINO
@@ -117,6 +118,9 @@ int InputBroker::handleInputEvent(const InputEvent *event)
 
 #if HAS_SCREEN
     if (screen && screenWasOff) {
+ #ifdef MESHTASTIC_PAGER_OS
+        graphics::MessageRenderer::handleWakeRequest();
+ #endif
         // If the screen was off, it is in the process of turning on, and we just drop the event
         return 0;
     }

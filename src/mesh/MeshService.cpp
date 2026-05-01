@@ -197,9 +197,14 @@ void MeshService::handleToRadio(meshtastic_MeshPacket &p)
     IF_SCREEN(if (p.decoded.portnum == meshtastic_PortNum_TEXT_MESSAGE_APP && p.decoded.payload.size > 0 &&
                   p.to != NODENUM_BROADCAST && p.to != 0) // DM only
               {
+#ifdef MESHTASTIC_PAGER_OS
+                  // Pager OS behaves as a receive-focused device. Outbound texts remain visible
+                  // in the mobile app and should not consume the on-device unread queue.
+#else
                   perhapsDecode(&p);
                   const StoredMessage &sm = messageStore.addFromPacket(p);
                   graphics::MessageRenderer::handleNewMessage(nullptr, sm, p); // notify UI
+#endif
               })
     // Send the packet into the mesh
     DEBUG_HEAP_BEFORE;

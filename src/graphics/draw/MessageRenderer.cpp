@@ -20,6 +20,8 @@
 #include "graphics/emotes.h"
 #include "main.h"
 #include "meshUtils.h"
+#include <algorithm>
+#include <deque>
 #include <string>
 #include <vector>
 
@@ -149,6 +151,422 @@ void clearMessageCache()
 static ThreadMode currentMode = ThreadMode::ALL;
 static int currentChannel = -1;
 static uint32_t currentPeer = 0;
+
+#ifdef MESHTASTIC_PAGER_OS
+namespace
+{
+struct PagerQueueMessage {
+    uint32_t sender = 0;
+    uint32_t arrivalMs = 0;
+    std::string text;
+    bool unread = true;
+};
+
+enum class PagerDisplayState : uint8_t { IDLE, AUTO_PLAY, MANUAL_REVIEW, BANNER };
+
+static std::deque<PagerQueueMessage> pagerQueue;
+static PagerDisplayState pagerDisplayState = PagerDisplayState::IDLE;
+static size_t activeMessageIndex = SIZE_MAX;
+static size_t pendingBannerMessageIndex = SIZE_MAX;
+static uint8_t activePassTarget = 0;
+static uint8_t activePassCompleted = 0;
+static uint32_t activePassStartMs = 0;
+static uint32_t activePassPauseUntilMs = 0;
+static uint32_t lastUnreadArrivalMs = 0;
+static uint32_t idleSleepDeadlineMs = 0;
+static uint32_t bannerUntilMs = 0;
+static bool pagerBootCleared = false;
+
+constexpr uint32_t PAGER_FAST_BLINK_WINDOW_MS = 5UL * 60UL * 1000UL;
+constexpr uint32_t PAGER_BANNER_MS = 1000;
+constexpr uint32_t PAGER_IDLE_SLEEP_MS = 1800;
+constexpr uint32_t PAGER_WAKE_SLEEP_MS = 2200;
+constexpr uint32_t PAGER_PASS_GAP_MS = 250;
+constexpr float PAGER_SCROLL_PIXELS_PER_SEC = 28.0f;
+constexpr size_t PAGER_QUEUE_LIMIT = 32;
+
+static void ensurePagerBootStateCleared()
+{
+    if (pagerBootCleared)
+        return;
+
+    pagerBootCleared = true;
+    pagerQueue.clear();
+    messageStore.clearAllMessages();
+    hasUnreadMessage = false;
+}
+
+static void syncUnreadIndicator()
+{
+    hasUnreadMessage = std::any_of(pagerQueue.begin(), pagerQueue.end(), [](const PagerQueueMessage &msg) { return msg.unread; });
+}
+
+static void invalidateActiveIndexForPopFront()
+{
+    if (activeMessageIndex != SIZE_MAX) {
+        if (activeMessageIndex == 0) {
+            activeMessageIndex = SIZE_MAX;
+        } else {
+            --activeMessageIndex;
+        }
+    }
+
+    if (pendingBannerMessageIndex != SIZE_MAX) {
+        if (pendingBannerMessageIndex == 0) {
+            pendingBannerMessageIndex = SIZE_MAX;
+        } else {
+            --pendingBannerMessageIndex;
+        }
+    }
+}
+
+static size_t newestUnreadIndex()
+{
+    for (size_t i = pagerQueue.size(); i-- > 0;) {
+        if (pagerQueue[i].unread)
+            return i;
+    }
+    return SIZE_MAX;
+}
+
+static size_t oldestUnreadNewerThan(size_t index)
+{
+    if (index == SIZE_MAX || index >= pagerQueue.size())
+        return SIZE_MAX;
+
+    for (size_t i = index + 1; i < pagerQueue.size(); ++i) {
+        if (pagerQueue[i].unread)
+            return i;
+    }
+    return SIZE_MAX;
+}
+
+static bool anyUnreadNewerThan(size_t index)
+{
+    return oldestUnreadNewerThan(index) != SIZE_MAX;
+}
+
+static void requestFastRefresh()
+{
+    if (screen) {
+        screen->runNow();
+    }
+}
+
+static void startPass(size_t index, PagerDisplayState state, uint8_t passTarget)
+{
+    if (index == SIZE_MAX || index >= pagerQueue.size())
+        return;
+
+    activeMessageIndex = index;
+    pagerDisplayState = state;
+    activePassTarget = std::max<uint8_t>(1, passTarget);
+    activePassCompleted = 0;
+    activePassStartMs = 0;
+    activePassPauseUntilMs = 0;
+    idleSleepDeadlineMs = 0;
+    requestFastRefresh();
+}
+
+static void showIdleAndSleepLater(uint32_t delayMs)
+{
+    pagerDisplayState = PagerDisplayState::IDLE;
+    activeMessageIndex = SIZE_MAX;
+    activePassTarget = 0;
+    activePassCompleted = 0;
+    activePassStartMs = 0;
+    activePassPauseUntilMs = 0;
+    idleSleepDeadlineMs = millis() + delayMs;
+    requestFastRefresh();
+}
+
+static void startAutoPlayback(size_t index)
+{
+    if (index == SIZE_MAX || index >= pagerQueue.size())
+        return;
+
+    const uint8_t passTarget = anyUnreadNewerThan(index) ? 1 : 3;
+    startPass(index, PagerDisplayState::AUTO_PLAY, passTarget);
+}
+
+static void startManualPlayback(size_t index)
+{
+    if (index == SIZE_MAX || index >= pagerQueue.size()) {
+        showIdleAndSleepLater(PAGER_IDLE_SLEEP_MS);
+        return;
+    }
+
+    startPass(index, PagerDisplayState::MANUAL_REVIEW, 1);
+}
+
+static void startBannerThenAuto(size_t index)
+{
+    pendingBannerMessageIndex = index;
+    pagerDisplayState = PagerDisplayState::BANNER;
+    bannerUntilMs = millis() + PAGER_BANNER_MS;
+    requestFastRefresh();
+}
+
+static void markCurrentMessageRead()
+{
+    if (activeMessageIndex == SIZE_MAX || activeMessageIndex >= pagerQueue.size())
+        return;
+
+    pagerQueue[activeMessageIndex].unread = false;
+    syncUnreadIndicator();
+}
+
+static const char *currentMessageText()
+{
+    if (activeMessageIndex == SIZE_MAX || activeMessageIndex >= pagerQueue.size())
+        return "";
+    return pagerQueue[activeMessageIndex].text.c_str();
+}
+
+static std::string currentSenderShortName()
+{
+    if (activeMessageIndex == SIZE_MAX || activeMessageIndex >= pagerQueue.size())
+        return "";
+
+    const auto &msg = pagerQueue[activeMessageIndex];
+    meshtastic_NodeInfoLite *node = nodeDB->getMeshNode(msg.sender);
+    if (node && node->has_user && node->user.short_name[0]) {
+        return node->user.short_name;
+    }
+
+    char fallback[12];
+    snprintf(fallback, sizeof(fallback), "%08x", msg.sender);
+    return fallback;
+}
+
+static void pushPagerMessage(const StoredMessage &sm)
+{
+    PagerQueueMessage msg;
+    msg.sender = sm.sender;
+    msg.arrivalMs = millis();
+    msg.text = MessageStore::getText(sm);
+    msg.unread = true;
+
+    if (pagerQueue.size() >= PAGER_QUEUE_LIMIT) {
+        pagerQueue.pop_front();
+        invalidateActiveIndexForPopFront();
+    }
+
+    pagerQueue.push_back(std::move(msg));
+    lastUnreadArrivalMs = millis();
+    syncUnreadIndicator();
+}
+
+static void advancePagerTimeline(OLEDDisplay *display)
+{
+    ensurePagerBootStateCleared();
+
+    const uint32_t now = millis();
+
+    if (pagerDisplayState == PagerDisplayState::BANNER) {
+        if (now >= bannerUntilMs) {
+            const size_t target = pendingBannerMessageIndex;
+            pendingBannerMessageIndex = SIZE_MAX;
+            startAutoPlayback(target);
+        }
+        return;
+    }
+
+    if (pagerDisplayState == PagerDisplayState::IDLE) {
+        if (idleSleepDeadlineMs && now >= idleSleepDeadlineMs && screen && screen->isScreenOn()) {
+            screen->setOn(false);
+            idleSleepDeadlineMs = 0;
+        }
+        return;
+    }
+
+    if (activeMessageIndex == SIZE_MAX || activeMessageIndex >= pagerQueue.size()) {
+        showIdleAndSleepLater(PAGER_IDLE_SLEEP_MS);
+        return;
+    }
+
+    if (activePassPauseUntilMs) {
+        if (now < activePassPauseUntilMs)
+            return;
+        activePassPauseUntilMs = 0;
+        activePassStartMs = now;
+    }
+
+    if (activePassStartMs == 0)
+        activePassStartMs = now;
+
+    display->setFont(FONT_LARGE);
+    const int contentWidth = display->getWidth() - 4;
+    const int textWidth = std::max(contentWidth, UIRenderer::measureStringWithEmotes(display, currentMessageText()));
+    const float travel = static_cast<float>(textWidth + display->getWidth() + 12);
+    const float elapsedMs = static_cast<float>(now - activePassStartMs);
+    const float traveled = (elapsedMs / 1000.0f) * PAGER_SCROLL_PIXELS_PER_SEC;
+
+    if (traveled < travel)
+        return;
+
+    activePassCompleted++;
+
+    if (pagerDisplayState == PagerDisplayState::AUTO_PLAY) {
+        const size_t nextUnread = oldestUnreadNewerThan(activeMessageIndex);
+        if (nextUnread != SIZE_MAX) {
+            startAutoPlayback(nextUnread);
+            return;
+        }
+
+        if (activePassCompleted < activePassTarget) {
+            activePassStartMs = 0;
+            activePassPauseUntilMs = now + PAGER_PASS_GAP_MS;
+            requestFastRefresh();
+            return;
+        }
+
+        showIdleAndSleepLater(PAGER_IDLE_SLEEP_MS);
+        return;
+    }
+
+    if (pagerDisplayState == PagerDisplayState::MANUAL_REVIEW) {
+        if (activeMessageIndex < pagerQueue.size() && pagerQueue[activeMessageIndex].unread) {
+            showIdleAndSleepLater(PAGER_WAKE_SLEEP_MS);
+        } else {
+            const size_t nextUnread = newestUnreadIndex();
+            if (nextUnread != SIZE_MAX) {
+                startManualPlayback(nextUnread);
+            } else {
+                showIdleAndSleepLater(PAGER_IDLE_SLEEP_MS);
+            }
+        }
+    }
+}
+
+static void drawPagerFooter(OLEDDisplay *display, const std::string &sender)
+{
+    const int footerHeight = FONT_HEIGHT_SMALL + 1;
+    const int footerTop = SCREEN_HEIGHT - footerHeight;
+    display->setColor(BLACK);
+    display->fillRect(0, footerTop, SCREEN_WIDTH, footerHeight);
+    display->setColor(WHITE);
+    display->setFont(FONT_SMALL);
+    display->setTextAlignment(TEXT_ALIGN_LEFT);
+    if (!sender.empty()) {
+        display->drawString(1, footerTop, sender.c_str());
+    }
+}
+
+static void drawBanner(OLEDDisplay *display, const char *text)
+{
+    display->setFont(FONT_SMALL);
+    display->setTextAlignment(TEXT_ALIGN_CENTER);
+    const int boxWidth = SCREEN_WIDTH - 12;
+    const int boxHeight = FONT_HEIGHT_SMALL + 4;
+    const int boxX = 6;
+    const int boxY = (SCREEN_HEIGHT - boxHeight) / 2;
+    display->setColor(WHITE);
+    display->fillRect(boxX, boxY, boxWidth, boxHeight);
+    display->setColor(BLACK);
+    display->drawRect(boxX, boxY, boxWidth, boxHeight);
+    display->drawString(SCREEN_WIDTH / 2, boxY + 2, text);
+    display->setColor(WHITE);
+}
+
+static void drawIdleMessage(OLEDDisplay *display)
+{
+    display->setFont(FONT_MEDIUM);
+    display->setTextAlignment(TEXT_ALIGN_CENTER);
+    display->drawString(SCREEN_WIDTH / 2, (SCREEN_HEIGHT - FONT_HEIGHT_MEDIUM) / 2, "No new messages");
+    display->setTextAlignment(TEXT_ALIGN_LEFT);
+}
+
+static void drawPagerMarquee(OLEDDisplay *display)
+{
+    const uint32_t now = millis();
+    const int contentTop = getTextPositions(display)[1] + 2;
+    const int contentBottom = SCREEN_HEIGHT - FONT_HEIGHT_SMALL - 2;
+    const int contentHeight = std::max(0, contentBottom - contentTop);
+    const int textY = contentTop + std::max(0, (contentHeight - FONT_HEIGHT_LARGE) / 2);
+
+    display->setFont(FONT_LARGE);
+    display->setTextAlignment(TEXT_ALIGN_LEFT);
+
+    const char *text = currentMessageText();
+    const float elapsedMs = static_cast<float>(now - activePassStartMs);
+    const float traveled = (elapsedMs / 1000.0f) * PAGER_SCROLL_PIXELS_PER_SEC;
+    const int startX = display->getWidth();
+    const int textX = startX - static_cast<int>(traveled);
+
+    UIRenderer::drawStringWithEmotes(display, textX, textY, text, FONT_HEIGHT_LARGE, 1, true);
+}
+} // namespace
+
+void handleWakeRequest()
+{
+    ensurePagerBootStateCleared();
+
+    const size_t newestUnread = newestUnreadIndex();
+    if (newestUnread != SIZE_MAX) {
+        startManualPlayback(newestUnread);
+    } else {
+        showIdleAndSleepLater(PAGER_WAKE_SLEEP_MS);
+    }
+}
+
+void handlePrimaryButton()
+{
+    ensurePagerBootStateCleared();
+
+    if (pagerDisplayState == PagerDisplayState::IDLE) {
+        const size_t newestUnread = newestUnreadIndex();
+        if (newestUnread != SIZE_MAX) {
+            startManualPlayback(newestUnread);
+        } else {
+            showIdleAndSleepLater(PAGER_WAKE_SLEEP_MS);
+        }
+        return;
+    }
+
+    if (pagerDisplayState == PagerDisplayState::BANNER) {
+        return;
+    }
+
+    markCurrentMessageRead();
+    const size_t nextUnread = newestUnreadIndex();
+    if (nextUnread != SIZE_MAX) {
+        startManualPlayback(nextUnread);
+    } else {
+        showIdleAndSleepLater(PAGER_IDLE_SLEEP_MS);
+    }
+}
+
+void handleClearAllButton()
+{
+    ensurePagerBootStateCleared();
+    pagerQueue.clear();
+    messageStore.clearAllMessages();
+    syncUnreadIndicator();
+    showIdleAndSleepLater(PAGER_IDLE_SLEEP_MS);
+}
+
+bool hasUnreadMessages()
+{
+    syncUnreadIndicator();
+    return hasUnreadMessage;
+}
+
+bool wantsFastRefresh()
+{
+    return pagerDisplayState == PagerDisplayState::AUTO_PLAY || pagerDisplayState == PagerDisplayState::MANUAL_REVIEW ||
+           pagerDisplayState == PagerDisplayState::BANNER;
+}
+
+uint32_t unreadLedIntervalMs()
+{
+    if (!hasUnreadMessages())
+        return 0;
+
+    const uint32_t age = millis() - lastUnreadArrivalMs;
+    return (age < PAGER_FAST_BLINK_WINDOW_MS) ? 150 : 1000;
+}
+#endif
 
 namespace
 {
@@ -397,12 +815,16 @@ void togglePagerMode()
 
 bool restorePagerMode()
 {
+#ifdef MESHTASTIC_PAGER_OS
+    return false;
+#else
     loadPagerModeState();
     const bool shouldRestore = pagerModeEnabled && pagerRestorePending;
     if (shouldRestore)
         applyPagerModeToCurrentThread();
     pagerRestorePending = false;
     return shouldRestore;
+#endif
 }
 
 // Accessors for menuHandler
@@ -757,6 +1179,33 @@ void drawPagerFocusedMessage(OLEDDisplay *display, int16_t x, int16_t y, const c
 
 void drawTextMessageFrame(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y)
 {
+#ifdef MESHTASTIC_PAGER_OS
+    (void)state;
+    ensurePagerBootStateCleared();
+    advancePagerTimeline(display);
+
+    display->clear();
+    display->setColor(WHITE);
+    display->setTextAlignment(TEXT_ALIGN_LEFT);
+
+    const bool savedUnread = hasUnreadMessage;
+    hasUnreadMessage = false;
+    graphics::drawCommonHeader(display, x, y, "");
+    hasUnreadMessage = savedUnread;
+
+    if (pagerDisplayState == PagerDisplayState::IDLE || activeMessageIndex == SIZE_MAX || activeMessageIndex >= pagerQueue.size()) {
+        drawIdleMessage(display);
+        drawPagerFooter(display, "");
+    } else {
+        drawPagerMarquee(display);
+        drawPagerFooter(display, currentSenderShortName());
+    }
+
+    if (pagerDisplayState == PagerDisplayState::BANNER) {
+        drawBanner(display, "new message");
+    }
+    return;
+#endif
     loadPagerModeState();
 
     // Ensure any boot-relative timestamps are upgraded if RTC is valid
@@ -1412,6 +1861,33 @@ std::vector<int> calculateLineHeights(const std::vector<std::string> &lines, con
 
 bool handleNewMessage(OLEDDisplay *display, const StoredMessage &sm, const meshtastic_MeshPacket &packet)
 {
+#ifdef MESHTASTIC_PAGER_OS
+    (void)display;
+    (void)packet;
+    ensurePagerBootStateCleared();
+
+    pushPagerMessage(sm);
+    const size_t newestIndex = pagerQueue.empty() ? SIZE_MAX : (pagerQueue.size() - 1);
+    const bool screenIsOn = screen && screen->isScreenOn();
+
+    if (!screenIsOn) {
+        startAutoPlayback(newestIndex);
+        return true;
+    }
+
+    if (pagerDisplayState == PagerDisplayState::MANUAL_REVIEW || pagerDisplayState == PagerDisplayState::BANNER) {
+        startBannerThenAuto(newestIndex);
+        return false;
+    }
+
+    if (pagerDisplayState == PagerDisplayState::IDLE) {
+        startAutoPlayback(newestIndex);
+    } else {
+        requestFastRefresh();
+    }
+
+    return false;
+#endif
     loadPagerModeState();
     const bool pagerMatch = pagerModeMatchesMessage(sm, packet);
     bool shouldWakeScreen = false;
