@@ -175,6 +175,7 @@ static uint32_t activePassPauseUntilMs = 0;
 static uint32_t lastUnreadArrivalMs = 0;
 static uint32_t bannerUntilMs = 0;
 static bool pagerBootCleared = false;
+static bool sleepAfterPause = false;
 
 constexpr uint32_t PAGER_FAST_BLINK_WINDOW_MS = 30UL * 1000UL;
 constexpr uint32_t PAGER_BANNER_MS = 1000;
@@ -231,7 +232,7 @@ static size_t newestUnreadIndex()
 
 static void requestFastRefresh()
 {
-    if (screen) {
+    if (screen && screen->isScreenOn()) {
         screen->runNow();
     }
 }
@@ -246,6 +247,7 @@ static void startPass(size_t index, PagerDisplayState state, uint8_t passTarget)
     (void)passTarget;
     activePassStartMs = 0;
     activePassPauseUntilMs = 0;
+    sleepAfterPause = false;
     requestFastRefresh();
 }
 
@@ -256,10 +258,10 @@ static void showIdleAndSleepLater(uint32_t delayMs)
     activeMessageIndex = SIZE_MAX;
     activePassStartMs = 0;
     activePassPauseUntilMs = 0;
+    sleepAfterPause = false;
     if (screen) {
         screen->setOn(false);
     }
-    requestFastRefresh();
 }
 
 static void startAutoPlayback(size_t index)
@@ -285,6 +287,7 @@ static void startBannerThenAuto(size_t index)
     pendingBannerMessageIndex = index;
     pagerDisplayState = PagerDisplayState::BANNER;
     bannerUntilMs = millis() + PAGER_BANNER_MS;
+    sleepAfterPause = false;
     requestFastRefresh();
 }
 
@@ -352,6 +355,10 @@ static void advancePagerTimeline(OLEDDisplay *display)
         if (now < activePassPauseUntilMs)
             return;
         activePassPauseUntilMs = 0;
+        if (sleepAfterPause) {
+            showIdleAndSleepLater(0);
+            return;
+        }
         activePassStartMs = now;
     }
 
@@ -369,13 +376,13 @@ static void advancePagerTimeline(OLEDDisplay *display)
         return;
 
     if (pagerDisplayState == PagerDisplayState::AUTO_PLAY) {
-        showIdleAndSleepLater(0);
+        sleepAfterPause = true;
+        activePassPauseUntilMs = now + 1000;
         return;
     }
 
     activePassStartMs = 0;
     activePassPauseUntilMs = now + PAGER_PASS_GAP_MS;
-    requestFastRefresh();
 }
 
 static void drawBanner(OLEDDisplay *display, const char *text)

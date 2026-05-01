@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Screen.h"
 #include "NodeDB.h"
+#include "PowerFSM.h"
 #include "PowerMon.h"
 #include "Throttle.h"
 #include "configuration.h"
@@ -105,6 +106,9 @@ namespace graphics
 // A text message frame + debug frame + all the node infos
 FrameCallback *normalFrames;
 static uint32_t targetFramerate = IDLE_FRAMERATE;
+#ifdef MESHTASTIC_PAGER_OS
+static uint32_t pagerScreenHoldRefreshMs = 0;
+#endif
 #if GRAPHICS_TFT_COLORING_ENABLED
 static inline void prepareFrameColorRegions()
 {
@@ -1016,8 +1020,19 @@ int32_t Screen::runOnce()
     }
 #endif
 #ifdef MESHTASTIC_PAGER_OS
-    if (graphics::MessageRenderer::wantsFastRefresh()) {
+    const bool pagerFastRefresh = graphics::MessageRenderer::wantsFastRefresh();
+    if (pagerFastRefresh) {
         desiredFramerate = 10;
+    }
+
+    if (screenOn && pagerFastRefresh) {
+        const uint32_t now = millis();
+        if (pagerScreenHoldRefreshMs == 0 || (now - pagerScreenHoldRefreshMs) >= 1000) {
+            powerFSM.trigger(EVENT_INPUT);
+            pagerScreenHoldRefreshMs = now;
+        }
+    } else {
+        pagerScreenHoldRefreshMs = 0;
     }
 #endif
 
