@@ -164,7 +164,7 @@ struct PagerQueueMessage {
     bool unread = true;
 };
 
-enum class PagerDisplayState : uint8_t { IDLE, AUTO_PLAY, MANUAL_REVIEW, BANNER };
+enum class PagerDisplayState : uint8_t { IDLE, AUTO_PLAY, MANUAL_REVIEW };
 
 static std::deque<PagerQueueMessage> pagerQueue;
 static PagerDisplayState pagerDisplayState = PagerDisplayState::IDLE;
@@ -174,12 +174,10 @@ static uint32_t activePassStartMs = 0;
 static uint32_t activePassPauseUntilMs = 0;
 static uint32_t idleSleepAtMs = 0;
 static uint32_t lastUnreadArrivalMs = 0;
-static uint32_t bannerUntilMs = 0;
 static bool pagerBootCleared = false;
 static bool sleepAfterPause = false;
 
 constexpr uint32_t PAGER_FAST_BLINK_WINDOW_MS = 30UL * 1000UL;
-constexpr uint32_t PAGER_BANNER_MS = 1000;
 constexpr uint32_t PAGER_PASS_GAP_MS = 0;
 constexpr float PAGER_SCROLL_PIXELS_PER_SEC = 72.0f;
 constexpr size_t PAGER_QUEUE_LIMIT = 32;
@@ -233,9 +231,8 @@ static size_t newestUnreadIndex()
 
 static void requestFastRefresh()
 {
-    if (screen && screen->isScreenOn()) {
-        screen->runNow();
-    }
+    // Let the regular UI tick redraw pager transitions. Avoid forced immediate
+    // refreshes here because they can make the tiny pager UI feel sticky.
 }
 
 static void startPass(size_t index, PagerDisplayState state, uint8_t passTarget)
@@ -297,15 +294,6 @@ static void startManualPlayback(size_t index)
     startPass(index, PagerDisplayState::MANUAL_REVIEW, 1);
 }
 
-static void startBannerThenAuto(size_t index)
-{
-    pendingBannerMessageIndex = index;
-    pagerDisplayState = PagerDisplayState::BANNER;
-    bannerUntilMs = millis() + PAGER_BANNER_MS;
-    sleepAfterPause = false;
-    requestFastRefresh();
-}
-
 static void markCurrentMessageRead()
 {
     if (activeMessageIndex == SIZE_MAX || activeMessageIndex >= pagerQueue.size())
@@ -347,15 +335,6 @@ static void advancePagerTimeline(OLEDDisplay *display)
     ensurePagerBootStateCleared();
 
     const uint32_t now = millis();
-
-    if (pagerDisplayState == PagerDisplayState::BANNER) {
-        if (now >= bannerUntilMs) {
-            const size_t target = pendingBannerMessageIndex;
-            pendingBannerMessageIndex = SIZE_MAX;
-            startAutoPlayback(target);
-        }
-        return;
-    }
 
     if (pagerDisplayState == PagerDisplayState::IDLE) {
         if (idleSleepAtMs != 0 && now >= idleSleepAtMs) {
@@ -411,25 +390,6 @@ static void advancePagerTimeline(OLEDDisplay *display)
     activePassPauseUntilMs = now + PAGER_PASS_GAP_MS;
 }
 
-static void drawBanner(OLEDDisplay *display, const char *text)
-{
-    display->setFont(FONT_SMALL);
-    display->setTextAlignment(TEXT_ALIGN_CENTER);
-    const int boxWidth = SCREEN_WIDTH - 12;
-    const int boxHeight = FONT_HEIGHT_SMALL + 4;
-    const int boxX = 6;
-    const int contentTop = getTextPositions(display)[1] + 1;
-    const int contentBottom = SCREEN_HEIGHT - 1;
-    const int contentHeight = std::max(0, contentBottom - contentTop);
-    const int boxY = contentTop + std::max(0, (contentHeight - boxHeight) / 2) + PAGER_VERTICAL_CENTER_NUDGE;
-    display->setColor(WHITE);
-    display->fillRect(boxX, boxY, boxWidth, boxHeight);
-    display->setColor(BLACK);
-    display->drawRect(boxX, boxY, boxWidth, boxHeight);
-    display->drawString(SCREEN_WIDTH / 2, boxY + 2, text);
-    display->setColor(WHITE);
-}
-
 static void drawPagerMarquee(OLEDDisplay *display)
 {
     const uint32_t now = millis();
@@ -478,10 +438,6 @@ void handlePrimaryButton()
         return;
     }
 
-    if (pagerDisplayState == PagerDisplayState::BANNER) {
-        return;
-    }
-
     markCurrentMessageRead();
     const size_t nextUnread = newestUnreadIndex();
     if (nextUnread != SIZE_MAX) {
@@ -509,7 +465,7 @@ bool hasUnreadMessages()
 bool wantsFastRefresh()
 {
     return pagerDisplayState == PagerDisplayState::AUTO_PLAY || pagerDisplayState == PagerDisplayState::MANUAL_REVIEW ||
-           pagerDisplayState == PagerDisplayState::BANNER || idleSleepAtMs != 0;
+           idleSleepAtMs != 0;
 }
 
 uint32_t unreadLedIntervalMs()
@@ -1149,10 +1105,6 @@ void drawTextMessageFrame(OLEDDisplay *display, OLEDDisplayUiState *state, int16
     if (pagerDisplayState != PagerDisplayState::IDLE && activeMessageIndex != SIZE_MAX &&
         activeMessageIndex < pagerQueue.size()) {
         drawPagerMarquee(display);
-    }
-
-    if (pagerDisplayState == PagerDisplayState::BANNER) {
-        drawBanner(display, "new message");
     }
     return;
 #endif
@@ -1830,9 +1782,8 @@ bool handleNewMessage(OLEDDisplay *display, const StoredMessage &sm, const mesht
         return true;
     }
 
-    if (pagerDisplayState == PagerDisplayState::MANUAL_REVIEW || pagerDisplayState == PagerDisplayState::AUTO_PLAY ||
-        pagerDisplayState == PagerDisplayState::BANNER) {
-        startBannerThenAuto(newestIndex);
+    if (pagerDisplayState == PagerDisplayState::MANUAL_REVIEW || pagerDisplayState == PagerDisplayState::AUTO_PLAY) {
+        startAutoPlayback(newestIndex);
         return true;
     }
 
