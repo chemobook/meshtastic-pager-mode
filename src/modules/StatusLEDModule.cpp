@@ -74,18 +74,30 @@ int StatusLEDModule::handleInputEvent(const InputEvent *event)
 int32_t StatusLEDModule::runOnce()
 {
 #ifdef MESHTASTIC_PAGER_OS
+    static bool unreadPulseOn = false;
+    constexpr uint32_t unreadPulseWidthMs = 60;
+
     if (!graphics::MessageRenderer::hasUnreadMessages()) {
         CHARGE_LED_state = LED_STATE_OFF;
+        unreadPulseOn = false;
 #ifdef LED_POWER
         digitalWrite(LED_POWER, CHARGE_LED_state);
 #endif
         return 250;
     }
 
-    my_interval = graphics::MessageRenderer::unreadLedIntervalMs();
-    if (my_interval == 0)
-        my_interval = 250;
-    CHARGE_LED_state = !CHARGE_LED_state;
+    const uint32_t cycleMs = graphics::MessageRenderer::unreadLedIntervalMs();
+    if (!unreadPulseOn) {
+        CHARGE_LED_state = LED_STATE_ON;
+        unreadPulseOn = true;
+        my_interval = unreadPulseWidthMs;
+    } else {
+        CHARGE_LED_state = LED_STATE_OFF;
+        unreadPulseOn = false;
+        my_interval = (cycleMs > unreadPulseWidthMs) ? (cycleMs - unreadPulseWidthMs) : cycleMs;
+        if (my_interval == 0)
+            my_interval = 250;
+    }
 
 #ifdef LED_POWER
     digitalWrite(LED_POWER, CHARGE_LED_state);

@@ -28,7 +28,7 @@
 #endif
 
 #ifdef MESHTASTIC_PAGER_OS
-static constexpr uint32_t pagerScreenOnTimeoutMs = 30 * 1000UL;
+static constexpr uint32_t pagerScreenOnTimeoutMs = 10 * 1000UL;
 #endif
 
 #if MESHTASTIC_EXCLUDE_POWER_FSM

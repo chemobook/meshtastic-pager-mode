@@ -812,6 +812,14 @@ void NodeDB::initConfigIntervals()
     config.display.screen_on_secs = 30;
     config.power.wait_bluetooth_secs = 30;
 #endif
+
+#ifdef MESHTASTIC_PAGER_OS
+    config.power.is_power_saving = true;
+    config.power.wait_bluetooth_secs = 30;
+    config.power.ls_secs = 60;
+    config.power.min_wake_secs = 5;
+    config.display.screen_on_secs = 10;
+#endif
 }
 
 void NodeDB::installDefaultModuleConfig()
@@ -881,6 +889,9 @@ void NodeDB::installDefaultModuleConfig()
     moduleConfig.has_canned_message = true;
 #if USERPREFS_MQTT_ENABLED && !MESHTASTIC_EXCLUDE_MQTT
     moduleConfig.mqtt.enabled = true;
+#endif
+#ifdef MESHTASTIC_PAGER_OS
+    moduleConfig.mqtt.enabled = false;
 #endif
 #ifdef USERPREFS_MQTT_ADDRESS
     strncpy(moduleConfig.mqtt.address, USERPREFS_MQTT_ADDRESS, sizeof(moduleConfig.mqtt.address));

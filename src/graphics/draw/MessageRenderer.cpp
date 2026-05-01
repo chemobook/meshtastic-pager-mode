@@ -176,12 +176,14 @@ static uint32_t lastUnreadArrivalMs = 0;
 static uint32_t bannerUntilMs = 0;
 static bool pagerBootCleared = false;
 
-constexpr uint32_t PAGER_FAST_BLINK_WINDOW_MS = 5UL * 60UL * 1000UL;
+constexpr uint32_t PAGER_FAST_BLINK_WINDOW_MS = 30UL * 1000UL;
 constexpr uint32_t PAGER_BANNER_MS = 1000;
 constexpr uint32_t PAGER_PASS_GAP_MS = 0;
 constexpr float PAGER_SCROLL_PIXELS_PER_SEC = 90.0f;
 constexpr size_t PAGER_QUEUE_LIMIT = 32;
 constexpr int PAGER_VERTICAL_CENTER_NUDGE = -1;
+constexpr uint32_t PAGER_LED_FAST_INTERVAL_MS = 500;
+constexpr uint32_t PAGER_LED_SLOW_INTERVAL_MS = 5000;
 
 static void ensurePagerBootStateCleared()
 {
@@ -254,6 +256,9 @@ static void showIdleAndSleepLater(uint32_t delayMs)
     activeMessageIndex = SIZE_MAX;
     activePassStartMs = 0;
     activePassPauseUntilMs = 0;
+    if (screen) {
+        screen->setOn(false);
+    }
     requestFastRefresh();
 }
 
@@ -297,33 +302,6 @@ static const char *currentMessageText()
     if (activeMessageIndex == SIZE_MAX || activeMessageIndex >= pagerQueue.size())
         return "";
     return pagerQueue[activeMessageIndex].text.c_str();
-}
-
-static std::string currentSenderShortName()
-{
-    if (activeMessageIndex == SIZE_MAX || activeMessageIndex >= pagerQueue.size())
-        return "";
-
-    const auto &msg = pagerQueue[activeMessageIndex];
-    if (msg.type == MessageType::BROADCAST) {
-        const char *channelName = channels.getName(msg.channelIndex);
-        if (channelName && channelName[0]) {
-            return std::string("#") + channelName;
-        }
-
-        char fallbackChannel[12];
-        snprintf(fallbackChannel, sizeof(fallbackChannel), "CH%u", static_cast<unsigned>(msg.channelIndex));
-        return fallbackChannel;
-    }
-
-    meshtastic_NodeInfoLite *node = nodeDB->getMeshNode(msg.sender);
-    if (node && node->has_user && node->user.short_name[0]) {
-        return node->user.short_name;
-    }
-
-    char fallback[12];
-    snprintf(fallback, sizeof(fallback), "%08x", msg.sender);
-    return fallback;
 }
 
 static void pushPagerMessage(const StoredMessage &sm)
@@ -390,6 +368,11 @@ static void advancePagerTimeline(OLEDDisplay *display)
     if (traveled < travel)
         return;
 
+    if (pagerDisplayState == PagerDisplayState::AUTO_PLAY) {
+        showIdleAndSleepLater(0);
+        return;
+    }
+
     activePassStartMs = 0;
     activePassPauseUntilMs = now + PAGER_PASS_GAP_MS;
     requestFastRefresh();
@@ -412,18 +395,6 @@ static void drawBanner(OLEDDisplay *display, const char *text)
     display->drawRect(boxX, boxY, boxWidth, boxHeight);
     display->drawString(SCREEN_WIDTH / 2, boxY + 2, text);
     display->setColor(WHITE);
-}
-
-static void drawIdleMessage(OLEDDisplay *display)
-{
-    display->setFont(FONT_MEDIUM);
-    display->setTextAlignment(TEXT_ALIGN_CENTER);
-    const int contentTop = getTextPositions(display)[1] + 1;
-    const int contentBottom = SCREEN_HEIGHT - 1;
-    const int contentHeight = std::max(0, contentBottom - contentTop);
-    const int textY = contentTop + std::max(0, (contentHeight - FONT_HEIGHT_MEDIUM) / 2) + PAGER_VERTICAL_CENTER_NUDGE;
-    display->drawString(SCREEN_WIDTH / 2, textY, "No new messages");
-    display->setTextAlignment(TEXT_ALIGN_LEFT);
 }
 
 static void drawPagerMarquee(OLEDDisplay *display)
@@ -513,7 +484,7 @@ uint32_t unreadLedIntervalMs()
         return 0;
 
     const uint32_t age = millis() - lastUnreadArrivalMs;
-    return (age < PAGER_FAST_BLINK_WINDOW_MS) ? 150 : 1000;
+    return (age < PAGER_FAST_BLINK_WINDOW_MS) ? PAGER_LED_FAST_INTERVAL_MS : PAGER_LED_SLOW_INTERVAL_MS;
 }
 #endif
 
@@ -1142,9 +1113,7 @@ void drawTextMessageFrame(OLEDDisplay *display, OLEDDisplayUiState *state, int16
     graphics::drawCommonHeader(display, x, y, "");
     hasUnreadMessage = savedUnread;
 
-    if (pagerDisplayState == PagerDisplayState::IDLE || activeMessageIndex == SIZE_MAX || activeMessageIndex >= pagerQueue.size()) {
-        drawIdleMessage(display);
-    } else {
+    if (pagerDisplayState != PagerDisplayState::IDLE && activeMessageIndex != SIZE_MAX && activeMessageIndex < pagerQueue.size()) {
         drawPagerMarquee(display);
     }
 

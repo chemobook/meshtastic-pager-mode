@@ -138,6 +138,25 @@ AudioThread *audioThread = nullptr;
 ExtensionIOXL9555 io;
 #endif
 
+#ifdef MESHTASTIC_PAGER_OS
+static void applyPagerOSPowerProfile()
+{
+    config.power.is_power_saving = true;
+    config.power.wait_bluetooth_secs = 30;
+    config.power.ls_secs = 60;
+    config.power.min_wake_secs = 5;
+    config.display.screen_on_secs = 10;
+    config.network.wifi_enabled = false;
+    moduleConfig.mqtt.enabled = false;
+
+#if !MESHTASTIC_EXCLUDE_GPS
+    if (config.position.gps_mode != meshtastic_Config_PositionConfig_GpsMode_NOT_PRESENT) {
+        config.position.gps_mode = meshtastic_Config_PositionConfig_GpsMode_DISABLED;
+    }
+#endif
+}
+#endif
+
 #if HAS_TFT
 extern void tftSetup(void);
 #endif
@@ -705,6 +724,10 @@ void setup()
     // but we need to do this after main cpu init (esp32setup), because we need the random seed set
     nodeDB = new NodeDB;
 
+#ifdef MESHTASTIC_PAGER_OS
+    applyPagerOSPowerProfile();
+#endif
+
     // Initialize transmit history to persist broadcast throttle timers across reboots
     TransmitHistory::getInstance()->loadFromDisk();
 #if HAS_TFT
@@ -956,7 +979,12 @@ void setup()
     lateInitVariant(); // Do board specific init (see extra_variants/README.md for documentation)
 
 #if !MESHTASTIC_EXCLUDE_MQTT
+#ifdef MESHTASTIC_PAGER_OS
+    if (moduleConfig.mqtt.enabled)
+        mqttInit();
+#else
     mqttInit();
+#endif
 #endif
 
 #ifdef RF95_FAN_EN
@@ -970,7 +998,12 @@ void setup()
 
         // Initialize Wifi
 #if HAS_WIFI
+#ifdef MESHTASTIC_PAGER_OS
+    if (config.network.wifi_enabled)
+        initWifi();
+#else
     initWifi();
+#endif
 #endif
 
 #if HAS_ETHERNET
@@ -979,7 +1012,7 @@ void setup()
 #endif
 #endif
 
-#if defined(ARCH_ESP32) && !MESHTASTIC_EXCLUDE_WEBSERVER
+#if defined(ARCH_ESP32) && !MESHTASTIC_EXCLUDE_WEBSERVER && !defined(MESHTASTIC_PAGER_OS)
     // Start web server thread.
     webServerThread = new WebServerThread();
 #endif

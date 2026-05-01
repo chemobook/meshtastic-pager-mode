@@ -1017,7 +1017,7 @@ int32_t Screen::runOnce()
 #endif
 #ifdef MESHTASTIC_PAGER_OS
     if (graphics::MessageRenderer::wantsFastRefresh()) {
-        desiredFramerate = 30;
+        desiredFramerate = 10;
     }
 #endif
 

@@ -107,7 +107,7 @@ void MessageStore::addLiveMessage(const StoredMessage &msg)
     pushWithLimit(liveMessages, msg);
 }
 
-#if ENABLE_MESSAGE_PERSISTENCE
+#if ENABLE_MESSAGE_PERSISTENCE && !defined(MESHTASTIC_PAGER_OS)
 static bool g_messageStoreHasUnsavedChanges = false;
 static uint32_t g_lastAutoSaveMs = 0; // last time we actually saved
 
@@ -191,7 +191,7 @@ const StoredMessage &MessageStore::addFromPacket(const meshtastic_MeshPacket &pa
 
     addLiveMessage(sm);
 
-#if ENABLE_MESSAGE_PERSISTENCE
+#if ENABLE_MESSAGE_PERSISTENCE && !defined(MESHTASTIC_PAGER_OS)
     markMessageStoreUnsaved();
 #endif
 
@@ -220,12 +220,12 @@ void MessageStore::addFromString(uint32_t sender, uint8_t channelIndex, const st
 
     addLiveMessage(sm);
 
-#if ENABLE_MESSAGE_PERSISTENCE
+#if ENABLE_MESSAGE_PERSISTENCE && !defined(MESHTASTIC_PAGER_OS)
     markMessageStoreUnsaved();
 #endif
 }
 
-#if ENABLE_MESSAGE_PERSISTENCE
+#if ENABLE_MESSAGE_PERSISTENCE && !defined(MESHTASTIC_PAGER_OS)
 
 // Compact, fixed-size on-flash representation using offset + length
 struct __attribute__((packed)) StoredMessageRecord {
@@ -359,14 +359,14 @@ void MessageStore::clearAllMessages()
     std::deque<StoredMessage>().swap(liveMessages);
     resetMessagePool();
 
-#ifdef FSCom
+#if defined(FSCom) && !defined(MESHTASTIC_PAGER_OS)
     SafeFile f(filename.c_str(), false);
     uint8_t count = 0;
     f.write(&count, 1); // write "0 messages"
     f.close();
 #endif
 
-#if ENABLE_MESSAGE_PERSISTENCE
+#if ENABLE_MESSAGE_PERSISTENCE && !defined(MESHTASTIC_PAGER_OS)
     g_messageStoreHasUnsavedChanges = false;
     g_lastAutoSaveMs = millis();
 #endif
@@ -501,7 +501,7 @@ uint16_t MessageStore::storeText(const char *src, size_t len)
     return storeTextInPool(src, len);
 }
 
-#if ENABLE_MESSAGE_PERSISTENCE
+#if ENABLE_MESSAGE_PERSISTENCE && !defined(MESHTASTIC_PAGER_OS)
 void messageStoreAutosaveTick()
 {
     // Called from the main loop to check autosave timing
