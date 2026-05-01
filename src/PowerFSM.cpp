@@ -26,6 +26,11 @@
 #ifndef SLEEP_TIME
 #define SLEEP_TIME 30
 #endif
+
+#ifdef MESHTASTIC_PAGER_OS
+static constexpr uint32_t pagerScreenOnTimeoutMs = 30 * 1000UL;
+#endif
+
 #if MESHTASTIC_EXCLUDE_POWER_FSM
 FakeFsm powerFSM;
 void PowerFSM_setup(){};
@@ -399,12 +404,16 @@ void PowerFSM_setup()
     if (config.display.screen_on_secs > 0)
 #endif
     {
+#ifdef MESHTASTIC_PAGER_OS
+        const uint32_t screenOnTimeoutMs = pagerScreenOnTimeoutMs;
+#else
+        const uint32_t screenOnTimeoutMs =
+            Default::getConfiguredOrDefaultMs(config.display.screen_on_secs, default_screen_on_secs);
+#endif
         powerFSM.add_timed_transition(&stateON, &stateDARK,
-                                      Default::getConfiguredOrDefaultMs(config.display.screen_on_secs, default_screen_on_secs),
-                                      NULL, "Screen-on timeout");
+                                      screenOnTimeoutMs, NULL, "Screen-on timeout");
         powerFSM.add_timed_transition(&statePOWER, &stateDARK,
-                                      Default::getConfiguredOrDefaultMs(config.display.screen_on_secs, default_screen_on_secs),
-                                      NULL, "Screen-on timeout");
+                                      screenOnTimeoutMs, NULL, "Screen-on timeout");
     }
 
 // We never enter light-sleep or NB states on NRF52 (because the CPU uses so little power normally)

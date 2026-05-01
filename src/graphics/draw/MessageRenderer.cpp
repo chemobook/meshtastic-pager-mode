@@ -168,19 +168,14 @@ static std::deque<PagerQueueMessage> pagerQueue;
 static PagerDisplayState pagerDisplayState = PagerDisplayState::IDLE;
 static size_t activeMessageIndex = SIZE_MAX;
 static size_t pendingBannerMessageIndex = SIZE_MAX;
-static uint8_t activePassTarget = 0;
-static uint8_t activePassCompleted = 0;
 static uint32_t activePassStartMs = 0;
 static uint32_t activePassPauseUntilMs = 0;
 static uint32_t lastUnreadArrivalMs = 0;
-static uint32_t idleSleepDeadlineMs = 0;
 static uint32_t bannerUntilMs = 0;
 static bool pagerBootCleared = false;
 
 constexpr uint32_t PAGER_FAST_BLINK_WINDOW_MS = 5UL * 60UL * 1000UL;
 constexpr uint32_t PAGER_BANNER_MS = 1000;
-constexpr uint32_t PAGER_IDLE_SLEEP_MS = 1800;
-constexpr uint32_t PAGER_WAKE_SLEEP_MS = 2200;
 constexpr uint32_t PAGER_PASS_GAP_MS = 250;
 constexpr float PAGER_SCROLL_PIXELS_PER_SEC = 28.0f;
 constexpr size_t PAGER_QUEUE_LIMIT = 32;
@@ -229,23 +224,6 @@ static size_t newestUnreadIndex()
     return SIZE_MAX;
 }
 
-static size_t oldestUnreadNewerThan(size_t index)
-{
-    if (index == SIZE_MAX || index >= pagerQueue.size())
-        return SIZE_MAX;
-
-    for (size_t i = index + 1; i < pagerQueue.size(); ++i) {
-        if (pagerQueue[i].unread)
-            return i;
-    }
-    return SIZE_MAX;
-}
-
-static bool anyUnreadNewerThan(size_t index)
-{
-    return oldestUnreadNewerThan(index) != SIZE_MAX;
-}
-
 static void requestFastRefresh()
 {
     if (screen) {
@@ -260,23 +238,19 @@ static void startPass(size_t index, PagerDisplayState state, uint8_t passTarget)
 
     activeMessageIndex = index;
     pagerDisplayState = state;
-    activePassTarget = std::max<uint8_t>(1, passTarget);
-    activePassCompleted = 0;
+    (void)passTarget;
     activePassStartMs = 0;
     activePassPauseUntilMs = 0;
-    idleSleepDeadlineMs = 0;
     requestFastRefresh();
 }
 
 static void showIdleAndSleepLater(uint32_t delayMs)
 {
+    (void)delayMs;
     pagerDisplayState = PagerDisplayState::IDLE;
     activeMessageIndex = SIZE_MAX;
-    activePassTarget = 0;
-    activePassCompleted = 0;
     activePassStartMs = 0;
     activePassPauseUntilMs = 0;
-    idleSleepDeadlineMs = millis() + delayMs;
     requestFastRefresh();
 }
 
@@ -285,14 +259,13 @@ static void startAutoPlayback(size_t index)
     if (index == SIZE_MAX || index >= pagerQueue.size())
         return;
 
-    const uint8_t passTarget = anyUnreadNewerThan(index) ? 1 : 3;
-    startPass(index, PagerDisplayState::AUTO_PLAY, passTarget);
+    startPass(index, PagerDisplayState::AUTO_PLAY, 1);
 }
 
 static void startManualPlayback(size_t index)
 {
     if (index == SIZE_MAX || index >= pagerQueue.size()) {
-        showIdleAndSleepLater(PAGER_IDLE_SLEEP_MS);
+        showIdleAndSleepLater(0);
         return;
     }
 
@@ -373,15 +346,11 @@ static void advancePagerTimeline(OLEDDisplay *display)
     }
 
     if (pagerDisplayState == PagerDisplayState::IDLE) {
-        if (idleSleepDeadlineMs && now >= idleSleepDeadlineMs && screen && screen->isScreenOn()) {
-            screen->setOn(false);
-            idleSleepDeadlineMs = 0;
-        }
         return;
     }
 
     if (activeMessageIndex == SIZE_MAX || activeMessageIndex >= pagerQueue.size()) {
-        showIdleAndSleepLater(PAGER_IDLE_SLEEP_MS);
+        showIdleAndSleepLater(0);
         return;
     }
 
@@ -405,38 +374,9 @@ static void advancePagerTimeline(OLEDDisplay *display)
     if (traveled < travel)
         return;
 
-    activePassCompleted++;
-
-    if (pagerDisplayState == PagerDisplayState::AUTO_PLAY) {
-        const size_t nextUnread = oldestUnreadNewerThan(activeMessageIndex);
-        if (nextUnread != SIZE_MAX) {
-            startAutoPlayback(nextUnread);
-            return;
-        }
-
-        if (activePassCompleted < activePassTarget) {
-            activePassStartMs = 0;
-            activePassPauseUntilMs = now + PAGER_PASS_GAP_MS;
-            requestFastRefresh();
-            return;
-        }
-
-        showIdleAndSleepLater(PAGER_IDLE_SLEEP_MS);
-        return;
-    }
-
-    if (pagerDisplayState == PagerDisplayState::MANUAL_REVIEW) {
-        if (activeMessageIndex < pagerQueue.size() && pagerQueue[activeMessageIndex].unread) {
-            showIdleAndSleepLater(PAGER_WAKE_SLEEP_MS);
-        } else {
-            const size_t nextUnread = newestUnreadIndex();
-            if (nextUnread != SIZE_MAX) {
-                startManualPlayback(nextUnread);
-            } else {
-                showIdleAndSleepLater(PAGER_IDLE_SLEEP_MS);
-            }
-        }
-    }
+    activePassStartMs = 0;
+    activePassPauseUntilMs = now + PAGER_PASS_GAP_MS;
+    requestFastRefresh();
 }
 
 static void drawPagerFooter(OLEDDisplay *display, const std::string &sender)
@@ -506,7 +446,7 @@ void handleWakeRequest()
     if (newestUnread != SIZE_MAX) {
         startManualPlayback(newestUnread);
     } else {
-        showIdleAndSleepLater(PAGER_WAKE_SLEEP_MS);
+        showIdleAndSleepLater(0);
     }
 }
 
@@ -519,7 +459,7 @@ void handlePrimaryButton()
         if (newestUnread != SIZE_MAX) {
             startManualPlayback(newestUnread);
         } else {
-            showIdleAndSleepLater(PAGER_WAKE_SLEEP_MS);
+            showIdleAndSleepLater(0);
         }
         return;
     }
@@ -533,7 +473,7 @@ void handlePrimaryButton()
     if (nextUnread != SIZE_MAX) {
         startManualPlayback(nextUnread);
     } else {
-        showIdleAndSleepLater(PAGER_IDLE_SLEEP_MS);
+        showIdleAndSleepLater(0);
     }
 }
 
@@ -543,7 +483,7 @@ void handleClearAllButton()
     pagerQueue.clear();
     messageStore.clearAllMessages();
     syncUnreadIndicator();
-    showIdleAndSleepLater(PAGER_IDLE_SLEEP_MS);
+    showIdleAndSleepLater(0);
 }
 
 bool hasUnreadMessages()
@@ -1875,18 +1815,19 @@ bool handleNewMessage(OLEDDisplay *display, const StoredMessage &sm, const mesht
         return true;
     }
 
-    if (pagerDisplayState == PagerDisplayState::MANUAL_REVIEW || pagerDisplayState == PagerDisplayState::BANNER) {
-        startBannerThenAuto(newestIndex);
-        return false;
-    }
-
     if (pagerDisplayState == PagerDisplayState::IDLE) {
         startAutoPlayback(newestIndex);
-    } else {
-        requestFastRefresh();
+        return true;
     }
 
-    return false;
+    if (pagerDisplayState == PagerDisplayState::MANUAL_REVIEW || pagerDisplayState == PagerDisplayState::AUTO_PLAY ||
+        pagerDisplayState == PagerDisplayState::BANNER) {
+        startBannerThenAuto(newestIndex);
+        return true;
+    }
+
+    requestFastRefresh();
+    return true;
 #endif
     loadPagerModeState();
     const bool pagerMatch = pagerModeMatchesMessage(sm, packet);
