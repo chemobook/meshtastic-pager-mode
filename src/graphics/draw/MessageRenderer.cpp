@@ -179,7 +179,7 @@ static bool pagerBootCleared = false;
 constexpr uint32_t PAGER_FAST_BLINK_WINDOW_MS = 5UL * 60UL * 1000UL;
 constexpr uint32_t PAGER_BANNER_MS = 1000;
 constexpr uint32_t PAGER_PASS_GAP_MS = 0;
-constexpr float PAGER_SCROLL_PIXELS_PER_SEC = 64.0f;
+constexpr float PAGER_SCROLL_PIXELS_PER_SEC = 90.0f;
 constexpr size_t PAGER_QUEUE_LIMIT = 32;
 
 static void ensurePagerBootStateCleared()
@@ -394,24 +394,6 @@ static void advancePagerTimeline(OLEDDisplay *display)
     requestFastRefresh();
 }
 
-static void drawPagerFooter(OLEDDisplay *display, const std::string &sender)
-{
-    const int footerHeight = FONT_HEIGHT_SMALL + 3;
-    const int footerTop = SCREEN_HEIGHT - footerHeight;
-    display->setColor(WHITE);
-    display->fillRect(0, footerTop, SCREEN_WIDTH, footerHeight);
-    display->setColor(BLACK);
-    display->drawHorizontalLine(0, footerTop, SCREEN_WIDTH);
-    display->setFont(FONT_SMALL);
-    display->setTextAlignment(TEXT_ALIGN_LEFT);
-    if (!sender.empty()) {
-        char footerText[48];
-        UIRenderer::truncateStringWithEmotes(display, sender.c_str(), footerText, sizeof(footerText), SCREEN_WIDTH - 4);
-        display->drawString(2, footerTop + 1, footerText);
-    }
-    display->setColor(WHITE);
-}
-
 static void drawBanner(OLEDDisplay *display, const char *text)
 {
     display->setFont(FONT_SMALL);
@@ -439,11 +421,10 @@ static void drawIdleMessage(OLEDDisplay *display)
 static void drawPagerMarquee(OLEDDisplay *display)
 {
     const uint32_t now = millis();
-    const int footerHeight = FONT_HEIGHT_SMALL + 3;
     const int contentTop = getTextPositions(display)[1] + 1;
-    const int contentBottom = SCREEN_HEIGHT - footerHeight - 1;
+    const int contentBottom = SCREEN_HEIGHT - 1;
     const int contentHeight = std::max(0, contentBottom - contentTop);
-    const int textY = contentTop + std::max(0, (contentHeight - FONT_HEIGHT_LARGE) / 2) - 1;
+    const int textY = contentTop + std::max(0, (contentHeight - FONT_HEIGHT_LARGE) / 2) + 2;
 
     display->setFont(FONT_LARGE);
     display->setTextAlignment(TEXT_ALIGN_LEFT);
@@ -1155,10 +1136,8 @@ void drawTextMessageFrame(OLEDDisplay *display, OLEDDisplayUiState *state, int16
 
     if (pagerDisplayState == PagerDisplayState::IDLE || activeMessageIndex == SIZE_MAX || activeMessageIndex >= pagerQueue.size()) {
         drawIdleMessage(display);
-        drawPagerFooter(display, "");
     } else {
         drawPagerMarquee(display);
-        drawPagerFooter(display, currentSenderShortName());
     }
 
     if (pagerDisplayState == PagerDisplayState::BANNER) {
