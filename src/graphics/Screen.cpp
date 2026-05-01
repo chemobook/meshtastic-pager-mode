@@ -1022,7 +1022,7 @@ int32_t Screen::runOnce()
 #ifdef MESHTASTIC_PAGER_OS
     const bool pagerFastRefresh = graphics::MessageRenderer::wantsFastRefresh();
     if (pagerFastRefresh) {
-        desiredFramerate = 10;
+        desiredFramerate = 15;
     }
 
     if (screenOn && pagerFastRefresh) {
