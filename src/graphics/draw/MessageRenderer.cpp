@@ -172,6 +172,7 @@ static size_t activeMessageIndex = SIZE_MAX;
 static size_t pendingBannerMessageIndex = SIZE_MAX;
 static uint32_t activePassStartMs = 0;
 static uint32_t activePassPauseUntilMs = 0;
+static uint32_t idleSleepAtMs = 0;
 static uint32_t lastUnreadArrivalMs = 0;
 static uint32_t bannerUntilMs = 0;
 static bool pagerBootCleared = false;
@@ -247,19 +248,20 @@ static void startPass(size_t index, PagerDisplayState state, uint8_t passTarget)
     (void)passTarget;
     activePassStartMs = 0;
     activePassPauseUntilMs = 0;
+    idleSleepAtMs = 0;
     sleepAfterPause = false;
     requestFastRefresh();
 }
 
 static void showIdleAndSleepLater(uint32_t delayMs)
 {
-    (void)delayMs;
     pagerDisplayState = PagerDisplayState::IDLE;
     activeMessageIndex = SIZE_MAX;
     activePassStartMs = 0;
     activePassPauseUntilMs = 0;
+    idleSleepAtMs = delayMs ? (millis() + delayMs) : 0;
     sleepAfterPause = false;
-    if (screen) {
+    if (screen && delayMs == 0) {
         screen->setOn(false);
     }
 }
@@ -270,6 +272,7 @@ static void showIdleWithoutSleeping()
     activeMessageIndex = SIZE_MAX;
     activePassStartMs = 0;
     activePassPauseUntilMs = 0;
+    idleSleepAtMs = 0;
     sleepAfterPause = false;
     requestFastRefresh();
 }
@@ -353,6 +356,12 @@ static void advancePagerTimeline(OLEDDisplay *display)
     }
 
     if (pagerDisplayState == PagerDisplayState::IDLE) {
+        if (idleSleepAtMs != 0 && now >= idleSleepAtMs) {
+            idleSleepAtMs = 0;
+            if (screen) {
+                screen->setOn(false);
+            }
+        }
         return;
     }
 
@@ -388,6 +397,11 @@ static void advancePagerTimeline(OLEDDisplay *display)
     if (pagerDisplayState == PagerDisplayState::AUTO_PLAY) {
         sleepAfterPause = true;
         activePassPauseUntilMs = now + 1000;
+        return;
+    }
+
+    if (pagerDisplayState == PagerDisplayState::MANUAL_REVIEW) {
+        showIdleAndSleepLater(1000);
         return;
     }
 
