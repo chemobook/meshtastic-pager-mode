@@ -912,7 +912,7 @@ int32_t Screen::runOnce()
     }
 #endif
 
-#ifndef DISABLE_WELCOME_UNSET
+#if !defined(DISABLE_WELCOME_UNSET) && !defined(MESHTASTIC_PAGER_OS)
     if (!NotificationRenderer::isOverlayBannerShowing() && config.lora.region == meshtastic_Config_LoRaConfig_RegionCode_UNSET) {
 #if defined(M5STACK_UNITC6L)
         menuHandler::LoraRegionPicker();
