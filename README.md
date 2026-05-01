@@ -30,9 +30,7 @@ Core behavior:
 - long press clears local pager history
 - white LED reminds about unread messages
 
-Flashing and user setup are now documented directly on the web flasher page:
-
-- [Open Pager OS Web Flasher](https://chemobook.github.io/meshtastic-pager-mode/)
+[Open Pager OS Web Flasher](https://chemobook.github.io/meshtastic-pager-mode/)
 
 This is not an official Meshtastic release. Real-device testing still matters.
 
@@ -53,8 +51,6 @@ This is not an official Meshtastic release. Real-device testing still matters.
 - долгое удержание очищает локальную историю пейджера
 - белый LED напоминает о непрочитанных сообщениях
 
-Вся пользовательская инструкция и прошивка через браузер теперь находятся прямо на странице прошивальщика:
-
-- [Открыть Pager OS Web Flasher](https://chemobook.github.io/meshtastic-pager-mode/)
+[Открыть Pager OS Web Flasher](https://chemobook.github.io/meshtastic-pager-mode/)
 
 Это не официальный релиз Meshtastic. Проверка на реальном устройстве всё ещё обязательна.
