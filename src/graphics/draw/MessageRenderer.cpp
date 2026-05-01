@@ -231,8 +231,9 @@ static size_t newestUnreadIndex()
 
 static void requestFastRefresh()
 {
-    // Let the regular UI tick redraw pager transitions. Avoid forced immediate
-    // refreshes here because they can make the tiny pager UI feel sticky.
+    if (screen && screen->isScreenOn()) {
+        screen->runNow();
+    }
 }
 
 static void startPass(size_t index, PagerDisplayState state, uint8_t passTarget)

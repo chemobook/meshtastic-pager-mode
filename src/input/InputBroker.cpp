@@ -69,6 +69,7 @@ static void wakePagerFromInitialPress()
         return;
 
     powerFSM.trigger(EVENT_INPUT);
+    screen->setOn(true);
     graphics::MessageRenderer::handleWakeRequest();
     pagerWakePressConsumed = true;
 #endif
@@ -151,9 +152,9 @@ int InputBroker::handleInputEvent(const InputEvent *event)
 
 #if HAS_SCREEN
     if (screen && screenWasOff) {
- #ifdef MESHTASTIC_PAGER_OS
+#ifdef MESHTASTIC_PAGER_OS
         return 0;
- #endif
+#endif
         // If the screen was off, it is in the process of turning on, and we just drop the event
         return 0;
     }
