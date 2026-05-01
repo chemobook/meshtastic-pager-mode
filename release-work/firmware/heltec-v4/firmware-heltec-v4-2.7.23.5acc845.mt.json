@@ -1,29 +1,29 @@
 {
-  "version": "2.7.23.4002fc6",
+  "version": "2.7.23.5acc845",
   "build_epoch": 1777579200,
   "platformioTarget": "heltec-v4",
   "mcu": "esp32s3",
   "repo": "chemobook/meshtastic-pager-mode",
   "files": [
     {
-      "name": "firmware-heltec-v4-2.7.23.4002fc6.elf",
-      "md5": "b99f0449c7a8f50e1b7def20102a283e",
-      "bytes": 22320500
+      "name": "firmware-heltec-v4-2.7.23.5acc845.elf",
+      "md5": "1a26cedc7656ba84c475e36ed37f4d6d",
+      "bytes": 22332336
     },
     {
-      "name": "firmware-heltec-v4-2.7.23.4002fc6.bin",
-      "md5": "778fe6b8b5e997ba80c195a75e5329ed",
-      "bytes": 2088704,
+      "name": "firmware-heltec-v4-2.7.23.5acc845.bin",
+      "md5": "6d24760368cdcd94d86a2843d1ac6d2b",
+      "bytes": 2089232,
       "part_name": "app0"
     },
     {
-      "name": "firmware-heltec-v4-2.7.23.4002fc6.factory.bin",
-      "md5": "55e0b1725ce2a51487e8409738b0f3fa",
-      "bytes": 2154240
+      "name": "firmware-heltec-v4-2.7.23.5acc845.factory.bin",
+      "md5": "cd9160c7a39216f815e9d9262b4c6f4d",
+      "bytes": 2154768
     },
     {
-      "name": "littlefs-heltec-v4-2.7.23.4002fc6.bin",
-      "md5": "665bd6b75c2bdf7fbe14200b0bd03415",
+      "name": "littlefs-heltec-v4-2.7.23.5acc845.bin",
+      "md5": "16d5d5d8a97d73f54a69773fedc43515",
       "bytes": 3538944,
       "part_name": "spiffs"
     }

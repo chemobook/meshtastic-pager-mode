@@ -21,6 +21,7 @@
 #include "main.h"
 #include "meshUtils.h"
 #include <algorithm>
+#include <cmath>
 #include <deque>
 #include <string>
 #include <vector>
@@ -176,8 +177,8 @@ static bool pagerBootCleared = false;
 
 constexpr uint32_t PAGER_FAST_BLINK_WINDOW_MS = 5UL * 60UL * 1000UL;
 constexpr uint32_t PAGER_BANNER_MS = 1000;
-constexpr uint32_t PAGER_PASS_GAP_MS = 250;
-constexpr float PAGER_SCROLL_PIXELS_PER_SEC = 28.0f;
+constexpr uint32_t PAGER_PASS_GAP_MS = 0;
+constexpr float PAGER_SCROLL_PIXELS_PER_SEC = 64.0f;
 constexpr size_t PAGER_QUEUE_LIMIT = 32;
 
 static void ensurePagerBootStateCleared()
@@ -420,21 +421,27 @@ static void drawIdleMessage(OLEDDisplay *display)
 static void drawPagerMarquee(OLEDDisplay *display)
 {
     const uint32_t now = millis();
-    const int contentTop = getTextPositions(display)[1] + 2;
-    const int contentBottom = SCREEN_HEIGHT - FONT_HEIGHT_SMALL - 2;
+    const int contentTop = getTextPositions(display)[1] + 1;
+    const int contentBottom = SCREEN_HEIGHT - FONT_HEIGHT_SMALL - 1;
     const int contentHeight = std::max(0, contentBottom - contentTop);
-    const int textY = contentTop + std::max(0, (contentHeight - FONT_HEIGHT_LARGE) / 2);
+    const int textY = contentTop + std::max(0, (contentHeight - FONT_HEIGHT_LARGE) / 2) - 1;
 
     display->setFont(FONT_LARGE);
     display->setTextAlignment(TEXT_ALIGN_LEFT);
 
     const char *text = currentMessageText();
+    const int textWidth = std::max(1, UIRenderer::measureStringWithEmotes(display, text));
+    const int gapWidth = 10;
+    const float cycleWidth = static_cast<float>(textWidth + gapWidth);
     const float elapsedMs = static_cast<float>(now - activePassStartMs);
     const float traveled = (elapsedMs / 1000.0f) * PAGER_SCROLL_PIXELS_PER_SEC;
-    const int startX = display->getWidth();
-    const int textX = startX - static_cast<int>(traveled);
+    const float cycleOffset = (cycleWidth > 0.0f) ? std::fmod(traveled, cycleWidth) : 0.0f;
+    const int startX = display->getWidth() - 2;
+    const int textX = startX - static_cast<int>(cycleOffset);
+    const int nextTextX = textX + static_cast<int>(cycleWidth);
 
     UIRenderer::drawStringWithEmotes(display, textX, textY, text, FONT_HEIGHT_LARGE, 1, true);
+    UIRenderer::drawStringWithEmotes(display, nextTextX, textY, text, FONT_HEIGHT_LARGE, 1, true);
 }
 } // namespace
 
