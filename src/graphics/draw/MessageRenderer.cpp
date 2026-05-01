@@ -181,6 +181,7 @@ constexpr uint32_t PAGER_BANNER_MS = 1000;
 constexpr uint32_t PAGER_PASS_GAP_MS = 0;
 constexpr float PAGER_SCROLL_PIXELS_PER_SEC = 90.0f;
 constexpr size_t PAGER_QUEUE_LIMIT = 32;
+constexpr int PAGER_VERTICAL_CENTER_NUDGE = -1;
 
 static void ensurePagerBootStateCleared()
 {
@@ -401,7 +402,10 @@ static void drawBanner(OLEDDisplay *display, const char *text)
     const int boxWidth = SCREEN_WIDTH - 12;
     const int boxHeight = FONT_HEIGHT_SMALL + 4;
     const int boxX = 6;
-    const int boxY = (SCREEN_HEIGHT - boxHeight) / 2;
+    const int contentTop = getTextPositions(display)[1] + 1;
+    const int contentBottom = SCREEN_HEIGHT - 1;
+    const int contentHeight = std::max(0, contentBottom - contentTop);
+    const int boxY = contentTop + std::max(0, (contentHeight - boxHeight) / 2) + PAGER_VERTICAL_CENTER_NUDGE;
     display->setColor(WHITE);
     display->fillRect(boxX, boxY, boxWidth, boxHeight);
     display->setColor(BLACK);
@@ -414,7 +418,11 @@ static void drawIdleMessage(OLEDDisplay *display)
 {
     display->setFont(FONT_MEDIUM);
     display->setTextAlignment(TEXT_ALIGN_CENTER);
-    display->drawString(SCREEN_WIDTH / 2, (SCREEN_HEIGHT - FONT_HEIGHT_MEDIUM) / 2, "No new messages");
+    const int contentTop = getTextPositions(display)[1] + 1;
+    const int contentBottom = SCREEN_HEIGHT - 1;
+    const int contentHeight = std::max(0, contentBottom - contentTop);
+    const int textY = contentTop + std::max(0, (contentHeight - FONT_HEIGHT_MEDIUM) / 2) + PAGER_VERTICAL_CENTER_NUDGE;
+    display->drawString(SCREEN_WIDTH / 2, textY, "No new messages");
     display->setTextAlignment(TEXT_ALIGN_LEFT);
 }
 
@@ -424,7 +432,7 @@ static void drawPagerMarquee(OLEDDisplay *display)
     const int contentTop = getTextPositions(display)[1] + 1;
     const int contentBottom = SCREEN_HEIGHT - 1;
     const int contentHeight = std::max(0, contentBottom - contentTop);
-    const int textY = contentTop + std::max(0, (contentHeight - FONT_HEIGHT_LARGE) / 2) + 2;
+    const int textY = contentTop + std::max(0, (contentHeight - FONT_HEIGHT_LARGE) / 2) + PAGER_VERTICAL_CENTER_NUDGE;
 
     display->setFont(FONT_LARGE);
     display->setTextAlignment(TEXT_ALIGN_LEFT);
