@@ -1,59 +1,78 @@
-<svg width="1600" height="520" viewBox="0 0 1600 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="520" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#0A1320"/>
-      <stop offset="0.58" stop-color="#112235"/>
-      <stop offset="1" stop-color="#16362F"/>
+    <linearGradient id="bg" x1="96" y1="70" x2="1090" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0A1822"/>
+      <stop offset="0.55" stop-color="#112A38"/>
+      <stop offset="1" stop-color="#16352C"/>
     </linearGradient>
-    <linearGradient id="chipBlue" x1="0" y1="0" x2="1" y2="1">
-      <stop stop-color="#173B5C"/>
-      <stop offset="1" stop-color="#23597D"/>
+    <linearGradient id="panel" x1="232" y1="150" x2="924" y2="504" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#173143" stop-opacity="0.96"/>
+      <stop offset="1" stop-color="#1A4332" stop-opacity="0.92"/>
     </linearGradient>
-    <linearGradient id="chipGreen" x1="0" y1="0" x2="1" y2="1">
-      <stop stop-color="#183F39"/>
-      <stop offset="1" stop-color="#2A5B47"/>
+    <linearGradient id="screen" x1="673" y1="243" x2="755" y2="332" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EAF5FF"/>
+      <stop offset="1" stop-color="#D8EEF4"/>
     </linearGradient>
-    <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
-      <stop stop-color="#67D8FF"/>
-      <stop offset="1" stop-color="#9AF7B3"/>
-    </linearGradient>
+    <filter id="shadow" x="0" y="0" width="1200" height="630" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000000" flood-opacity="0.28"/>
+    </filter>
   </defs>
 
-  <rect width="1600" height="520" rx="28" fill="url(#bg)"/>
-  <rect x="74" y="72" width="1452" height="376" rx="28" fill="#0D1C2B" fill-opacity="0.42" stroke="#D6E6F2" stroke-opacity="0.12"/>
-  <path d="M0 382C188 330 340 316 500 334C685 356 816 430 1012 426C1228 421 1383 351 1600 318V520H0V382Z" fill="#08131D" fill-opacity="0.56"/>
-  <circle cx="1378" cy="92" r="118" fill="#53D4F9" fill-opacity="0.08"/>
-  <circle cx="262" cy="420" r="148" fill="#9FF4A4" fill-opacity="0.06"/>
+  <rect width="1200" height="630" rx="32" fill="url(#bg)"/>
+  <circle cx="1020" cy="130" r="130" fill="#79D9FF" fill-opacity="0.08"/>
+  <circle cx="182" cy="536" r="170" fill="#9DEFB1" fill-opacity="0.07"/>
+  <ellipse cx="612" cy="480" rx="422" ry="104" fill="#D8FFF0" fill-opacity="0.04"/>
 
-  <rect x="148" y="124" width="168" height="38" rx="19" fill="url(#chipBlue)"/>
-  <text x="232" y="148" text-anchor="middle" fill="#D7F2FF" font-family="Verdana, Geneva, sans-serif" font-size="18" font-weight="700">COMMUNITY FORK</text>
-
-  <rect x="332" y="124" width="150" height="38" rx="19" fill="url(#chipGreen)"/>
-  <text x="407" y="148" text-anchor="middle" fill="#E2FFD8" font-family="Verdana, Geneva, sans-serif" font-size="18" font-weight="700">AI ASSISTED</text>
-
-  <text x="148" y="232" fill="white" font-family="Verdana, Geneva, sans-serif" font-size="58" font-weight="700">Pager Mode Fork</text>
-  <text x="148" y="282" fill="#A9E7FF" font-family="Verdana, Geneva, sans-serif" font-size="26" font-weight="700">Heltec V3 / V4 small-screen firmware fork</text>
-
-  <text x="148" y="336" fill="#D8E3EB" font-family="Verdana, Geneva, sans-serif" font-size="24">
-    <tspan x="148" dy="0">Focused UI changes and ready build targets.</tspan>
-    <tspan x="148" dy="34">Community-maintained, openly AI-assisted.</tspan>
-  </text>
-
-  <g transform="translate(1206 122)">
-    <rect x="0" y="0" width="208" height="276" rx="28" fill="#08111C" stroke="url(#frame)" stroke-width="3"/>
-    <rect x="18" y="18" width="172" height="240" rx="18" fill="#F3F8FB"/>
-    <rect x="42" y="42" width="124" height="20" rx="10" fill="#2E5F7A"/>
-    <rect x="42" y="84" width="96" height="12" rx="6" fill="#A8BCC8"/>
-    <rect x="42" y="108" width="112" height="12" rx="6" fill="#A8BCC8"/>
-    <rect x="42" y="132" width="104" height="12" rx="6" fill="#A8BCC8"/>
-    <rect x="42" y="156" width="86" height="12" rx="6" fill="#A8BCC8"/>
-    <rect x="42" y="196" width="90" height="38" rx="12" fill="#173A4D"/>
-    <text x="87" y="221" text-anchor="middle" fill="#D8F3FF" font-family="Verdana, Geneva, sans-serif" font-size="18" font-weight="700">PAGER</text>
+  <g filter="url(#shadow)">
+    <rect x="168" y="132" width="734" height="354" rx="28" fill="url(#panel)" stroke="#87CDEE" stroke-opacity="0.25" stroke-width="3"/>
   </g>
 
-  <g opacity="0.72">
-    <path d="M1036 232C1082 198 1144 198 1190 232" stroke="#59DFFF" stroke-width="4" stroke-linecap="round"/>
-    <path d="M1012 204C1070 160 1148 160 1206 204" stroke="#59DFFF" stroke-width="4" stroke-linecap="round" opacity="0.82"/>
-    <path d="M986 174C1058 120 1158 120 1230 174" stroke="#59DFFF" stroke-width="4" stroke-linecap="round" opacity="0.58"/>
+  <rect x="214" y="184" width="168" height="52" rx="26" fill="#274D66"/>
+  <rect x="390" y="184" width="160" height="52" rx="26" fill="#355F42"/>
+  <text x="238" y="216" fill="#D4EDFF" font-family="Verdana, Geneva, sans-serif" font-size="24" font-weight="700">COMMUNITY</text>
+  <text x="416" y="216" fill="#E1FFD1" font-family="Verdana, Geneva, sans-serif" font-size="24" font-weight="700">AI ASSISTED</text>
+
+  <text x="216" y="294" fill="#F6FBFF" font-family="Verdana, Geneva, sans-serif" font-size="72" font-weight="700">Meshtastic Pager OS</text>
+  <text x="216" y="352" fill="#A4E4FF" font-family="Verdana, Geneva, sans-serif" font-size="34" font-weight="700">Standalone message pager for Heltec V4</text>
+  <text x="216" y="408" fill="#D8E6EF" font-family="Verdana, Geneva, sans-serif" font-size="26">Built for simple work: receive, glance, confirm, sleep.</text>
+  <text x="216" y="446" fill="#D8E6EF" font-family="Verdana, Geneva, sans-serif" font-size="26">No carousel, no device-side setup, no extra motion.</text>
+
+  <g opacity="0.9">
+    <path d="M708 247C742 247 770 267 790 300" stroke="#69D6FF" stroke-width="6" stroke-linecap="round"/>
+    <path d="M682 232C730 232 774 258 811 309" stroke="#69D6FF" stroke-opacity="0.78" stroke-width="6" stroke-linecap="round"/>
+    <path d="M655 216C718 216 782 251 830 322" stroke="#69D6FF" stroke-opacity="0.55" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+  <g>
+    <rect x="736" y="196" width="142" height="226" rx="24" fill="#081722" stroke="#A9F3C6" stroke-width="4"/>
+    <rect x="750" y="214" width="114" height="188" rx="18" fill="url(#screen)"/>
+    <rect x="778" y="241" width="66" height="15" rx="7.5" fill="#4C7D95"/>
+    <rect x="775" y="285" width="68" height="11" rx="5.5" fill="#A2BACA"/>
+    <rect x="775" y="313" width="72" height="11" rx="5.5" fill="#A2BACA"/>
+    <rect x="775" y="341" width="58" height="11" rx="5.5" fill="#A2BACA"/>
+    <rect x="775" y="363" width="74" height="11" rx="5.5" fill="#A2BACA"/>
+    <rect x="774" y="400" width="76" height="38" rx="12" fill="#15374B"/>
+    <text x="790" y="425" fill="#E8F8FF" font-family="Verdana, Geneva, sans-serif" font-size="18" font-weight="700">PAGER</text>
+  </g>
+
+  <g transform="translate(908 124)">
+    <path d="M0 382H70L92 214L78 0H42L28 214L0 382Z" fill="#5D6872"/>
+    <rect x="30" y="62" width="18" height="224" rx="9" fill="#A7B7C3"/>
+    <path d="M-14 180L102 180" stroke="#7B8791" stroke-width="8" stroke-linecap="round"/>
+    <path d="M12 234L88 234" stroke="#7B8791" stroke-width="8" stroke-linecap="round" opacity="0.7"/>
+
+    <circle cx="50" cy="120" r="28" fill="#FFCF9A"/>
+    <path d="M30 112C34 89 47 78 61 82C73 85 80 98 77 110" fill="#1C2226"/>
+    <path d="M23 162C28 139 42 126 63 126C83 126 97 139 102 162L112 220L88 228L74 188L74 288H28V188L14 228L-10 220L0 164C2 164 10 163 23 162Z" fill="#D65B3F"/>
+    <path d="M74 186L118 212" stroke="#D65B3F" stroke-width="12" stroke-linecap="round"/>
+    <path d="M28 186L0 238" stroke="#D65B3F" stroke-width="12" stroke-linecap="round"/>
+    <path d="M40 290L30 382" stroke="#172024" stroke-width="14" stroke-linecap="round"/>
+    <path d="M66 290L74 382" stroke="#172024" stroke-width="14" stroke-linecap="round"/>
+
+    <rect x="92" y="204" width="42" height="58" rx="10" fill="#0F1D26" stroke="#8FE7F6" stroke-width="3"/>
+    <rect x="99" y="213" width="28" height="40" rx="6" fill="#DDEFF7"/>
+    <rect x="103" y="219" width="20" height="5" rx="2.5" fill="#5B8298"/>
+    <rect x="103" y="229" width="18" height="4" rx="2" fill="#A0B6C4"/>
+    <rect x="103" y="237" width="16" height="4" rx="2" fill="#A0B6C4"/>
   </g>
 </svg>

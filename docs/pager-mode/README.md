@@ -1,121 +1,131 @@
-# Meshtastic Pager Mode Fork
+# Meshtastic Pager OS
 
-![Pager Mode banner](assets/pager-mode-banner.svg)
+![Pager OS concept art](assets/pager-mode-banner.svg)
 
-> Unofficial Meshtastic fork with pager-mode changes for small displays and e-ink targets.
+`Meshtastic Pager OS` is a standalone pager-style firmware direction built on top of the Meshtastic codebase. The goal is not to preserve the old device UI. The goal is to turn a Heltec V4 into a small, reliable message receiver that behaves like a pager.
 
-## Project note
+## Project status
 
-This is a **fork** of Meshtastic firmware, not an official upstream release.
+- Base platform: Meshtastic firmware fork
+- Main target: `heltec-v4`
+- Configuration path: official mobile app over BLE
+- Device-side UI scope: reduced to pager behavior
 
-It is maintained as community work without commercial backing or financial motivation.
+This project is maintained as community work without commercial backing. A substantial part of the implementation and documentation was done with AI assistance because the maintainer works outside embedded development.
 
-A large part of the work here was produced with **AI assistance**. That is deliberate and openly acknowledged. The maintainer works in a different field, so AI was used as a practical tool to get from idea to working firmware changes and documentation.
+## Why this exists
 
-## Language
+Some users do not need a pocket radio with many local screens. They need a clipped-on device that:
 
-- English: this file
-- Russian: [README.ru.md](README.ru.md)
+- waits quietly
+- wakes on incoming text
+- shows the message clearly
+- goes back to low-power behavior
 
-## What this fork changes
+Typical use cases:
 
-- Adds `Pager Mode` to the classic small-screen UI
-- Carries the same idea into `InkHUD` on supported e-ink targets
-- Keeps the device focused on the selected DM or channel while pager mode is active
-- Uses long press to open message actions, including enable/disable for pager mode
-- Returns to the normal start screen after reboot instead of restoring pager mode automatically
-- Improves readability of long messages
-- Keeps the changes intentionally smaller than a full UI redesign
+- field technicians
+- climbers and riggers
+- airsoft and training events
+- hiking and outdoor groups
+- rough work conditions where a simple pager is better than a busy handheld UI
 
-## Intended devices
+The general idea is simple: do not complicate what already works.
 
-This fork is aimed at small displays:
+## Display layout
 
-- OLED-based Meshtastic devices
-- e-ink devices using `InkHUD`
+The OLED is divided into three fixed zones:
 
-Large TFT-first layouts were intentionally not the main goal.
+1. Header
+Battery status and current time.
 
-## Scope
+2. Center
+Large horizontally scrolling message text.
 
-- Keep the UI focused on message reading
-- Limit the change set to something maintainable
-- Preserve as much upstream behavior as possible
-- Make local build, packaging, and flashing easier for the boards used in this fork
+3. Lower zone
+Used only for pager-specific surfaces when needed by the message flow.
 
-## Recommended targets
+The center area is the priority. It should be readable quickly, even when the device is clipped to clothing or gear.
 
-Examples:
+![Pager OS layout](assets/pager-mode-overview.svg)
+
+## Message handling
+
+Current pager behavior is based on a strict queue model:
+
+- Incoming message wakes the screen
+- Message text scrolls in the center area
+- If another message arrives while the screen is already active, the new message is shown next and the active timer is refreshed
+- Unread messages stay in the local pager queue until the user confirms them with the button
+- Local message history is intentionally temporary and can be cleared completely
+
+The device is not meant to be an archive. If users want long-term history, they can keep it in the mobile app.
+
+## Button behavior
+
+- Short press on a sleeping screen wakes the screen and opens unread message review
+- Additional short presses confirm the current message and move backward through unread history
+- Long press clears all locally stored pager messages
+
+The button is used as a quick acknowledgement tool, not as a menu navigation system.
+
+## LED behavior
+
+- White LED blinks while unread messages exist
+- Blinking is faster during the initial alert window
+- Blinking slows down later to save power
+
+The LED is a quiet reminder that something still needs to be checked.
+
+## What remains compatible
+
+- BLE pairing and configuration through the standard Meshtastic app
+- Channel traffic
+- Direct messages
+- Existing provisioning and flashing workflow
+
+## What is intentionally removed from the UX
+
+- standard OLED screen carousel
+- rich device-side navigation
+- on-device settings as a primary workflow
+
+This fork is intentionally narrow. It is not trying to improve every upstream scenario.
+
+## Flashing from the browser
+
+Preferred user workflow:
+
+1. Open the [Pager OS Web Flasher](https://chemobook.github.io/meshtastic-pager-mode/)
+2. Use desktop Chrome or Edge
+3. Choose `Heltec V4`
+4. Flash directly from the browser
+5. Wait for reboot
+
+If the board is not detected:
+
+- replace the USB cable first
+- close any serial monitor or terminal tool
+- try another USB port
+
+## Build locally
 
 ```bash
-pio run -e heltec-v3
 pio run -e heltec-v4
-pio run -e heltec-wireless-paper-inkhud
-pio run -e t-echo-inkhud
 ```
 
-Use the target that matches your actual hardware.
-
-## Build, package, flash
-
-The local build/export area for this fork is:
-
-- [../../release-work/README.md](../../release-work/README.md)
-
-## Preferred user path
-
-For most users, the easiest path is now the browser flasher:
-
-1. Open [Pager Mode Web Flasher](https://chemobook.github.io/meshtastic-pager-mode/).
-2. Use desktop Chrome or Edge.
-3. Select `Heltec V3` or `Heltec V4`.
-4. Flash from the browser and wait for the reboot.
-5. If no port appears, replace the USB cable first and close other serial tools.
-6. If Windows still does not see the board, install the ESP32 USB serial driver from the [official Meshtastic guide](https://meshtastic.org/docs/getting-started/serial-drivers/esp32/).
-
-Only these two boards are currently exposed on the web flasher.
-
-To package current builds into that folder:
+Package the build into the release-style folder:
 
 ```bash
-./bin/pager-package.sh heltec-v3 heltec-v4
+./bin/pager-package.sh heltec-v4
 ```
 
-That script copies the latest matching artifacts from `.pio/build/<env>/` into release-style folders and also fetches the ESP32-S3 OTA helper image when needed.
+The packaged files are placed in:
 
-### Fast path
+- [../../release-work/firmware/heltec-v4](../../release-work/firmware/heltec-v4)
 
-```bash
-pio run -e heltec-v3
-pio run -e heltec-v4
-```
+## Practical notes
 
-### Pack the results
-
-```bash
-./bin/pager-package.sh heltec-v3 heltec-v4
-```
-
-### Flash with the fork helper
-
-```bash
-./bin/pager-flash.sh --board heltec-v3 --port /dev/tty.usbmodemXXXX
-./bin/pager-flash.sh --board heltec-v4 --port /dev/tty.usbmodemXXXX
-```
-
-This wrapper sits on top of the existing `bin/device-install.sh` flow and makes it easier to pick the right packaged image for `Heltec V3/V4`.
-
-## Usage notes
-
-- Use the exact board target that matches the hardware.
-- Prefer the web flasher for normal user installs on `heltec-v3` and `heltec-v4`.
-- Browser flashing depends on Web Serial, so Safari and most mobile browsers are not the primary path.
-- Prefer testing pager-mode behavior on a real device before sharing a build.
-- Treat this branch as a fork with focused changes, not as a full replacement for upstream Meshtastic.
-
-## Known limitations
-
-- This remains a community fork, so edge cases still need real-device testing.
-- Large TFT targets were not the main focus.
-- Russian defaults in this fork are practical, but more opinionated than upstream.
-- The goal here is usefulness, not perfect coverage of every board.
+- This is not an official Meshtastic release
+- Real device testing still matters more than simulator assumptions
+- The active product direction is `Pager OS`, even if some old paths in the repository still mention `pager-mode`

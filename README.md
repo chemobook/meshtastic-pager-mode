@@ -1,9 +1,9 @@
 <div align="center">
 
-<img src=".github/meshtastic_logo.png" alt="Meshtastic logo" width="88" />
-<h1>Meshtastic Pager Mode Fork</h1>
+<img src=".github/meshtastic_logo.png" alt="Meshtastic logo" width="84" />
+<h1>Meshtastic Pager OS</h1>
 
-<p><strong>Unofficial Meshtastic fork with pager-mode changes for Heltec V3, Heltec V4 and other small-screen targets.</strong></p>
+<p><strong>Standalone pager-style firmware fork for Heltec V4, built on top of the Meshtastic radio stack.</strong></p>
 
 <p>
   <a href="https://chemobook.github.io/meshtastic-pager-mode/">Web Flasher</a>
@@ -12,7 +12,7 @@
   ·
   <a href="#русский">Русский</a>
   ·
-  <a href="release-work/README.md">Ready firmware</a>
+  <a href="release-work/README.md">Firmware files</a>
   ·
   <a href="docs/pager-mode/README.md">Detailed EN guide</a>
   ·
@@ -21,156 +21,164 @@
 
 </div>
 
-![Pager Mode banner](docs/pager-mode/assets/pager-mode-banner.svg)
+![Pager OS field illustration](docs/pager-mode/assets/pager-mode-banner.svg)
 
 ## English
 
-This repository is an **unofficial fork** of the Meshtastic firmware focused on a more practical **Pager Mode** experience for compact devices such as **Heltec V3**, **Heltec V4**, and other small-screen or e-ink targets.
+`Meshtastic Pager OS` is an unofficial fork of Meshtastic aimed at one job: receive text over LoRa and show it on a small OLED like a classic work pager.
 
-It is a community fork maintained without commercial backing or financial motivation. A large part of the implementation and documentation was created with **AI assistance**. The maintainer works outside embedded development, so AI was used as a practical tool, not hidden authorship.
+This project is maintained by interested people without financial motivation. A meaningful part of the code and documentation was produced with AI assistance. That is intentional and not hidden: the maintainer works outside embedded development and used AI as a practical engineering tool.
 
-### What this fork is
+### Concept
 
-- A fork of upstream Meshtastic, not a replacement for it
-- A small-screen-first branch with focused UI changes
-- A practical workspace for builds, packaging, and board-specific testing
-- A project that should still be validated on real hardware before wider use
+- Built for `Heltec V4` first
+- Keeps Meshtastic radio, BLE configuration and mobile app workflow
+- Removes the normal device-side UI, carousel and settings screens
+- Treats the device as a simple pager, not a multi-screen handheld
 
-### What this fork changes
+This is useful when the device is clipped to clothing, gear, or a harness and the operator only needs short incoming text in harsh or busy conditions.
 
-- Adds and refines `Pager Mode` for compact displays
-- Carries the same idea into `InkHUD` on supported e-ink targets
-- Keeps the device focused on the selected DM or channel while pager mode is active
-- Uses long press to open message actions, including enable/disable for pager mode
-- Returns to the normal start screen after reboot instead of restoring pager mode automatically
-- Keeps message reading simple and foregrounded
-- Improves readability of long messages
-- Preserves as much upstream Meshtastic behavior as possible
+### Display model
 
-![Pager Mode overview](docs/pager-mode/assets/pager-mode-overview.svg)
+The OLED is split into three fixed zones:
 
-### Build and release workflow
+1. Header: battery and current time
+2. Center: large horizontal scrolling message text
+3. Bottom area: optional status surfaces when needed by the pager flow
 
-Ready firmware packages prepared in this workspace are collected in [release-work/README.md](release-work/README.md).
+The goal is simple reading at a glance. No menu browsing is required during normal use.
 
-Current release-oriented targets:
+### Message logic
 
-- `heltec-v3`
+- Incoming text wakes the screen
+- The message scrolls in the center area for the active display window
+- If another message arrives while the screen is already active, the new message takes over and the timer resets
+- Unread messages are tracked locally until the user confirms them with the hardware button
+- Local message history is intentionally disposable and can be cleared completely
+
+### Button and LED logic
+
+- Short press on a sleeping screen wakes it and opens unread message review
+- Further short presses confirm the current message and move through unread history
+- Long press clears local pager history
+- The white LED blinks for unread messages and slows down after the fast alert window
+
+### What stays from Meshtastic
+
+- BLE configuration through the official mobile app
+- Channel and DM transport
+- Existing radio stack, packet handling and device provisioning flow
+
+### What is intentionally gone
+
+- Standard screen carousel
+- Device-side navigation as the main workflow
+- “General purpose handheld” behavior on the OLED
+
+### Flashing
+
+The main user path is the browser flasher:
+
+1. Open [Pager OS Web Flasher](https://chemobook.github.io/meshtastic-pager-mode/)
+2. Use desktop Chrome or Edge
+3. Choose `Heltec V4`
+4. Flash from the browser and wait for reboot
+5. If the board is not detected, replace the USB cable first and close other serial tools
+
+Current packaged target exposed to users:
+
 - `heltec-v4`
 
-### Web flasher
-
-Preferred user path:
-
-- Open [Pager Mode Web Flasher](https://chemobook.github.io/meshtastic-pager-mode/)
-- Use desktop Chrome or Edge
-- Choose `Heltec V3` or `Heltec V4`
-- Flash from the browser with the board-matching package
-- If the board is not detected, first replace the USB cable and close other serial tools
-- If Windows still does not see the device, install the ESP32 USB serial driver from the [official Meshtastic guide](https://meshtastic.org/docs/getting-started/serial-drivers/esp32/)
-
-### Build it yourself
-
-Quick build:
+### Build
 
 ```bash
-pio run -e heltec-v3
 pio run -e heltec-v4
-```
-
-Package release-style artifacts:
-
-```bash
-./bin/pager-package.sh heltec-v3 heltec-v4
-```
-
-Flash with the helper script:
-
-```bash
-./bin/pager-flash.sh --board heltec-v3 --port /dev/tty.usbmodemXXXX
-./bin/pager-flash.sh --board heltec-v4 --port /dev/tty.usbmodemXXXX
+./bin/pager-package.sh heltec-v4
 ```
 
 ### Notes
 
-- This is not an official Meshtastic release.
-- Board selection still matters. Flash only the image that matches the hardware exactly.
-- Real-device testing is still required, especially for UI behavior and long-message handling.
-- The browser flasher currently supports only `heltec-v3` and `heltec-v4`.
-- The detailed English guide is in [docs/pager-mode/README.md](docs/pager-mode/README.md).
+- This is not an official Meshtastic release
+- Real-device testing still matters
+- The repo name may still mention the older pager-mode branch, but the active direction is now `Meshtastic Pager OS`
 
 ---
 
 ## Русский
 
-Этот репозиторий — **неофициальный форк** прошивки Meshtastic с более практичным **Pager Mode** для компактных устройств вроде **Heltec V3**, **Heltec V4** и других small-screen / e-ink плат.
+`Meshtastic Pager OS` — это неофициальный форк Meshtastic, который теперь делается под одну простую задачу: принимать текст по LoRa и показывать его на маленьком OLED как классический рабочий пейджер.
 
-Это community fork без коммерческой поддержки и без финансовой мотивации. Значительная часть кода и документации была сделана с помощью **искусственного интеллекта**. Это не скрывается: AI здесь использовался как рабочий инструмент, потому что сопровождающий проекта работает в другой области.
+Проект поддерживается заинтересованными людьми без финансовой выгоды. Значительная часть кода и документации была сделана с помощью AI. Это не скрывается: сопровождающий проекта работает в другой области и использует AI как практический инженерный инструмент.
 
-### Что это за проект
+### Концепция
 
-- Это форк upstream Meshtastic, а не замена оригиналу
-- Это ветка с фокусом на маленькие экраны и точечные UI-изменения
-- Это рабочий репозиторий для сборки, упаковки и проверки отдельных плат
-- Это проект, который всё равно нужно проверять на реальном железе
+- В первую очередь прошивка делается для `Heltec V4`
+- Радиостек, BLE-настройка и работа через мобильное приложение Meshtastic сохраняются
+- Обычный интерфейс устройства, карусель экранов и настройки с самого устройства убраны
+- Устройство рассматривается как простой пейджер, а не как универсальный handheld
 
-### Что меняет форк
+Такой подход нужен, когда устройство висит на одежде, разгрузке, рюкзаке или страховке, а пользователю важнее быстро увидеть входящий текст, чем листать экранные меню.
 
-- Добавляет и дорабатывает `Pager Mode` для компактных экранов
-- Переносит ту же идею в `InkHUD` для поддерживаемых e-ink устройств
-- Фиксирует устройство на выбранном DM или канале, пока активен pager mode
-- Открывает действия сообщения длинным нажатием, включая включение и выключение pager mode
-- После перезагрузки восстанавливает активную pager-сессию и снова открывает экран сообщений
-- Делает чтение сообщений более простым и заметным
-- Делает длинные сообщения более читаемыми
-- Старается сохранить максимум совместимости с upstream
+### Схема экрана
 
-### Сборка и выпуск
+OLED разбит на три фиксированные зоны:
 
-Готовые локально собранные артефакты складываются в [release-work/README.md](release-work/README.md).
+1. Верхняя строка: батарея и текущее время
+2. Центральная зона: крупный бегущий текст сообщения
+3. Нижняя зона: служебные поверхности, когда они нужны логике пейджера
 
-Основные release-цели:
+Идея простая: сообщение должно читаться с первого взгляда. Постоянная навигация по меню не нужна.
 
-- `heltec-v3`
+### Логика сообщений
+
+- Входящее сообщение будит экран
+- Текст крутится в центральной зоне в течение активного окна показа
+- Если во время показа приходит следующее сообщение, новое сообщение перехватывает экран и таймер сбрасывается
+- Непрочитанные сообщения отслеживаются локально до подтверждения кнопкой
+- Локальная история специально считается временной и может быть полностью очищена
+
+### Логика кнопки и LED
+
+- Короткое нажатие на спящем экране будит устройство и открывает просмотр непрочитанных сообщений
+- Следующие короткие нажатия подтверждают текущее сообщение и листают историю непрочитанных
+- Долгое удержание очищает локальную историю пейджера
+- Белый светодиод мигает при наличии непрочитанных сообщений и затем замедляется
+
+### Что сохраняется от Meshtastic
+
+- Настройка через официальное мобильное приложение по BLE
+- Работа каналов и DM
+- Существующий радиостек, доставка пакетов и общий provisioning flow
+
+### Что убрано специально
+
+- Обычная экранная карусель
+- Навигация по устройству как основной сценарий
+- Поведение “универсального карманного устройства” на OLED
+
+### Прошивка
+
+Основной путь для пользователя сейчас такой:
+
+1. Открыть [Pager OS Web Flasher](https://chemobook.github.io/meshtastic-pager-mode/)
+2. Использовать настольный Chrome или Edge
+3. Выбрать `Heltec V4`
+4. Прошить устройство из браузера и дождаться перезагрузки
+5. Если устройство не находится, сначала заменить USB-кабель и закрыть программы, которые держат serial-порт
+
+Сейчас для пользователей подготовлена одна основная цель:
+
 - `heltec-v4`
 
-### Веб-прошивальщик
-
-Основной путь для обычного пользователя:
-
-- Открыть [Pager Mode Web Flasher](https://chemobook.github.io/meshtastic-pager-mode/)
-- Использовать настольный Chrome или Edge
-- Выбрать `Heltec V3` или `Heltec V4`
-- Прошить устройство прямо из браузера
-- Если устройство не находится, сначала заменить USB-кабель и закрыть программы, которые держат COM-порт
-- Если Windows всё ещё не видит плату, поставить USB serial driver для ESP32 по [официальной инструкции Meshtastic](https://meshtastic.org/docs/getting-started/serial-drivers/esp32/)
-
-### Как собрать самому
-
-Быстрая сборка:
+### Сборка
 
 ```bash
-pio run -e heltec-v3
 pio run -e heltec-v4
-```
-
-Упаковка артефактов:
-
-```bash
-./bin/pager-package.sh heltec-v3 heltec-v4
-```
-
-Прошивка через helper-скрипт:
-
-```bash
-./bin/pager-flash.sh --board heltec-v3 --port /dev/tty.usbmodemXXXX
-./bin/pager-flash.sh --board heltec-v4 --port /dev/tty.usbmodemXXXX
+./bin/pager-package.sh heltec-v4
 ```
 
 ### Примечания
 
-- Это не официальный релиз Meshtastic.
-- Перед прошивкой важно точно проверить соответствие `env` и платы.
-- Проверка на реальном устройстве остаётся обязательной, особенно для UI и длинных сообщений.
-- Веб-прошивальщик сейчас поддерживает только `heltec-v3` и `heltec-v4`.
-- Подробная русская документация находится в [docs/pager-mode/README.ru.md](docs/pager-mode/README.ru.md).
+- Это не официальный релиз Meshtastic
+- Проверка на реальном устройстве всё ещё обязательна
+- Название репозитория пока может оставаться от старой ветки, но активная концепция проекта теперь называется `Meshtastic Pager OS`

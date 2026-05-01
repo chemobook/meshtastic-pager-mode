@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pager Mode Web Flasher</title>
+    <title>Meshtastic Pager OS Web Flasher</title>
     <meta
       name="description"
-      content="Browser-based installer for the Meshtastic Pager Mode Fork on Heltec V3 and Heltec V4."
+      content="Browser-based installer for Meshtastic Pager OS on Heltec V4."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,17 +17,17 @@
     <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
     <style>
       :root {
-        --bg: #08131d;
-        --bg-soft: #102233;
-        --panel: rgba(11, 24, 36, 0.84);
-        --panel-border: rgba(181, 222, 238, 0.18);
-        --text: #edf4f8;
-        --muted: #b1c4cf;
-        --accent: #8fdcff;
-        --accent-strong: #5ecae7;
-        --accent-soft: #8ee6ae;
-        --danger: #ffd0a8;
-        --shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+        --bg: #09131b;
+        --bg-soft: #12293a;
+        --panel: rgba(10, 21, 30, 0.84);
+        --panel-2: rgba(18, 42, 58, 0.72);
+        --border: rgba(154, 224, 244, 0.16);
+        --text: #ecf5f8;
+        --muted: #b6c9d3;
+        --cyan: #8fdcff;
+        --green: #9ce9b2;
+        --button: linear-gradient(135deg, #68d9ff, #92efb7);
+        --shadow: 0 28px 80px rgba(0, 0, 0, 0.3);
       }
 
       * {
@@ -40,35 +40,36 @@
         font-family: "IBM Plex Sans", sans-serif;
         color: var(--text);
         background:
-          radial-gradient(circle at top right, rgba(94, 202, 231, 0.16), transparent 24rem),
-          radial-gradient(circle at bottom left, rgba(142, 230, 174, 0.12), transparent 20rem),
-          linear-gradient(180deg, #09121c 0%, #0d1c2b 48%, #112d2d 100%);
+          radial-gradient(circle at 12% 82%, rgba(156, 233, 178, 0.1), transparent 18rem),
+          radial-gradient(circle at 88% 12%, rgba(143, 220, 255, 0.12), transparent 18rem),
+          linear-gradient(180deg, #08121a 0%, #0d1c27 45%, #102621 100%);
       }
 
       a {
-        color: var(--accent);
+        color: var(--cyan);
       }
 
       .page {
         width: min(1120px, calc(100% - 2rem));
         margin: 0 auto;
-        padding: 2rem 0 4rem;
+        padding: 1.2rem 0 4rem;
       }
 
       .hero,
       .section,
-      .footer-note {
+      .footer {
         background: var(--panel);
-        border: 1px solid var(--panel-border);
+        border: 1px solid var(--border);
         border-radius: 28px;
         box-shadow: var(--shadow);
       }
 
       .hero {
-        display: grid;
-        gap: 1.5rem;
-        grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
-        padding: 2rem;
+        overflow: hidden;
+      }
+
+      .hero-copy {
+        padding: 2rem 2rem 1.2rem;
       }
 
       .eyebrow {
@@ -79,7 +80,7 @@
       }
 
       .eyebrow span {
-        padding: 0.45rem 0.85rem;
+        padding: 0.42rem 0.82rem;
         border-radius: 999px;
         font-size: 0.82rem;
         font-weight: 700;
@@ -87,14 +88,14 @@
         text-transform: uppercase;
       }
 
-      .eyebrow .fork {
-        background: rgba(52, 119, 174, 0.34);
-        color: #d8f0ff;
+      .eyebrow .os {
+        background: rgba(61, 126, 170, 0.34);
+        color: #ddf3ff;
       }
 
-      .eyebrow .web {
-        background: rgba(47, 109, 84, 0.42);
-        color: #dcffe6;
+      .eyebrow .board {
+        background: rgba(57, 117, 83, 0.42);
+        color: #e1ffe6;
       }
 
       h1,
@@ -105,235 +106,115 @@
       }
 
       h1 {
-        font-size: clamp(2.25rem, 4vw, 4.2rem);
+        font-size: clamp(2.3rem, 4vw, 4.2rem);
         line-height: 0.95;
       }
 
-      .hero p {
+      .hero-copy p {
         margin: 0.9rem 0 0;
-        font-size: 1.05rem;
-        line-height: 1.65;
+        max-width: 52rem;
+        line-height: 1.68;
         color: var(--muted);
       }
 
-      .hero-actions {
+      .actions {
         display: flex;
         gap: 0.8rem;
         flex-wrap: wrap;
-        margin-top: 1.35rem;
+        margin-top: 1.3rem;
       }
 
-      .hero-actions a {
+      .actions a {
         text-decoration: none;
-        padding: 0.85rem 1.1rem;
+        padding: 0.9rem 1.1rem;
         border-radius: 14px;
-        font-weight: 600;
-      }
-
-      .hero-actions .primary {
-        background: linear-gradient(135deg, var(--accent-strong), #7fe5b6);
-        color: #052034;
-      }
-
-      .hero-actions .secondary {
-        background: rgba(255, 255, 255, 0.06);
-        color: var(--text);
-        border: 1px solid rgba(255, 255, 255, 0.09);
-      }
-
-      .device-illustration {
-        position: relative;
-        min-height: 280px;
-        border-radius: 24px;
-        background:
-          linear-gradient(160deg, rgba(19, 48, 70, 0.96), rgba(20, 55, 45, 0.85)),
-          linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
-        overflow: hidden;
-        display: grid;
-        place-items: center;
-      }
-
-      .device-illustration::before,
-      .device-illustration::after {
-        content: "";
-        position: absolute;
-        border-radius: 999px;
-        background: rgba(99, 211, 255, 0.09);
-      }
-
-      .device-illustration::before {
-        width: 220px;
-        height: 220px;
-        right: -40px;
-        top: -48px;
-      }
-
-      .device-illustration::after {
-        width: 240px;
-        height: 240px;
-        left: -64px;
-        bottom: -108px;
-        background: rgba(142, 230, 174, 0.08);
-      }
-
-      .pager-shell {
-        position: relative;
-        width: 180px;
-        height: 250px;
-        border-radius: 28px;
-        background: #06101a;
-        border: 3px solid rgba(145, 225, 255, 0.88);
-      }
-
-      .pager-screen {
-        position: absolute;
-        inset: 18px;
-        border-radius: 18px;
-        background: #eef4f8;
-      }
-
-      .pager-screen::before,
-      .pager-screen::after {
-        content: "";
-        position: absolute;
-        left: 22px;
-        right: 22px;
-        border-radius: 999px;
-        background: #abc0cf;
-      }
-
-      .pager-screen::before {
-        top: 42px;
-        height: 18px;
-        background: #2f647e;
-      }
-
-      .pager-line {
-        position: absolute;
-        left: 22px;
-        right: 34px;
-        height: 12px;
-        border-radius: 999px;
-        background: #a9bcc9;
-      }
-
-      .pager-line.one {
-        top: 84px;
-      }
-
-      .pager-line.two {
-        top: 110px;
-      }
-
-      .pager-line.three {
-        top: 136px;
-        right: 42px;
-      }
-
-      .pager-tag {
-        position: absolute;
-        left: 22px;
-        bottom: 28px;
-        padding: 0.9rem 1rem;
-        border-radius: 14px;
-        background: #163a4d;
-        color: #dff4ff;
         font-weight: 700;
-        letter-spacing: 0.04em;
       }
 
-      .waves {
-        position: absolute;
-        right: 174px;
-        top: 72px;
+      .actions .primary {
+        background: var(--button);
+        color: #052131;
       }
 
-      .waves span {
+      .actions .secondary {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .hero-art {
         display: block;
-        width: 150px;
-        height: 52px;
-        border: 4px solid transparent;
-        border-top-color: rgba(100, 220, 255, 0.7);
-        border-radius: 50%;
-      }
-
-      .waves span + span {
-        margin-top: -14px;
-        width: 178px;
-      }
-
-      .waves span + span + span {
-        width: 208px;
+        width: 100%;
+        height: auto;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
       }
 
       .section {
-        margin-top: 1.4rem;
-        padding: 1.6rem;
-      }
-
-      .section-intro {
-        display: flex;
-        justify-content: space-between;
-        gap: 1rem;
-        align-items: end;
-        margin-bottom: 1rem;
+        margin-top: 1.3rem;
+        padding: 1.5rem;
       }
 
       .section-intro p {
-        margin: 0.7rem 0 0;
+        margin: 0.8rem 0 0;
+        max-width: 56rem;
+        line-height: 1.66;
         color: var(--muted);
-        max-width: 60rem;
-        line-height: 1.6;
       }
 
-      .device-grid {
+      .device-card,
+      .info-card {
+        padding: 1.3rem;
+        border-radius: 24px;
+        background: var(--panel-2);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .device-grid,
+      .grid-two {
         display: grid;
         gap: 1rem;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .device-card {
-        padding: 1.3rem;
-        border-radius: 22px;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+      .grid-two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .device-meta {
         display: flex;
         gap: 0.55rem;
         flex-wrap: wrap;
-        margin: 0.85rem 0 1rem;
+        margin: 0.95rem 0 1rem;
       }
 
       .pill {
-        padding: 0.32rem 0.65rem;
+        padding: 0.34rem 0.68rem;
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.08);
         color: var(--muted);
-        font-size: 0.8rem;
+        font-size: 0.82rem;
       }
 
-      .version {
-        color: var(--accent-soft);
+      .pill.version {
+        color: #ddffe9;
       }
 
       .device-card p,
       .device-card li,
-      .section li {
+      .info-card p,
+      .info-card li {
         color: var(--muted);
-        line-height: 1.6;
+        line-height: 1.62;
       }
 
       .device-card ul,
-      .section ol,
-      .section ul {
+      .info-card ul,
+      .info-card ol {
         margin: 0.9rem 0 0;
         padding-left: 1.2rem;
       }
 
       .install-wrap {
-        margin-top: 1.15rem;
+        margin-top: 1.05rem;
       }
 
       esp-web-install-button::part(button) {
@@ -345,64 +226,49 @@
         display: inline-flex;
         justify-content: center;
         align-items: center;
-        padding: 0.95rem 1rem;
+        padding: 0.98rem 1rem;
         border-radius: 14px;
-        background: linear-gradient(135deg, var(--accent-strong), #7fe5b6);
-        color: #062236;
+        background: var(--button);
+        color: #062235;
         font-weight: 700;
         cursor: pointer;
       }
 
       .subtle {
         display: inline-block;
-        margin-top: 0.75rem;
-        font-size: 0.88rem;
+        margin-top: 0.7rem;
         color: var(--muted);
+        font-size: 0.9rem;
       }
 
-      .grid-two {
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .info-card {
-        padding: 1.25rem;
-        border-radius: 22px;
-        background: rgba(255, 255, 255, 0.04);
+      .diagram {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin-top: 1rem;
+        border-radius: 24px;
         border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.03);
       }
 
-      .info-card h3 {
-        margin-bottom: 0.8rem;
-        font-size: 1.15rem;
+      .footer {
+        margin-top: 1.3rem;
+        padding: 1.35rem 1.5rem;
       }
 
-      .footer-note {
-        margin-top: 1.4rem;
-        padding: 1.4rem 1.6rem;
-      }
-
-      .footer-note p {
-        margin: 0.6rem 0 0;
+      .footer p {
+        margin: 0.5rem 0 0;
         color: var(--muted);
         line-height: 1.6;
       }
 
-      @media (max-width: 920px) {
-        .hero,
-        .device-grid,
+      @media (max-width: 900px) {
         .grid-two {
           grid-template-columns: 1fr;
         }
 
-        .section-intro {
-          display: block;
-        }
-
         .page {
           width: min(100% - 1rem, 1120px);
-          padding-top: 1rem;
         }
       }
     </style>
@@ -410,83 +276,39 @@
   <body>
     <main class="page">
       <section class="hero">
-        <div>
+        <div class="hero-copy">
           <div class="eyebrow">
-            <span class="fork">Community fork</span>
-            <span class="web">Web flasher</span>
+            <span class="os">Pager OS</span>
+            <span class="board">Heltec V4</span>
           </div>
-          <h1>Pager Mode Web Flasher</h1>
+          <h1>Meshtastic Pager OS Web Flasher</h1>
           <p>
-            Browser-based installer for the Meshtastic Pager Mode Fork on
-            <strong>Heltec V3</strong> and <strong>Heltec V4</strong>.
+            Browser installer for a standalone pager-style firmware fork built on top of the Meshtastic radio stack.
+            The idea is simple: receive messages, read them fast, confirm them, go back to low-power behavior.
           </p>
           <p>
-            Веб-прошивальщик для Meshtastic Pager Mode Fork. Сейчас доступны только
-            <strong>Heltec V3</strong> и <strong>Heltec V4</strong>.
+            Веб-прошивальщик для отдельной pager-прошивки на базе Meshtastic. Идея простая:
+            принять сообщение, быстро его увидеть, подтвердить и снова вернуться в экономичный режим.
           </p>
-          <div class="hero-actions">
-            <a class="primary" href="#devices">Open installer</a>
+          <div class="actions">
+            <a class="primary" href="#install">Open installer</a>
             <a class="secondary" href="pager-mode/README.ru.md">Русская инструкция</a>
             <a class="secondary" href="pager-mode/README.md">English guide</a>
           </div>
         </div>
-        <div class="device-illustration" aria-hidden="true">
-          <div class="waves">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <div class="pager-shell">
-            <div class="pager-screen">
-              <div class="pager-line one"></div>
-              <div class="pager-line two"></div>
-              <div class="pager-line three"></div>
-              <div class="pager-tag">PAGER</div>
-            </div>
-          </div>
-        </div>
+        <img class="hero-art" src="pager-mode/assets/pager-mode-banner.svg" alt="Field technician reading a pager message" />
       </section>
 
-      <section class="section" id="devices">
+      <section class="section" id="install">
         <div class="section-intro">
-          <div>
-            <h2>Select your board</h2>
-            <p>
-              This page performs a full browser install using the packaged factory image,
-              OTA helper image and LittleFS image. Choose only the board that matches the
-              device exactly.
-            </p>
-          </div>
+          <h2>Install firmware</h2>
+          <p>
+            The public browser installer is intentionally narrow right now. It exposes one primary target:
+            <strong>Heltec V4</strong>. That keeps the page honest and avoids flashing the wrong image to the wrong board.
+          </p>
         </div>
 
         <div class="device-grid">
-          <article class="device-card">
-            <h3>Heltec V3</h3>
-            <div class="device-meta">
-              <span class="pill">ESP32-S3</span>
-              <span class="pill">8MB flash</span>
-              <span class="pill version" data-version-for="heltec-v3">Latest packaged build</span>
-            </div>
-            <p>
-              Recommended for Heltec Wireless Tracker / LoRa 32 V3 style devices using the
-              `heltec-v3` target in this fork.
-            </p>
-            <ul>
-              <li>Browser install with the packaged full image set</li>
-              <li>Uses the same firmware package prepared in `release-work`</li>
-              <li>Best used from desktop Chrome or Edge</li>
-            </ul>
-            <div class="install-wrap">
-              <esp-web-install-button manifest="https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v3/web-installer.json">
-                <button class="flash-button" slot="activate">Install Heltec V3</button>
-              </esp-web-install-button>
-              <span class="subtle">
-                Package files:
-                <a href="https://github.com/chemobook/meshtastic-pager-mode/tree/main/release-work/firmware/heltec-v3">release-work/firmware/heltec-v3</a>
-              </span>
-            </div>
-          </article>
-
           <article class="device-card">
             <h3>Heltec V4</h3>
             <div class="device-meta">
@@ -495,13 +317,13 @@
               <span class="pill version" data-version-for="heltec-v4">Latest packaged build</span>
             </div>
             <p>
-              Recommended for devices that must be flashed with the `heltec-v4` target from
-              this fork.
+              Main target for the current Pager OS concept. Use this only for boards that must be flashed with the
+              `heltec-v4` environment.
             </p>
             <ul>
-              <li>Browser install with the packaged full image set</li>
-              <li>Uses the same firmware package prepared in `release-work`</li>
-              <li>Best used from desktop Chrome or Edge</li>
+              <li>Full browser install through Web Serial</li>
+              <li>Uses the packaged images from `release-work/firmware/heltec-v4`</li>
+              <li>After flashing, configure the node in the standard Meshtastic mobile app</li>
             </ul>
             <div class="install-wrap">
               <esp-web-install-button manifest="https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/web-installer.json">
@@ -517,35 +339,45 @@
       </section>
 
       <section class="section">
+        <div class="section-intro">
+          <h2>Pager model</h2>
+          <p>
+            This firmware no longer presents the device as a generic handheld UI. The OLED is treated like a pager screen:
+            header with battery and time, center message area, and a lower service zone only when required by the message flow.
+          </p>
+        </div>
+        <img class="diagram" src="pager-mode/assets/pager-mode-overview.svg" alt="Pager OS screen layout and message workflow" />
+      </section>
+
+      <section class="section">
         <div class="grid-two">
           <div class="info-card">
             <h3>How to flash</h3>
             <ol>
-              <li>Use a desktop browser with Web Serial support: Chrome or Edge.</li>
-              <li>Connect the device with a real data USB cable.</li>
-              <li>Close other serial tools before starting the install.</li>
-              <li>Choose the exact board, click the install button, then pick the serial port.</li>
-              <li>Wait for the browser flasher to finish and let the device reboot.</li>
-              <li>After first boot, configure the node in the Meshtastic app as usual.</li>
+              <li>Use current desktop Chrome or Edge.</li>
+              <li>Connect the board with a real data USB cable.</li>
+              <li>Close any terminal or serial tool that may hold the port.</li>
+              <li>Click the install button and choose the board serial port.</li>
+              <li>Wait for the browser installer to finish and allow the reboot.</li>
+              <li>Open the standard Meshtastic mobile app and configure the node over BLE.</li>
             </ol>
             <p class="subtle">
-              Browser flashing requires Web Serial. For the fewest problems, use current
-              desktop Chrome or Edge.
+              Browser flashing depends on Web Serial, so Safari and most mobile browsers are not the primary path.
             </p>
           </div>
+
           <div class="info-card">
             <h3>Как прошивать</h3>
             <ol>
-              <li>Используй настольный Chrome или Edge с поддержкой Web Serial.</li>
-              <li>Подключи устройство нормальным USB-кабелем для передачи данных.</li>
-              <li>Перед прошивкой закрой другие программы, которые держат COM-порт.</li>
-              <li>Выбери точную модель платы, нажми кнопку прошивки и укажи serial-порт.</li>
-              <li>Дождись завершения прошивки и перезагрузки устройства.</li>
-              <li>После первой загрузки настрой узел через обычное приложение Meshtastic.</li>
+              <li>Используй актуальный настольный Chrome или Edge.</li>
+              <li>Подключи плату нормальным USB-кабелем для передачи данных.</li>
+              <li>Закрой терминалы и serial-программы, которые могут держать порт.</li>
+              <li>Нажми кнопку прошивки и выбери serial-порт устройства.</li>
+              <li>Дождись завершения браузерной прошивки и перезагрузки.</li>
+              <li>Открой обычное приложение Meshtastic и настрой узел по BLE.</li>
             </ol>
             <p class="subtle">
-              Для веб-прошивки нужен Web Serial. Самый надёжный вариант сейчас:
-              настольный Chrome или Edge.
+              Веб-прошивка зависит от Web Serial, поэтому Safari и большинство мобильных браузеров здесь не основной путь.
             </p>
           </div>
         </div>
@@ -556,38 +388,36 @@
           <div class="info-card">
             <h3>Important notes</h3>
             <ul>
-              <li>This page is for `heltec-v3` and `heltec-v4` only.</li>
-              <li>Choosing the wrong board can leave the device in a bad state.</li>
-              <li>This is an unofficial community fork, not an upstream Meshtastic release.</li>
+              <li>This is an unofficial community firmware fork.</li>
+              <li>The public installer currently targets `heltec-v4` only.</li>
+              <li>Choosing the wrong board image can leave the device in a bad state.</li>
             </ul>
           </div>
+
           <div class="info-card">
             <h3>Troubleshooting</h3>
             <ul>
-              <li>If no serial port appears, first replace the USB cable with a known data cable.</li>
+              <li>If no port appears, replace the USB cable first.</li>
+              <li>If the port exists but cannot be opened, close other serial tools.</li>
               <li>If Windows does not see the board, install the required ESP32 USB serial driver.</li>
-              <li>If Linux sees the board but the browser cannot open it, check serial permissions and close terminal tools.</li>
-              <li>If the install fails once, retry from the same page before switching to another tool.</li>
-              <li>If the wrong target was selected, stop and re-flash only with the correct board package.</li>
+              <li>If the install fails once, retry from the same page before switching tools.</li>
             </ul>
             <p class="subtle">
               Driver reference:
-              <a href="https://meshtastic.org/docs/getting-started/serial-drivers/esp32/">
-                Meshtastic ESP32 serial drivers
-              </a>
+              <a href="https://meshtastic.org/docs/getting-started/serial-drivers/esp32/">Meshtastic ESP32 serial drivers</a>
             </p>
           </div>
         </div>
       </section>
 
-      <section class="footer-note">
+      <section class="footer">
         <h2>Project links</h2>
         <p>
           Repository:
           <a href="https://github.com/chemobook/meshtastic-pager-mode">chemobook/meshtastic-pager-mode</a>
         </p>
         <p>
-          Detailed docs:
+          Guides:
           <a href="pager-mode/README.md">English</a>
           /
           <a href="pager-mode/README.ru.md">Русский</a>
@@ -596,19 +426,12 @@
     </main>
 
     <script>
-      const manifests = {
-        "heltec-v3":
-          "https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v3/web-installer.json",
-        "heltec-v4":
-          "https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/web-installer.json",
-      };
+      const manifestUrl =
+        "https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/web-installer.json";
 
-      for (const [board, url] of Object.entries(manifests)) {
-        const target = document.querySelector(`[data-version-for="${board}"]`);
-        if (!target) {
-          continue;
-        }
-        fetch(url)
+      const target = document.querySelector('[data-version-for="heltec-v4"]');
+      if (target) {
+        fetch(manifestUrl)
           .then((response) => response.json())
           .then((manifest) => {
             target.textContent = `Version ${manifest.version || "unknown"}`;
