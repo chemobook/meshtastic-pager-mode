@@ -1,6 +1,6 @@
 {
   "name": "Meshtastic Pager Mode Fork (heltec-v4)",
-  "version": "2.7.23.33a025a",
+  "version": "2.7.23.fce1803",
   "new_install_prompt_erase": false,
   "builds": [
     {
@@ -8,7 +8,7 @@
       "improv": false,
       "parts": [
         {
-          "path": "https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/firmware-heltec-v4-2.7.23.33a025a.factory.bin",
+          "path": "https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/firmware-heltec-v4-2.7.23.fce1803.factory.bin",
           "offset": 0
         },
         {
@@ -16,7 +16,7 @@
           "offset": 6619136
         },
         {
-          "path": "https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/littlefs-heltec-v4-2.7.23.33a025a.bin",
+          "path": "https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/littlefs-heltec-v4-2.7.23.fce1803.bin",
           "offset": 13172736
         }
       ]
