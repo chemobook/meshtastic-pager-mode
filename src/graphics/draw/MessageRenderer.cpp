@@ -263,6 +263,8 @@ static void showIdleAndSleepLater(uint32_t delayMs)
     sleepAfterPause = false;
     if (screen && delayMs == 0) {
         screen->setOn(false);
+    } else if (delayMs != 0) {
+        requestFastRefresh();
     }
 }
 
@@ -445,7 +447,8 @@ static void drawPagerMarquee(OLEDDisplay *display)
     const int startX = display->getWidth() - 2;
     const int textX = startX - static_cast<int>(traveled);
 
-    UIRenderer::drawStringWithEmotes(display, textX, textY, text, FONT_HEIGHT_LARGE, 1, true);
+    // Pager OS marquee must stay a single horizontal line without helper-side wrapping.
+    display->drawString(textX, textY, text);
 }
 } // namespace
 
@@ -506,7 +509,7 @@ bool hasUnreadMessages()
 bool wantsFastRefresh()
 {
     return pagerDisplayState == PagerDisplayState::AUTO_PLAY || pagerDisplayState == PagerDisplayState::MANUAL_REVIEW ||
-           pagerDisplayState == PagerDisplayState::BANNER;
+           pagerDisplayState == PagerDisplayState::BANNER || idleSleepAtMs != 0;
 }
 
 uint32_t unreadLedIntervalMs()
@@ -602,8 +605,7 @@ void loadPagerModeState()
 
 #ifdef FSCom
     spiLock->lock();
-    if (!FSCom.exists(PAGER_MODE_FILENAME))
-    {
+    if (!FSCom.exists(PAGER_MODE_FILENAME)) {
         spiLock->unlock();
         return;
     }
@@ -1144,7 +1146,8 @@ void drawTextMessageFrame(OLEDDisplay *display, OLEDDisplayUiState *state, int16
     graphics::drawCommonHeader(display, x, y, "");
     hasUnreadMessage = savedUnread;
 
-    if (pagerDisplayState != PagerDisplayState::IDLE && activeMessageIndex != SIZE_MAX && activeMessageIndex < pagerQueue.size()) {
+    if (pagerDisplayState != PagerDisplayState::IDLE && activeMessageIndex != SIZE_MAX &&
+        activeMessageIndex < pagerQueue.size()) {
         drawPagerMarquee(display);
     }
 
@@ -1850,7 +1853,8 @@ bool handleNewMessage(OLEDDisplay *display, const StoredMessage &sm, const mesht
             // Determine if message belongs to a muted channel
             bool isChannelMuted = false;
             if (sm.type == MessageType::BROADCAST) {
-                const meshtastic_Channel channel = channels.getByIndex(packet.channel ? packet.channel : channels.getPrimaryIndex());
+                const meshtastic_Channel channel =
+                    channels.getByIndex(packet.channel ? packet.channel : channels.getPrimaryIndex());
                 if (channel.settings.has_module_settings && channel.settings.module_settings.is_muted)
                     isChannelMuted = true;
             }
