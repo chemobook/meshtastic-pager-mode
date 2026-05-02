@@ -23,6 +23,10 @@ This file (`AGENTS.md`) is a short pointer + quick reference for agents that don
 | Regenerate protobuf bindings      | `bin/regen-protos.sh`                                                                      |
 | Generate CI matrix                | `./bin/generate_ci_matrix.py all [--level pr]`                                             |
 
+### Heltec V4 OLED — кто что делает (pager-mode fork)
+
+После любых изменений в исходниках **прошивки**, которые должны попасть на **веб‑прошивальщик** (`heltec-v4`): **агент сам** выполняет в рабочей копии `./bin/pager-web-release-heltec-v4.sh` (полная сборка + `release-work/firmware/heltec-v4/` + правка кеш‑бастера в `docs/index.html`). **Оператор** затем только **синхронизирует** репозиторий через GitHub Desktop (коммит/пуш); **не** просить оператора отдельно запускать `pio`/скрипты упаковки.
+
 ## MCP server (device + test automation)
 
 The `mcp-server/` package exposes ~32 MCP tools for device discovery, building, flashing, serial monitoring, and live-node administration. Tools are grouped as:

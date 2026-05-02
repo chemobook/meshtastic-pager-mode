@@ -1,6 +1,6 @@
 {
   "name": "Meshtastic Pager Mode Fork (heltec-v4)",
-  "version": "2.7.27.250160b",
+  "version": "2.7.27.d676d43",
   "new_install_prompt_erase": false,
   "builds": [
     {
@@ -8,15 +8,15 @@
       "improv": false,
       "parts": [
         {
-          "path": "https://cdn.jsdelivr.net/gh/chemobook/meshtastic-pager-mode@main/release-work/firmware/heltec-v4/firmware-heltec-v4-2.7.27.250160b.factory.bin?v=2.7.27.250160b",
+          "path": "https://cdn.jsdelivr.net/gh/chemobook/meshtastic-pager-mode@main/release-work/firmware/heltec-v4/firmware-heltec-v4-2.7.27.d676d43.factory.bin?v=2.7.27.d676d43",
           "offset": 0
         },
         {
-          "path": "https://cdn.jsdelivr.net/gh/chemobook/meshtastic-pager-mode@main/release-work/firmware/heltec-v4/mt-esp32s3-ota.bin?v=2.7.27.250160b",
+          "path": "https://cdn.jsdelivr.net/gh/chemobook/meshtastic-pager-mode@main/release-work/firmware/heltec-v4/mt-esp32s3-ota.bin?v=2.7.27.d676d43",
           "offset": 6619136
         },
         {
-          "path": "https://cdn.jsdelivr.net/gh/chemobook/meshtastic-pager-mode@main/release-work/firmware/heltec-v4/littlefs-heltec-v4-2.7.27.250160b.bin?v=2.7.27.250160b",
+          "path": "https://cdn.jsdelivr.net/gh/chemobook/meshtastic-pager-mode@main/release-work/firmware/heltec-v4/littlefs-heltec-v4-2.7.27.d676d43.bin?v=2.7.27.d676d43",
           "offset": 13172736
         }
       ]
