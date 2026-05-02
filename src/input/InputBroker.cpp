@@ -111,8 +111,11 @@ int InputBroker::handleInputEvent(const InputEvent *event)
     if (event && event->inputEvent != INPUT_BROKER_NONE && externalNotificationModule &&
         moduleConfig.external_notification.enabled && externalNotificationModule->nagging()) {
         externalNotificationModule->stopNow();
+#ifndef MESHTASTIC_PAGER_OS
         // If this turns off a notification, don't further process the event
         return 0;
+#endif
+        // Pager UX: same physical press must still wake the OLED and run handleWakeRequest/observers.
     }
 
 #if HAS_SCREEN

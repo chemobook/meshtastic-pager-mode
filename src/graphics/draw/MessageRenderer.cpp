@@ -232,9 +232,17 @@ static size_t newestUnreadIndex()
 
 static void requestFastRefresh()
 {
-    if (screen && screen->isScreenOn()) {
+    if (!screen) {
+        return;
+    }
+#ifdef MESHTASTIC_PAGER_OS
+    // Drain SET_ON/render ASAP; isScreenOn() can still be false in the same thread slice as handleWakeRequest().
+    screen->runNow();
+#else
+    if (screen->isScreenOn()) {
         screen->runNow();
     }
+#endif
 }
 
 static void startPass(size_t index, PagerDisplayState state, uint8_t passTarget)
@@ -1813,7 +1821,12 @@ bool handleNewMessage(OLEDDisplay *display, const StoredMessage &sm, const mesht
     const bool screenIsOn = screen && screen->isScreenOn();
 
     if (!screenIsOn) {
+        // Must queue hardware wake before timeline state; ROUTER skips EVENT_RECEIVED_MSG transitions in PowerFSM.
+        if (screen) {
+            screen->setOn(true);
+        }
         startAutoPlayback(newestIndex);
+        requestFastRefresh();
         return true;
     }
 
