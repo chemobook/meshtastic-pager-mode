@@ -236,8 +236,16 @@ static void requestFastRefresh()
         return;
     }
 #ifdef MESHTASTIC_PAGER_OS
-    // Drain SET_ON/render ASAP; isScreenOn() can still be false in the same thread slice as handleWakeRequest().
-    screen->runNow();
+    /*
+     * runNow() calls setFastFramerate() → SCREEN_TRANSITION_FRAMERATE, which fights the pager marquee
+     * pacing (~10FPS) and hammers the scheduler (jerky scrolling + sluggish button thread).
+     * Use full wake when the display latch is still off; otherwise poke a cheap reschedule.
+     */
+    if (!screen->isScreenOn()) {
+        screen->runNow();
+    } else {
+        screen->pokeRedrawSoon();
+    }
 #else
     if (screen->isScreenOn()) {
         screen->runNow();

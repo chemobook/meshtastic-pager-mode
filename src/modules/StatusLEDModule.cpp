@@ -74,15 +74,18 @@ int StatusLEDModule::handleInputEvent(const InputEvent *event)
 int32_t StatusLEDModule::runOnce()
 {
 #ifdef MESHTASTIC_PAGER_OS
+    /*
+     * Pager OS: never fall through to the stock charge/BLE heartbeat — on USB power that path
+     * forces CHARGE_LED ON (charging/charged) so the lamp looks stuck. Only pulse for unread mail
+     * while actually on battery; otherwise keep indicators dark (Heltec uses LED_POWER only).
+     */
     static bool unreadPulseOn = false;
     constexpr uint32_t unreadPulseWidthMs = 60;
+    my_interval = 1000;
+    PAIRING_LED_state = LED_STATE_OFF;
+    CHARGE_LED_state = LED_STATE_OFF;
 
-    const bool canUseUnreadPulse = graphics::MessageRenderer::hasUnreadMessages() && power_state == discharging;
-
-    if (!canUseUnreadPulse) {
-        CHARGE_LED_state = LED_STATE_OFF;
-        unreadPulseOn = false;
-    } else {
+    if (graphics::MessageRenderer::hasUnreadMessages() && power_state == discharging) {
         const uint32_t cycleMs = graphics::MessageRenderer::unreadLedIntervalMs();
         if (!unreadPulseOn) {
             CHARGE_LED_state = LED_STATE_ON;
@@ -95,13 +98,43 @@ int32_t StatusLEDModule::runOnce()
             if (my_interval == 0)
                 my_interval = 250;
         }
+    } else {
+        unreadPulseOn = false;
+    }
 
-#ifdef LED_POWER
-        digitalWrite(LED_POWER, CHARGE_LED_state);
-#endif
-        return my_interval;
+    if (config.device.led_heartbeat_disabled) {
+        CHARGE_LED_state = LED_STATE_OFF;
+    }
+#if defined(HAS_PMU)
+    if (pmu_found && PMU) {
+        PMU->setChargingLedMode(CHARGE_LED_state ? XPOWERS_CHG_LED_ON : XPOWERS_CHG_LED_OFF);
     }
 #endif
+#ifdef PCA_LED_POWER
+    io.digitalWrite(PCA_LED_POWER, CHARGE_LED_state);
+#endif
+#ifdef PCA_LED_ENABLE
+    io.digitalWrite(PCA_LED_ENABLE, CHARGE_LED_state);
+#endif
+#ifdef LED_POWER
+    digitalWrite(LED_POWER, CHARGE_LED_state);
+#endif
+#ifdef LED_PAIRING
+    digitalWrite(LED_PAIRING, PAIRING_LED_state);
+#endif
+
+#ifdef RGB_LED_POWER
+    if (!config.device.led_heartbeat_disabled) {
+        if (CHARGE_LED_state == LED_STATE_ON) {
+            ambientLightingThread->setLighting(10, 255, 0, 0);
+        } else {
+            ambientLightingThread->setLighting(0, 0, 0, 0);
+        }
+    }
+#endif
+
+    return (my_interval);
+#else // !MESHTASTIC_PAGER_OS
     my_interval = 1000;
 
     if (power_state == charging) {
@@ -216,6 +249,7 @@ int32_t StatusLEDModule::runOnce()
 #endif
 
     return (my_interval);
+#endif // MESHTASTIC_PAGER_OS
 }
 
 void StatusLEDModule::setPowerLED(bool LEDon)

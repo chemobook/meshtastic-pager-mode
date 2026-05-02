@@ -352,6 +352,9 @@ class Screen : public concurrency::OSThread
         enqueueCmd(ScreenCmd{.cmd = Cmd::NOOP});
     }
 
+    /// Wake Screen soon without pinning transition FPS (pager OS marquee scrolling).
+    void pokeRedrawSoon();
+
     /// Overrides the default utf8 character conversion, to replace empty space with question marks
     static char customFontTableLookup(const uint8_t ch)
     {

@@ -1019,7 +1019,7 @@ int32_t Screen::runOnce()
 #ifdef MESHTASTIC_PAGER_OS
     const bool pagerFastRefresh = graphics::MessageRenderer::wantsFastRefresh();
     if (pagerFastRefresh) {
-        desiredFramerate = 10;
+        desiredFramerate = 14;
     }
 #endif
 
@@ -1647,6 +1647,13 @@ void Screen::setFastFramerate()
 
     ui->setTargetFPS(targetFramerate);
     setInterval(0); // redraw ASAP
+    runASAP = true;
+}
+
+void Screen::pokeRedrawSoon()
+{
+    enqueueCmd(ScreenCmd{.cmd = Cmd::NOOP});
+    setInterval(0); // rerun Screen ASAP while keeping pager's target FPS throttle
     runASAP = true;
 }
 
