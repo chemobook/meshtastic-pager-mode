@@ -27,6 +27,7 @@
 #define EVENT_FIRMWARE_UPDATE 15 // We just received a new firmware update packet from the phone
 #define EVENT_SHUTDOWN 16        // force a full shutdown now (not just sleep)
 #define EVENT_INPUT 17           // input broker wants something, we need to wake up and enable screen
+#define EVENT_PAGER_DISMISS 18   // pager OS: user finished with screen; sync FSM to DARK immediately
 
 #if MESHTASTIC_EXCLUDE_POWER_FSM
 class FakeFsm

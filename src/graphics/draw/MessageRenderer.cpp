@@ -325,6 +325,9 @@ static void showIdleAndSleepLater(uint32_t delayMs)
     if (screen) {
         screen->setOn(false);
     }
+#if defined(MESHTASTIC_PAGER_OS) && !MESHTASTIC_EXCLUDE_POWER_FSM
+    powerFSM.trigger(EVENT_PAGER_DISMISS);
+#endif
 }
 
 static void startAutoPlayback(size_t index)

@@ -399,6 +399,13 @@ void PowerFSM_setup()
 
     powerFSM.add_transition(&stateDARK, &stateDARK, EVENT_CONTACT_FROM_PHONE, NULL, "Contact from phone");
 
+#ifdef MESHTASTIC_PAGER_OS
+    // INPUT always runs before handlers; pager calls setOn(false) but stays in ON and keeps resetting the stay-awake
+    // timer. Force DARK so the OLED stays off and timeout logic matches user intent.
+    powerFSM.add_transition(&stateON, &stateDARK, EVENT_PAGER_DISMISS, NULL, "Pager dismissed");
+    powerFSM.add_transition(&statePOWER, &stateDARK, EVENT_PAGER_DISMISS, NULL, "Pager dismissed");
+#endif
+
 #ifdef USE_EINK
     // Allow E-Ink devices to suppress the screensaver, if screen timeout set to 0
     if (config.display.screen_on_secs > 0)
@@ -410,10 +417,8 @@ void PowerFSM_setup()
         const uint32_t screenOnTimeoutMs =
             Default::getConfiguredOrDefaultMs(config.display.screen_on_secs, default_screen_on_secs);
 #endif
-        powerFSM.add_timed_transition(&stateON, &stateDARK,
-                                      screenOnTimeoutMs, NULL, "Screen-on timeout");
-        powerFSM.add_timed_transition(&statePOWER, &stateDARK,
-                                      screenOnTimeoutMs, NULL, "Screen-on timeout");
+        powerFSM.add_timed_transition(&stateON, &stateDARK, screenOnTimeoutMs, NULL, "Screen-on timeout");
+        powerFSM.add_timed_transition(&statePOWER, &stateDARK, screenOnTimeoutMs, NULL, "Screen-on timeout");
     }
 
 // We never enter light-sleep or NB states on NRF52 (because the CPU uses so little power normally)
