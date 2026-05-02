@@ -939,6 +939,12 @@ void NodeDB::installDefaultModuleConfig()
     moduleConfig.ambient_lighting.green = (myNodeInfo.my_node_num & 0x00FF00) >> 8;
     moduleConfig.ambient_lighting.blue = myNodeInfo.my_node_num & 0x0000FF;
 
+#ifdef MESHTASTIC_PAGER_OS
+    // Pager UX uses StatusLED on LED_POWER for message indication. External notification can misconfigure
+    // GPIOs (restored from another board or app) and fight the button/LED paths.
+    moduleConfig.external_notification = meshtastic_ModuleConfig_ExternalNotificationConfig_init_zero;
+#endif
+
     initModuleConfigIntervals();
 }
 
@@ -1432,6 +1438,18 @@ void NodeDB::loadFromDisk()
 
         saveToDisk(SEGMENT_MODULECONFIG);
     }
+#ifdef MESHTASTIC_PAGER_OS
+    {
+        auto &ext = moduleConfig.external_notification;
+        const bool hadIncompatible = ext.enabled || ext.output || ext.output_buzzer || ext.output_vibra || ext.alert_message ||
+                                     ext.alert_message_buzzer || ext.alert_message_vibra || ext.use_i2s_as_buzzer;
+        if (hadIncompatible) {
+            ext = meshtastic_ModuleConfig_ExternalNotificationConfig_init_zero;
+            LOG_WARN("Pager OS: cleared external_notification config (use LED_POWER status LED only)");
+            saveToDisk(SEGMENT_MODULECONFIG);
+        }
+    }
+#endif
 #if ARCH_PORTDUINO
     // set any config overrides
     if (portduino_config.has_configDisplayMode) {
