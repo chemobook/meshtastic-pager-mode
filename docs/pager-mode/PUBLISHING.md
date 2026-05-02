@@ -56,6 +56,23 @@ SKIP_BUILD=1 ./bin/pager-web-release-heltec-v4.sh
 
 Then commit and push **`release-work/firmware/heltec-v4/`** together with **`docs/index.html`** (GitHub Pages uses `/docs`; the installer fetches blobs via jsDelivr after `push` lands on `main`).
 
+### Why the browser flasher lags behind GitHub Desktop
+
+Things that are **normal**:
+
+- **GitHub Pages** redeploy can take **1–10 minutes** after `push`. Hard-refresh the site (or open an incognito window).
+- **`raw.githubusercontent.com`** for the manifest can be cached briefly; `docs/index.html` uses **`?v=<firmware version>`** — that value **must change** whenever you publish a new `web-installer.json` (`pager-web-release-heltec-v4.sh` bumps it).
+
+**jsDelivr** serves the large `.bin` files:
+
+- Paths that **include** the Meshtastic build id in the filename normally change each release.
+- **`mt-esp32s3-ota.bin`** has a **fixed** path → the CDN often kept serving an old blob when the manifest still pointed at `@main/.../mt-esp32s3-ota.bin`.
+- Packaging now adds **`?v=<same version as manifest>`** to **every** part URL so changing the firmware version picks a distinct fetch URL after you push.
+
+If it **still** shows an old blob after waiting:
+
+- Publish again with **`PAGER_JSDELIVR_REF=$(git rev-parse HEAD) SKIP_BUILD=1 ./bin/pager-package.sh heltec-v4`** (only after those files exist on **`main`** at that commit — e.g. re-run packaging on the revision you pushed, then amend or follow with a tiny commit).
+
 ## Good README Expectations
 
 A useful GitHub landing page should answer:

@@ -6,17 +6,19 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUT_DIR="${ROOT_DIR}/release-work/firmware"
 OTA_URL_ESP32S3="https://github.com/meshtastic/esp32-unified-ota/releases/latest/download/mt-esp32s3-ota.bin"
 # Large firmware blobs fetched from raw.githubusercontent.com often fail in the browser (“Failed to fetch”).
-# jsDelivr mirrors those blobs reliably. NOTE: jsDelivr also caches `@main`/.../web-installer.json so the browser
-# flasher page should load that small manifest from raw.githubusercontent.com, not jsDelivr. Override CDN root via
-# PAGER_FLASHER_FIRMWARE_ROOT if you fork under another GitHub account.
-DEFAULT_FIRMWARE_REPO_ROOT="https://cdn.jsdelivr.net/gh/chemobook/meshtastic-pager-mode@main"
+# jsDelivr mirrors those blobs reliably. CDN caveat: `@main` + unchanged path => long-lived cache (hits
+# `mt-esp32s3-ota.bin`). We append `?v=<firmware version>` on every part URL to bust caches when the manifest
+# version changes.
+# Override base: PAGER_FLASHER_FIRMWARE_ROOT, or jsDelivr ref only: PAGER_JSDELIVR_REF=<branch|sha> (default: main).
+DEFAULT_GH_USER_REPO="chemobook/meshtastic-pager-mode"
 
 usage() {
     cat <<'EOF'
 Usage: ./bin/pager-package.sh <env> [<env>...]
 
 Environment:
-  PAGER_FLASHER_FIRMWARE_ROOT  Repo root URL for web-installer.bin paths (default: jsDelivr mirror of chemobook fork).
+  PAGER_FLASHER_FIRMWARE_ROOT  Full base URL prefix for firmware paths (overrides jsDelivr ref below).
+  PAGER_JSDELIVR_REF           Git branch or commit for jsDelivr (default: main). Use full SHA after a push if CDN is stubborn.
 
 Example:
   ./bin/pager-package.sh heltec-v3 heltec-v4
@@ -67,7 +69,7 @@ write_web_installer_manifest() {
     local factory_name="$4"
     local littlefs_name="$5"
     local ota_helper_name="$6"
-    local firmware_root="${PAGER_FLASHER_FIRMWARE_ROOT:-${DEFAULT_FIRMWARE_REPO_ROOT}}"
+    local firmware_root="$7"
     local version
     local ota_offset
     local littlefs_offset
@@ -111,15 +113,15 @@ write_web_installer_manifest() {
       "improv": false,
       "parts": [
         {
-          "path": "${firmware_root}/release-work/firmware/${env_name}/${factory_name}",
+          "path": "${firmware_root}/release-work/firmware/${env_name}/${factory_name}?v=${version}",
           "offset": 0
         },
         {
-          "path": "${firmware_root}/release-work/firmware/${env_name}/${ota_helper_name}",
+          "path": "${firmware_root}/release-work/firmware/${env_name}/${ota_helper_name}?v=${version}",
           "offset": ${ota_offset}
         },
         {
-          "path": "${firmware_root}/release-work/firmware/${env_name}/${littlefs_name}",
+          "path": "${firmware_root}/release-work/firmware/${env_name}/${littlefs_name}?v=${version}",
           "offset": ${littlefs_offset}
         }
       ]
@@ -130,6 +132,17 @@ EOF
 }
 
 mkdir -p "${OUT_DIR}"
+
+# jsDelivr: https://cdn.jsdelivr.net/gh/<user>/<repo>@<ref>/...
+resolve_jsdelivr_firmware_root() {
+	if [[ -n "${PAGER_FLASHER_FIRMWARE_ROOT:-}" ]]; then
+		echo "${PAGER_FLASHER_FIRMWARE_ROOT}"
+		return
+	fi
+	echo "https://cdn.jsdelivr.net/gh/${DEFAULT_GH_USER_REPO}@${PAGER_JSDELIVR_REF:-main}"
+}
+
+PACKAGED_FIRMWARE_ROOT="$(resolve_jsdelivr_firmware_root)"
 
 for env_name in "$@"; do
     build_dir="${ROOT_DIR}/.pio/build/${env_name}"
@@ -171,6 +184,7 @@ for env_name in "$@"; do
     cat > "${target_dir}/BUILD-INFO.txt" <<EOF
 Fork: Meshtastic Pager Mode
 PlatformIO env: ${env_name}
+jsDelivr base: ${PACKAGED_FIRMWARE_ROOT}
 Packaged at: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
 Factory image: $(basename "${factory_bin}")
 Update image: $(basename "${ota_bin}")
@@ -185,7 +199,8 @@ EOF
         "${meta_json}" \
         "$(basename "${factory_bin}")" \
         "$(basename "${littlefs_bin}")" \
-        "mt-esp32s3-ota.bin"
+        "mt-esp32s3-ota.bin" \
+        "${PACKAGED_FIRMWARE_ROOT}"
 
     echo "Packaged ${env_name} -> ${target_dir}"
 done

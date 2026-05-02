@@ -66,11 +66,13 @@ pattern = (
     rf"chemobook/meshtastic-pager-mode/main/release-work/firmware/{re.escape(env)}/"
     r"web-installer\.json\?v=)[^\s\"]+"
 )
-new_text, n = re.subn(pattern, r"\g<1>" + version, text)
+# Keep &cdn=jd (or bump it once) so raw.githubusercontent.com refetches manifest after CDN-related manifest edits.
+manifest_qs = version + "&cdn=jd"
+new_text, n = re.subn(pattern, r"\g<1>" + manifest_qs, text)
 if n == 0:
     raise SystemExit("Could not patch manifest URLs in docs/index.html (pattern mismatch?).")
 idx.write_text(new_text, encoding="utf-8")
-print(f"Patched docs/index.html: web-installer.json?v={version} ({n} replacement(s))")
+print(f"Patched docs/index.html: web-installer.json?v={manifest_qs} ({n} replacement(s))")
 PY
 
 echo "Done. Manifest version: ${VERSION}"
