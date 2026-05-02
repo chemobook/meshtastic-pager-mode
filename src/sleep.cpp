@@ -339,7 +339,9 @@ void doDeepSleep(uint32_t msecToWake, bool skipPreflight = false, bool skipSaveN
         // If we want to leave the radio receiving in would be 11.5mA current draw, but most of the time it is just waiting
         // in its sequencer (true?) so the average power draw should be much lower even if we were listening for packets
         // all the time.
+#ifndef MESHTASTIC_PAGER_OS
         PMU->setChargingLedMode(XPOWERS_CHG_LED_OFF);
+#endif
 
         uint8_t model = PMU->getChipModel();
         if (model == XPOWERS_AXP2101) {

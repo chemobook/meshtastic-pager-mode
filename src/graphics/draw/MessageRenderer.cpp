@@ -9,6 +9,9 @@
 #include "SPILock.h"
 #include "SafeFile.h"
 #include "UIRenderer.h"
+#if defined(MESHTASTIC_PAGER_OS) && !MESHTASTIC_EXCLUDE_POWER_FSM
+#include "PowerFSM.h"
+#endif
 #include "gps/RTC.h"
 #include "graphics/EmoteRenderer.h"
 #include "graphics/Screen.h"
@@ -176,6 +179,9 @@ static uint32_t lastUnreadArrivalMs = 0;
 static uint32_t bannerUntilMs = 0;
 static bool pagerBootCleared = false;
 static bool sleepAfterPause = false;
+#if defined(MESHTASTIC_PAGER_OS) && !MESHTASTIC_EXCLUDE_POWER_FSM
+static uint32_t lastPagerPowerStirMs = 0;
+#endif
 
 constexpr uint32_t PAGER_FAST_BLINK_WINDOW_MS = 30UL * 1000UL;
 constexpr uint32_t PAGER_BANNER_MS = 1000;
@@ -196,6 +202,28 @@ static void ensurePagerBootStateCleared()
     messageStore.clearAllMessages();
     hasUnreadMessage = false;
 }
+
+#if defined(MESHTASTIC_PAGER_OS) && !MESHTASTIC_EXCLUDE_POWER_FSM
+// Keep PowerFSM screen-on timer from expiring mid-marquee (ON→DARK stops UI ticks before scroll finishes).
+static void pagerStirPowerFsmWhilePlaying()
+{
+    switch (pagerDisplayState) {
+    case PagerDisplayState::BANNER:
+    case PagerDisplayState::AUTO_PLAY:
+    case PagerDisplayState::MANUAL_REVIEW:
+        break;
+    default:
+        return;
+    }
+
+    constexpr uint32_t kEveryMs = 2500;
+    const uint32_t now = millis();
+    if (lastPagerPowerStirMs != 0 && (now - lastPagerPowerStirMs) < kEveryMs)
+        return;
+    lastPagerPowerStirMs = now;
+    powerFSM.trigger(EVENT_INPUT);
+}
+#endif
 
 static void syncUnreadIndicator()
 {
@@ -258,6 +286,9 @@ static void startPass(size_t index, PagerDisplayState state, uint8_t passTarget)
     if (index == SIZE_MAX || index >= pagerQueue.size())
         return;
 
+#if defined(MESHTASTIC_PAGER_OS) && !MESHTASTIC_EXCLUDE_POWER_FSM
+    lastPagerPowerStirMs = 0;
+#endif
     activeMessageIndex = index;
     pagerDisplayState = state;
     (void)passTarget;
@@ -270,6 +301,9 @@ static void startPass(size_t index, PagerDisplayState state, uint8_t passTarget)
 static void showIdleAndSleepLater(uint32_t delayMs)
 {
     (void)delayMs;
+#if defined(MESHTASTIC_PAGER_OS) && !MESHTASTIC_EXCLUDE_POWER_FSM
+    lastPagerPowerStirMs = 0;
+#endif
     pagerDisplayState = PagerDisplayState::IDLE;
     activeMessageIndex = SIZE_MAX;
     pendingBannerMessageIndex = SIZE_MAX;
@@ -302,6 +336,9 @@ static void startManualPlayback(size_t index)
 
 static void startBannerThenAuto(size_t index)
 {
+#if defined(MESHTASTIC_PAGER_OS) && !MESHTASTIC_EXCLUDE_POWER_FSM
+    lastPagerPowerStirMs = 0;
+#endif
     pendingBannerMessageIndex = index;
     pagerDisplayState = PagerDisplayState::BANNER;
     bannerUntilMs = millis() + PAGER_BANNER_MS;
@@ -348,6 +385,9 @@ static void pushPagerMessage(const StoredMessage &sm)
 static void advancePagerTimeline(OLEDDisplay *display)
 {
     ensurePagerBootStateCleared();
+#if defined(MESHTASTIC_PAGER_OS) && !MESHTASTIC_EXCLUDE_POWER_FSM
+    pagerStirPowerFsmWhilePlaying();
+#endif
 
     const uint32_t now = millis();
 

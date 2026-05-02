@@ -122,6 +122,10 @@ int InputBroker::handleInputEvent(const InputEvent *event)
 #ifdef MESHTASTIC_PAGER_OS
     if (screen && screenWasOff && event && event->source && strcmp(event->source, "UserButton") == 0 &&
         event->inputEvent != INPUT_BROKER_NONE) {
+#if !MESHTASTIC_EXCLUDE_POWER_FSM
+        // Match physical-button path in PowerFSM (LS/NB/DARK wake); helps first press register from sleep.
+        powerFSM.trigger(EVENT_PRESS);
+#endif
         powerFSM.trigger(EVENT_INPUT);
         graphics::MessageRenderer::handleWakeRequest();
         return 0;

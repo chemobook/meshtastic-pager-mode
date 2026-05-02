@@ -76,8 +76,9 @@ int32_t StatusLEDModule::runOnce()
 #ifdef MESHTASTIC_PAGER_OS
     /*
      * Pager OS: never fall through to the stock charge/BLE heartbeat — on USB power that path
-     * forces CHARGE_LED ON (charging/charged) so the lamp looks stuck. Only pulse for unread mail
-     * while actually on battery; otherwise keep indicators dark (Heltec uses LED_POWER only).
+     * forces CHARGE_LED ON (charging/charged) so the lamp looks stuck. Only pulse unread on GPIO
+     * LED_POWER (e.g. Heltec V4 OLED white LED on pin 35). Do NOT drive the PMU charging LED or
+     * RGB strands from this path — that is a separate hardware indicator the user reserved.
      */
     static bool unreadPulseOn = false;
     constexpr uint32_t unreadPulseWidthMs = 60;
@@ -105,11 +106,6 @@ int32_t StatusLEDModule::runOnce()
     if (config.device.led_heartbeat_disabled) {
         CHARGE_LED_state = LED_STATE_OFF;
     }
-#if defined(HAS_PMU)
-    if (pmu_found && PMU) {
-        PMU->setChargingLedMode(CHARGE_LED_state ? XPOWERS_CHG_LED_ON : XPOWERS_CHG_LED_OFF);
-    }
-#endif
 #ifdef PCA_LED_POWER
     io.digitalWrite(PCA_LED_POWER, CHARGE_LED_state);
 #endif
@@ -124,13 +120,7 @@ int32_t StatusLEDModule::runOnce()
 #endif
 
 #ifdef RGB_LED_POWER
-    if (!config.device.led_heartbeat_disabled) {
-        if (CHARGE_LED_state == LED_STATE_ON) {
-            ambientLightingThread->setLighting(10, 255, 0, 0);
-        } else {
-            ambientLightingThread->setLighting(0, 0, 0, 0);
-        }
-    }
+    ambientLightingThread->setLighting(0, 0, 0, 0); // pager: unread uses LED_POWER only
 #endif
 
     return (my_interval);
@@ -254,7 +244,16 @@ int32_t StatusLEDModule::runOnce()
 
 void StatusLEDModule::setPowerLED(bool LEDon)
 {
-
+#ifdef MESHTASTIC_PAGER_OS
+    /*
+     * Pager / Heltec OLED: firmware only touches the notification LED on LED_POWER (e.g. GPIO 35).
+     * Charging / status red on the PMU is left to hardware, like stock Meshtastic never repurposed it in UX.
+     */
+    const uint8_t ledState = LEDon ? LED_STATE_ON : LED_STATE_OFF;
+#ifdef LED_POWER
+    digitalWrite(LED_POWER, ledState);
+#endif
+#else
 #if defined(HAS_PMU)
     if (pmu_found && PMU) {
         // blink the axp led
@@ -287,4 +286,5 @@ void StatusLEDModule::setPowerLED(bool LEDon)
 #ifdef Battery_LED_4
     digitalWrite(Battery_LED_4, ledState);
 #endif
+#endif // MESHTASTIC_PAGER_OS
 }
