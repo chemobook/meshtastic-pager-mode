@@ -14,7 +14,10 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
       rel="stylesheet"
     />
-    <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"
+    ></script>
     <style>
       :root {
         --bg: #09131b;
@@ -40,8 +43,16 @@
         font-family: "IBM Plex Sans", sans-serif;
         color: var(--text);
         background:
-          radial-gradient(circle at 12% 82%, rgba(156, 233, 178, 0.1), transparent 18rem),
-          radial-gradient(circle at 88% 12%, rgba(143, 220, 255, 0.12), transparent 18rem),
+          radial-gradient(
+            circle at 12% 82%,
+            rgba(156, 233, 178, 0.1),
+            transparent 18rem
+          ),
+          radial-gradient(
+            circle at 88% 12%,
+            rgba(143, 220, 255, 0.12),
+            transparent 18rem
+          ),
           linear-gradient(180deg, #08121a 0%, #0d1c27 45%, #102621 100%);
       }
 
@@ -283,27 +294,40 @@
           </div>
           <h1>Meshtastic Pager OS Web Flasher</h1>
           <p>
-            Browser installer for a standalone pager-style firmware fork built on top of the Meshtastic radio stack.
-            The idea is simple: receive messages, read them fast, confirm them, go back to low-power behavior.
+            Browser installer for a standalone pager-style firmware fork built
+            on top of the Meshtastic radio stack. The idea is simple: receive
+            messages, read them fast, confirm them, go back to low-power
+            behavior.
           </p>
           <p>
-            Веб-прошивальщик для отдельной pager-прошивки на базе Meshtastic. Идея простая:
-            принять сообщение, быстро его увидеть, подтвердить и снова вернуться в экономичный режим.
+            Веб-прошивальщик для отдельной pager-прошивки на базе Meshtastic.
+            Идея простая: принять сообщение, быстро его увидеть, подтвердить и
+            снова вернуться в экономичный режим.
           </p>
           <div class="actions">
             <a class="primary" href="#install">Open installer</a>
-            <a class="secondary" href="https://github.com/chemobook/meshtastic-pager-mode/tree/main/release-work/firmware/heltec-v4">Firmware files</a>
+            <a
+              class="secondary"
+              href="https://github.com/chemobook/meshtastic-pager-mode/tree/main/release-work/firmware/heltec-v4"
+              >Firmware files</a
+            >
           </div>
         </div>
-        <img class="hero-art" src="pager-mode/assets/pager-mode-banner.svg" alt="Field technician reading a pager message" />
+        <img
+          class="hero-art"
+          src="pager-mode/assets/pager-mode-banner.svg"
+          alt="Field technician reading a pager message"
+        />
       </section>
 
       <section class="section" id="install">
         <div class="section-intro">
           <h2>Install firmware</h2>
           <p>
-            The public browser installer is intentionally narrow right now. It exposes one primary target:
-            <strong>Heltec V4</strong>. That keeps the page honest and avoids flashing the wrong image to the wrong board.
+            The public browser installer is intentionally narrow right now. It
+            exposes one primary target:
+            <strong>Heltec V4</strong>. That keeps the page honest and avoids
+            flashing the wrong image to the wrong board.
           </p>
         </div>
 
@@ -313,24 +337,38 @@
             <div class="device-meta">
               <span class="pill">ESP32-S3</span>
               <span class="pill">16MB flash</span>
-              <span class="pill version" data-version-for="heltec-v4">Latest packaged build</span>
+              <span class="pill version" data-version-for="heltec-v4"
+                >Latest packaged build</span
+              >
             </div>
             <p>
-              Main target for the current Pager OS concept. Use this only for boards that must be flashed with the
-              `heltec-v4` environment.
+              Main target for the current Pager OS concept. Use this only for
+              boards that must be flashed with the `heltec-v4` environment.
             </p>
             <ul>
               <li>Full browser install through Web Serial</li>
-              <li>Uses the packaged images from `release-work/firmware/heltec-v4`</li>
-              <li>After flashing, configure the node in the standard Meshtastic mobile app</li>
+              <li>
+                Uses the packaged images from `release-work/firmware/heltec-v4`
+              </li>
+              <li>
+                After flashing, configure the node in the standard Meshtastic
+                mobile app
+              </li>
             </ul>
             <div class="install-wrap">
-              <esp-web-install-button manifest="https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/web-installer.json">
-                <button class="flash-button" slot="activate">Install Heltec V4</button>
+              <esp-web-install-button
+                manifest="https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/web-installer.json?v=2.7.23.39cadaf"
+              >
+                <button class="flash-button" slot="activate">
+                  Install Heltec V4
+                </button>
               </esp-web-install-button>
               <span class="subtle">
                 Package files:
-                <a href="https://github.com/chemobook/meshtastic-pager-mode/tree/main/release-work/firmware/heltec-v4">release-work/firmware/heltec-v4</a>
+                <a
+                  href="https://github.com/chemobook/meshtastic-pager-mode/tree/main/release-work/firmware/heltec-v4"
+                  >release-work/firmware/heltec-v4</a
+                >
               </span>
             </div>
           </article>
@@ -345,12 +383,20 @@
               <li>Use current desktop Chrome or Edge.</li>
               <li>Connect the board with a real data USB cable.</li>
               <li>Close any terminal or serial tool that may hold the port.</li>
-              <li>Click the install button and choose the board serial port.</li>
-              <li>Wait for the browser installer to finish and allow the reboot.</li>
-              <li>Open the standard Meshtastic mobile app and configure the node over BLE.</li>
+              <li>
+                Click the install button and choose the board serial port.
+              </li>
+              <li>
+                Wait for the browser installer to finish and allow the reboot.
+              </li>
+              <li>
+                Open the standard Meshtastic mobile app and configure the node
+                over BLE.
+              </li>
             </ol>
             <p class="subtle">
-              Browser flashing depends on Web Serial, so Safari and most mobile browsers are not the primary path.
+              Browser flashing depends on Web Serial, so Safari and most mobile
+              browsers are not the primary path.
             </p>
           </div>
 
@@ -358,14 +404,21 @@
             <h3>Как прошивать</h3>
             <ol>
               <li>Используй актуальный настольный Chrome или Edge.</li>
-              <li>Подключи плату нормальным USB-кабелем для передачи данных.</li>
-              <li>Закрой терминалы и serial-программы, которые могут держать порт.</li>
+              <li>
+                Подключи плату нормальным USB-кабелем для передачи данных.
+              </li>
+              <li>
+                Закрой терминалы и serial-программы, которые могут держать порт.
+              </li>
               <li>Нажми кнопку прошивки и выбери serial-порт устройства.</li>
               <li>Дождись завершения браузерной прошивки и перезагрузки.</li>
-              <li>Открой обычное приложение Meshtastic и настрой узел по BLE.</li>
+              <li>
+                Открой обычное приложение Meshtastic и настрой узел по BLE.
+              </li>
             </ol>
             <p class="subtle">
-              Веб-прошивка зависит от Web Serial, поэтому Safari и большинство мобильных браузеров здесь не основной путь.
+              Веб-прошивка зависит от Web Serial, поэтому Safari и большинство
+              мобильных браузеров здесь не основной путь.
             </p>
           </div>
         </div>
@@ -376,16 +429,30 @@
           <h3>Before flashing</h3>
           <ul>
             <li>This is an unofficial community firmware fork.</li>
-            <li>The public installer currently targets <strong>Heltec V4</strong> only.</li>
+            <li>
+              The public installer currently targets
+              <strong>Heltec V4</strong> only.
+            </li>
             <li>Use the correct image for the correct board.</li>
             <li>If no serial port appears, replace the USB cable first.</li>
-            <li>If the port exists but cannot be opened, close other serial tools.</li>
-            <li>If Windows does not see the board, install the required ESP32 USB serial driver.</li>
-            <li>If the install fails once, retry from the same page before switching tools.</li>
+            <li>
+              If the port exists but cannot be opened, close other serial tools.
+            </li>
+            <li>
+              If Windows does not see the board, install the required ESP32 USB
+              serial driver.
+            </li>
+            <li>
+              If the install fails once, retry from the same page before
+              switching tools.
+            </li>
           </ul>
           <p class="subtle">
             Driver reference:
-            <a href="https://meshtastic.org/docs/getting-started/serial-drivers/esp32/">Meshtastic ESP32 serial drivers</a>
+            <a
+              href="https://meshtastic.org/docs/getting-started/serial-drivers/esp32/"
+              >Meshtastic ESP32 serial drivers</a
+            >
           </p>
         </div>
       </section>
@@ -394,18 +461,23 @@
         <h2>Project links</h2>
         <p>
           Repository:
-          <a href="https://github.com/chemobook/meshtastic-pager-mode">chemobook/meshtastic-pager-mode</a>
+          <a href="https://github.com/chemobook/meshtastic-pager-mode"
+            >chemobook/meshtastic-pager-mode</a
+          >
         </p>
         <p>
           Packaged firmware:
-          <a href="https://github.com/chemobook/meshtastic-pager-mode/tree/main/release-work/firmware/heltec-v4">release-work/firmware/heltec-v4</a>
+          <a
+            href="https://github.com/chemobook/meshtastic-pager-mode/tree/main/release-work/firmware/heltec-v4"
+            >release-work/firmware/heltec-v4</a
+          >
         </p>
       </section>
     </main>
 
     <script>
       const manifestUrl =
-        "https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/web-installer.json";
+        "https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/web-installer.json?v=2.7.23.39cadaf";
 
       const target = document.querySelector('[data-version-for="heltec-v4"]');
       if (target) {
