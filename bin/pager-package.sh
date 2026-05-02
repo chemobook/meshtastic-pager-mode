@@ -5,9 +5,10 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUT_DIR="${ROOT_DIR}/release-work/firmware"
 OTA_URL_ESP32S3="https://github.com/meshtastic/esp32-unified-ota/releases/latest/download/mt-esp32s3-ota.bin"
-# Large firmware blobs fetched from raw.githubusercontent.com often fail in the browser (# Failed to fetch)
-# despite CORS headers—ISP filters, flaky edge caches, or regional blocks. jsDelivr mirrors gh content with
-# reliable CORS. Override with env PAGER_FLASHER_FIRMWARE_ROOT if you fork the repo under another user/org.
+# Large firmware blobs fetched from raw.githubusercontent.com often fail in the browser (“Failed to fetch”).
+# jsDelivr mirrors those blobs reliably. NOTE: jsDelivr also caches `@main`/.../web-installer.json so the browser
+# flasher page should load that small manifest from raw.githubusercontent.com, not jsDelivr. Override CDN root via
+# PAGER_FLASHER_FIRMWARE_ROOT if you fork under another GitHub account.
 DEFAULT_FIRMWARE_REPO_ROOT="https://cdn.jsdelivr.net/gh/chemobook/meshtastic-pager-mode@main"
 
 usage() {
