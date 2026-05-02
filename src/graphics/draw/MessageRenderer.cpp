@@ -256,6 +256,8 @@ static void showIdleAndSleepLater(uint32_t delayMs)
     (void)delayMs;
     pagerDisplayState = PagerDisplayState::IDLE;
     activeMessageIndex = SIZE_MAX;
+    pendingBannerMessageIndex = SIZE_MAX;
+    bannerUntilMs = 0;
     activePassStartMs = 0;
     activePassPauseUntilMs = 0;
     sleepAfterPause = false;
@@ -433,7 +435,14 @@ void handleWakeRequest()
     if (newestUnread != SIZE_MAX) {
         startManualPlayback(newestUnread);
     } else {
-        showIdleAndSleepLater(0);
+        pagerDisplayState = PagerDisplayState::IDLE;
+        activeMessageIndex = SIZE_MAX;
+        pendingBannerMessageIndex = SIZE_MAX;
+        bannerUntilMs = 0;
+        activePassStartMs = 0;
+        activePassPauseUntilMs = 0;
+        sleepAfterPause = false;
+        requestFastRefresh();
     }
 }
 
@@ -519,6 +528,9 @@ static bool pagerRestorePending = false;
 
 void savePagerModePersistedState()
 {
+#ifdef MESHTASTIC_PAGER_OS
+    return;
+#endif
 #ifdef FSCom
     spiLock->lock();
     FSCom.mkdir("/prefs");
@@ -575,6 +587,11 @@ void loadPagerModeState()
     pagerChannel = -1;
     pagerPeer = 0;
     pagerRestorePending = false;
+
+#ifdef MESHTASTIC_PAGER_OS
+    clearPagerModePersistedState();
+    return;
+#endif
 
 #ifdef FSCom
     spiLock->lock();
@@ -729,9 +746,11 @@ void setPagerModeEnabled(bool enabled)
     pagerThreadMode = currentMode;
     pagerChannel = currentChannel;
     pagerPeer = currentPeer;
-    pagerRestorePending = true;
+    pagerRestorePending = false;
     applyPagerModeToCurrentThread();
+#ifndef MESHTASTIC_PAGER_OS
     savePagerModePersistedState();
+#endif
 }
 
 void togglePagerMode()

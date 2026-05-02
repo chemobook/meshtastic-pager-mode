@@ -138,25 +138,6 @@ AudioThread *audioThread = nullptr;
 ExtensionIOXL9555 io;
 #endif
 
-#ifdef MESHTASTIC_PAGER_OS
-static void applyPagerOSPowerProfile()
-{
-    config.power.is_power_saving = true;
-    config.power.wait_bluetooth_secs = 30;
-    config.power.ls_secs = 60;
-    config.power.min_wake_secs = 5;
-    config.display.screen_on_secs = 10;
-    config.network.wifi_enabled = false;
-    moduleConfig.mqtt.enabled = false;
-
-#if !MESHTASTIC_EXCLUDE_GPS
-    if (config.position.gps_mode != meshtastic_Config_PositionConfig_GpsMode_NOT_PRESENT) {
-        config.position.gps_mode = meshtastic_Config_PositionConfig_GpsMode_DISABLED;
-    }
-#endif
-}
-#endif
-
 #if HAS_TFT
 extern void tftSetup(void);
 #endif
@@ -723,10 +704,6 @@ void setup()
     // We do this as early as possible because this loads preferences from flash
     // but we need to do this after main cpu init (esp32setup), because we need the random seed set
     nodeDB = new NodeDB;
-
-#ifdef MESHTASTIC_PAGER_OS
-    applyPagerOSPowerProfile();
-#endif
 
     // Initialize transmit history to persist broadcast throttle timers across reboots
     TransmitHistory::getInstance()->loadFromDisk();

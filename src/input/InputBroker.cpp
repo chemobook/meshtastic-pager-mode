@@ -57,25 +57,6 @@ ButtonThread *CancelButtonThread = nullptr;
 
 InputBroker *inputBroker = nullptr;
 
-#ifdef MESHTASTIC_PAGER_OS
-namespace
-{
-static bool pagerWakePressConsumed = false;
-
-static void wakePagerFromInitialPress()
-{
-#if HAS_SCREEN
-    if (!screen || screen->isScreenOn())
-        return;
-
-    powerFSM.trigger(EVENT_INPUT);
-    graphics::MessageRenderer::handleWakeRequest();
-    pagerWakePressConsumed = true;
-#endif
-}
-} // namespace
-#endif
-
 InputBroker::InputBroker()
 {
 #if defined(HAS_FREE_RTOS) && !defined(ARCH_RP2040)
@@ -126,20 +107,6 @@ int InputBroker::handleInputEvent(const InputEvent *event)
         screenWasOff = !screen->isScreenOn();
     }
 #endif
-    powerFSM.trigger(EVENT_INPUT);
-
-#ifdef MESHTASTIC_PAGER_OS
-    if (pagerWakePressConsumed && event && event->source && strcmp(event->source, "UserButton") == 0) {
-        if (event->inputEvent == INPUT_BROKER_USER_PRESS) {
-            pagerWakePressConsumed = false;
-            return 0;
-        }
-
-        if (event->inputEvent != INPUT_BROKER_NONE) {
-            pagerWakePressConsumed = false;
-        }
-    }
-#endif
 
     if (event && event->inputEvent != INPUT_BROKER_NONE && externalNotificationModule &&
         moduleConfig.external_notification.enabled && externalNotificationModule->nagging()) {
@@ -149,14 +116,23 @@ int InputBroker::handleInputEvent(const InputEvent *event)
     }
 
 #if HAS_SCREEN
-    if (screen && screenWasOff) {
 #ifdef MESHTASTIC_PAGER_OS
+    if (screen && screenWasOff && event && event->source && strcmp(event->source, "UserButton") == 0 &&
+        event->inputEvent != INPUT_BROKER_NONE) {
+        powerFSM.trigger(EVENT_INPUT);
         graphics::MessageRenderer::handleWakeRequest();
+        return 0;
+    }
 #endif
+
+    if (screen && screenWasOff) {
+        powerFSM.trigger(EVENT_INPUT);
         // If the screen was off, it is in the process of turning on, and we just drop the event
         return 0;
     }
 #endif
+
+    powerFSM.trigger(EVENT_INPUT);
 
     this->notifyObservers(event);
     return 0;
@@ -353,9 +329,6 @@ void InputBroker::Init()
         userConfig.longPress = INPUT_BROKER_SELECT;
         userConfig.longPressTime = 500;
         userConfig.longLongPress = INPUT_BROKER_SHUTDOWN;
-#ifdef MESHTASTIC_PAGER_OS
-        userConfig.onPress = []() { wakePagerFromInitialPress(); };
-#endif
         UserButtonThread->initButton(userConfig);
     } else
 #endif

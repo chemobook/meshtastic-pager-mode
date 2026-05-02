@@ -77,32 +77,30 @@ int32_t StatusLEDModule::runOnce()
     static bool unreadPulseOn = false;
     constexpr uint32_t unreadPulseWidthMs = 60;
 
-    if (!graphics::MessageRenderer::hasUnreadMessages()) {
+    const bool canUseUnreadPulse = graphics::MessageRenderer::hasUnreadMessages() && power_state == discharging;
+
+    if (!canUseUnreadPulse) {
         CHARGE_LED_state = LED_STATE_OFF;
         unreadPulseOn = false;
+    } else {
+        const uint32_t cycleMs = graphics::MessageRenderer::unreadLedIntervalMs();
+        if (!unreadPulseOn) {
+            CHARGE_LED_state = LED_STATE_ON;
+            unreadPulseOn = true;
+            my_interval = unreadPulseWidthMs;
+        } else {
+            CHARGE_LED_state = LED_STATE_OFF;
+            unreadPulseOn = false;
+            my_interval = (cycleMs > unreadPulseWidthMs) ? (cycleMs - unreadPulseWidthMs) : cycleMs;
+            if (my_interval == 0)
+                my_interval = 250;
+        }
+
 #ifdef LED_POWER
         digitalWrite(LED_POWER, CHARGE_LED_state);
 #endif
-        return 250;
+        return my_interval;
     }
-
-    const uint32_t cycleMs = graphics::MessageRenderer::unreadLedIntervalMs();
-    if (!unreadPulseOn) {
-        CHARGE_LED_state = LED_STATE_ON;
-        unreadPulseOn = true;
-        my_interval = unreadPulseWidthMs;
-    } else {
-        CHARGE_LED_state = LED_STATE_OFF;
-        unreadPulseOn = false;
-        my_interval = (cycleMs > unreadPulseWidthMs) ? (cycleMs - unreadPulseWidthMs) : cycleMs;
-        if (my_interval == 0)
-            my_interval = 250;
-    }
-
-#ifdef LED_POWER
-    digitalWrite(LED_POWER, CHARGE_LED_state);
-#endif
-    return my_interval;
 #endif
     my_interval = 1000;
 
