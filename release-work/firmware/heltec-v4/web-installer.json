@@ -8,15 +8,15 @@
       "improv": false,
       "parts": [
         {
-          "path": "https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/firmware-heltec-v4-2.7.26.6b26195.factory.bin",
+          "path": "https://cdn.jsdelivr.net/gh/chemobook/meshtastic-pager-mode@main/release-work/firmware/heltec-v4/firmware-heltec-v4-2.7.26.6b26195.factory.bin",
           "offset": 0
         },
         {
-          "path": "https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/mt-esp32s3-ota.bin",
+          "path": "https://cdn.jsdelivr.net/gh/chemobook/meshtastic-pager-mode@main/release-work/firmware/heltec-v4/mt-esp32s3-ota.bin",
           "offset": 6619136
         },
         {
-          "path": "https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/littlefs-heltec-v4-2.7.26.6b26195.bin",
+          "path": "https://cdn.jsdelivr.net/gh/chemobook/meshtastic-pager-mode@main/release-work/firmware/heltec-v4/littlefs-heltec-v4-2.7.26.6b26195.bin",
           "offset": 13172736
         }
       ]

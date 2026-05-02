@@ -5,11 +5,17 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUT_DIR="${ROOT_DIR}/release-work/firmware"
 OTA_URL_ESP32S3="https://github.com/meshtastic/esp32-unified-ota/releases/latest/download/mt-esp32s3-ota.bin"
-DEFAULT_RAW_BASE="https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main"
+# Large firmware blobs fetched from raw.githubusercontent.com often fail in the browser (# Failed to fetch)
+# despite CORS headers—ISP filters, flaky edge caches, or regional blocks. jsDelivr mirrors gh content with
+# reliable CORS. Override with env PAGER_FLASHER_FIRMWARE_ROOT if you fork the repo under another user/org.
+DEFAULT_FIRMWARE_REPO_ROOT="https://cdn.jsdelivr.net/gh/chemobook/meshtastic-pager-mode@main"
 
 usage() {
     cat <<'EOF'
 Usage: ./bin/pager-package.sh <env> [<env>...]
+
+Environment:
+  PAGER_FLASHER_FIRMWARE_ROOT  Repo root URL for web-installer.bin paths (default: jsDelivr mirror of chemobook fork).
 
 Example:
   ./bin/pager-package.sh heltec-v3 heltec-v4
@@ -60,7 +66,7 @@ write_web_installer_manifest() {
     local factory_name="$4"
     local littlefs_name="$5"
     local ota_helper_name="$6"
-    local raw_base="${PAGER_FLASHER_RAW_BASE:-${DEFAULT_RAW_BASE}}"
+    local firmware_root="${PAGER_FLASHER_FIRMWARE_ROOT:-${DEFAULT_FIRMWARE_REPO_ROOT}}"
     local version
     local ota_offset
     local littlefs_offset
@@ -104,15 +110,15 @@ write_web_installer_manifest() {
       "improv": false,
       "parts": [
         {
-          "path": "${raw_base}/release-work/firmware/${env_name}/${factory_name}",
+          "path": "${firmware_root}/release-work/firmware/${env_name}/${factory_name}",
           "offset": 0
         },
         {
-          "path": "${raw_base}/release-work/firmware/${env_name}/${ota_helper_name}",
+          "path": "${firmware_root}/release-work/firmware/${env_name}/${ota_helper_name}",
           "offset": ${ota_offset}
         },
         {
-          "path": "${raw_base}/release-work/firmware/${env_name}/${littlefs_name}",
+          "path": "${firmware_root}/release-work/firmware/${env_name}/${littlefs_name}",
           "offset": ${littlefs_offset}
         }
       ]

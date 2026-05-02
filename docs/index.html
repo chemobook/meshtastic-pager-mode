@@ -357,7 +357,7 @@
             </ul>
             <div class="install-wrap">
               <esp-web-install-button
-                manifest="https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/web-installer.json?v=2.7.26.6b26195"
+                manifest="https://cdn.jsdelivr.net/gh/chemobook/meshtastic-pager-mode@main/release-work/firmware/heltec-v4/web-installer.json?v=2.7.26.6b26195"
               >
                 <button class="flash-button" slot="activate">
                   Install Heltec V4
@@ -446,6 +446,11 @@
               If the install fails once, retry from the same page before
               switching tools.
             </li>
+            <li>
+              If you see “Failed to fetch”, try another network/VPN—the
+              installer loads multi‑megabyte firmware files; strict filters
+              sometimes block them.
+            </li>
           </ul>
           <p class="subtle">
             Driver reference:
@@ -477,7 +482,7 @@
 
     <script>
       const manifestUrl =
-        "https://raw.githubusercontent.com/chemobook/meshtastic-pager-mode/main/release-work/firmware/heltec-v4/web-installer.json?v=2.7.26.6b26195";
+        "https://cdn.jsdelivr.net/gh/chemobook/meshtastic-pager-mode@main/release-work/firmware/heltec-v4/web-installer.json?v=2.7.26.6b26195";
 
       const target = document.querySelector('[data-version-for="heltec-v4"]');
       if (target) {
