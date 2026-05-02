@@ -97,6 +97,8 @@ bool ButtonThread::initButton(const ButtonConfig &config)
     }
 #ifdef USE_EINK
     userButton.setDebounceMs(0);
+#elif defined(MESHTASTIC_PAGER_OS)
+    userButton.setDebounceMs(20);
 #else
     userButton.setDebounceMs(1);
 #endif
@@ -310,10 +312,17 @@ int32_t ButtonThread::runOnce()
     btnEvent = BUTTON_EVENT_NONE;
 
     // only pull when the button is pressed, we get notified via IRQ on a new press
+#ifdef MESHTASTIC_PAGER_OS
+    if (!userButton.isIdle() || waitingForLongPress) {
+        return 25;
+    }
+    return 35;
+#else
     if (!userButton.isIdle() || waitingForLongPress) {
         return 50;
     }
     return 100; // FIXME: Why can't we rely on interrupts and use INT32_MAX here?
+#endif
 }
 
 /*

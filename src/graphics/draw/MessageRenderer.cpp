@@ -182,6 +182,9 @@ static bool sleepAfterPause = false;
 #if defined(MESHTASTIC_PAGER_OS) && !MESHTASTIC_EXCLUDE_POWER_FSM
 static uint32_t lastPagerPowerStirMs = 0;
 #endif
+// Measuring marquee width runs UTF-8/emoji shaping; caching avoids doing it ~14 Hz (starves ButtonThread/main loop).
+static size_t pagerMarqueeTravelCacheIndex = SIZE_MAX;
+static float pagerMarqueeTravelPx = 0.0f;
 
 constexpr uint32_t PAGER_FAST_BLINK_WINDOW_MS = 30UL * 1000UL;
 constexpr uint32_t PAGER_BANNER_MS = 1000;
@@ -225,6 +228,11 @@ static void pagerStirPowerFsmWhilePlaying()
 }
 #endif
 
+static void invalidatePagerMarqueeTravelCache()
+{
+    pagerMarqueeTravelCacheIndex = SIZE_MAX;
+}
+
 static void syncUnreadIndicator()
 {
     hasUnreadMessage = std::any_of(pagerQueue.begin(), pagerQueue.end(), [](const PagerQueueMessage &msg) { return msg.unread; });
@@ -232,6 +240,7 @@ static void syncUnreadIndicator()
 
 static void invalidateActiveIndexForPopFront()
 {
+    invalidatePagerMarqueeTravelCache();
     if (activeMessageIndex != SIZE_MAX) {
         if (activeMessageIndex == 0) {
             activeMessageIndex = SIZE_MAX;
@@ -289,6 +298,7 @@ static void startPass(size_t index, PagerDisplayState state, uint8_t passTarget)
 #if defined(MESHTASTIC_PAGER_OS) && !MESHTASTIC_EXCLUDE_POWER_FSM
     lastPagerPowerStirMs = 0;
 #endif
+    invalidatePagerMarqueeTravelCache();
     activeMessageIndex = index;
     pagerDisplayState = state;
     (void)passTarget;
@@ -311,6 +321,7 @@ static void showIdleAndSleepLater(uint32_t delayMs)
     activePassStartMs = 0;
     activePassPauseUntilMs = 0;
     sleepAfterPause = false;
+    invalidatePagerMarqueeTravelCache();
     if (screen) {
         screen->setOn(false);
     }
@@ -340,6 +351,7 @@ static void startBannerThenAuto(size_t index)
     lastPagerPowerStirMs = 0;
 #endif
     pendingBannerMessageIndex = index;
+    invalidatePagerMarqueeTravelCache();
     pagerDisplayState = PagerDisplayState::BANNER;
     bannerUntilMs = millis() + PAGER_BANNER_MS;
     sleepAfterPause = false;
@@ -378,6 +390,7 @@ static void pushPagerMessage(const StoredMessage &sm)
     }
 
     pagerQueue.push_back(std::move(msg));
+    invalidatePagerMarqueeTravelCache();
     lastUnreadArrivalMs = millis();
     syncUnreadIndicator();
 }
@@ -425,8 +438,13 @@ static void advancePagerTimeline(OLEDDisplay *display)
 
     display->setFont(FONT_LARGE);
     const int contentWidth = display->getWidth() - 4;
-    const int textWidth = std::max(contentWidth, UIRenderer::measureStringWithEmotes(display, currentMessageText()));
-    const float travel = static_cast<float>(textWidth + display->getWidth() + 12);
+    float travel;
+    if (pagerMarqueeTravelCacheIndex != activeMessageIndex) {
+        const int textWidth = std::max(contentWidth, UIRenderer::measureStringWithEmotes(display, currentMessageText()));
+        pagerMarqueeTravelPx = static_cast<float>(textWidth + display->getWidth() + 12);
+        pagerMarqueeTravelCacheIndex = activeMessageIndex;
+    }
+    travel = pagerMarqueeTravelPx;
     const float elapsedMs = static_cast<float>(now - activePassStartMs);
     const float traveled = (elapsedMs / 1000.0f) * PAGER_SCROLL_PIXELS_PER_SEC;
 
