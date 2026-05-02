@@ -106,17 +106,8 @@ int32_t StatusLEDModule::runOnce()
     if (config.device.led_heartbeat_disabled) {
         CHARGE_LED_state = LED_STATE_OFF;
     }
-#ifdef PCA_LED_POWER
-    io.digitalWrite(PCA_LED_POWER, CHARGE_LED_state);
-#endif
-#ifdef PCA_LED_ENABLE
-    io.digitalWrite(PCA_LED_ENABLE, CHARGE_LED_state);
-#endif
 #ifdef LED_POWER
     digitalWrite(LED_POWER, CHARGE_LED_state);
-#endif
-#ifdef LED_PAIRING
-    digitalWrite(LED_PAIRING, PAIRING_LED_state);
 #endif
 
 #ifdef RGB_LED_POWER

@@ -1441,8 +1441,10 @@ void NodeDB::loadFromDisk()
 #ifdef MESHTASTIC_PAGER_OS
     {
         auto &ext = moduleConfig.external_notification;
-        const bool hadIncompatible = ext.enabled || ext.output || ext.output_buzzer || ext.output_vibra || ext.alert_message ||
-                                     ext.alert_message_buzzer || ext.alert_message_vibra || ext.use_i2s_as_buzzer;
+        const bool hadIncompatible = ext.enabled || ext.output || ext.output_buzzer || ext.output_vibra || ext.active ||
+                                     ext.alert_message || ext.alert_bell || ext.alert_message_buzzer || ext.alert_bell_buzzer ||
+                                     ext.alert_message_vibra || ext.alert_bell_vibra || ext.use_i2s_as_buzzer || ext.use_pwm ||
+                                     ext.output_ms || ext.nag_timeout;
         if (hadIncompatible) {
             ext = meshtastic_ModuleConfig_ExternalNotificationConfig_init_zero;
             LOG_WARN("Pager OS: cleared external_notification config (use LED_POWER status LED only)");
