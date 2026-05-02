@@ -86,7 +86,7 @@ int32_t StatusLEDModule::runOnce()
     PAIRING_LED_state = LED_STATE_OFF;
     CHARGE_LED_state = LED_STATE_OFF;
 
-    if (graphics::MessageRenderer::hasUnreadMessages() && power_state == discharging) {
+    if (graphics::MessageRenderer::hasUnreadMessages()) {
         const uint32_t cycleMs = graphics::MessageRenderer::unreadLedIntervalMs();
         if (!unreadPulseOn) {
             CHARGE_LED_state = LED_STATE_ON;

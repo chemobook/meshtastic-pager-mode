@@ -433,7 +433,11 @@ static void advancePagerTimeline(OLEDDisplay *display)
     if (traveled < travel)
         return;
 
-    if (pagerDisplayState == PagerDisplayState::AUTO_PLAY) {
+    if (pagerDisplayState == PagerDisplayState::AUTO_PLAY || pagerDisplayState == PagerDisplayState::MANUAL_REVIEW) {
+        // MANUAL previously restarted the marquee forever and EVENT_INPUT stirred PowerFSM, so the
+        // screen never timed off. Idle after one pass like AUTO_PLAY; manual view counts as seen.
+        if (pagerDisplayState == PagerDisplayState::MANUAL_REVIEW)
+            markCurrentMessageRead();
         sleepAfterPause = true;
         activePassPauseUntilMs = now + 1000;
         return;
