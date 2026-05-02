@@ -141,7 +141,6 @@ int32_t ButtonThread::runOnce()
         buttonPressStartTime = millis();
         leadUpPlayed = false;
         leadUpSequenceActive = false;
-        longLongPressFired = false;
         resetLeadUpSequence();
     }
 #ifdef INPUT_DEBUG
@@ -177,20 +176,6 @@ int32_t ButtonThread::runOnce()
     }
 
     buttonWasPressed = buttonCurrentlyPressed;
-
-#ifdef MESHTASTIC_PAGER_OS
-    if (buttonCurrentlyPressed && !longLongPressFired && _longLongPress != INPUT_BROKER_NONE &&
-        strcmp(_originName, "UserButton") == 0 && (millis() - buttonPressStartTime) >= _longLongPressTime) {
-        InputEvent evt;
-        evt.source = _originName;
-        evt.inputEvent = _longLongPress;
-        evt.kbchar = 0;
-        evt.touchX = 0;
-        evt.touchY = 0;
-        this->notifyObservers(&evt);
-        longLongPressFired = true;
-    }
-#endif
 
     // new behavior
     if (btnEvent != BUTTON_EVENT_NONE) {
@@ -296,7 +281,7 @@ int32_t ButtonThread::runOnce()
 
             LOG_INFO("LONG PRESS RELEASE AFTER %u MILLIS", millis() - buttonPressStartTime);
             // Require press started after boot holdoff to avoid phantom shutdown from floating pins
-            if (!longLongPressFired && millis() > 30000 && buttonPressStartTime > 30000 && _longLongPress != INPUT_BROKER_NONE &&
+            if (millis() > 30000 && buttonPressStartTime > 30000 && _longLongPress != INPUT_BROKER_NONE &&
                 (millis() - buttonPressStartTime) >= _longLongPressTime && leadUpPlayed) {
                 evt.inputEvent = _longLongPress;
                 this->notifyObservers(&evt);
@@ -304,7 +289,6 @@ int32_t ButtonThread::runOnce()
             // Reset combination tracking
             waitingForLongPress = false;
             leadUpPlayed = false;
-            longLongPressFired = false;
 
             break;
         }

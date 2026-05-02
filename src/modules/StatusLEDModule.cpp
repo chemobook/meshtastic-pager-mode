@@ -75,7 +75,7 @@ int32_t StatusLEDModule::runOnce()
 {
 #ifdef MESHTASTIC_PAGER_OS
     static bool unreadPulseOn = false;
-    constexpr uint32_t unreadPulseWidthMs = 180;
+    constexpr uint32_t unreadPulseWidthMs = 60;
 
     if (!graphics::MessageRenderer::hasUnreadMessages()) {
         CHARGE_LED_state = LED_STATE_OFF;

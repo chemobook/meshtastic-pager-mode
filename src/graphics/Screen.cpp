@@ -912,7 +912,7 @@ int32_t Screen::runOnce()
     }
 #endif
 
-#if !defined(DISABLE_WELCOME_UNSET) && !defined(MESHTASTIC_PAGER_OS)
+#ifndef DISABLE_WELCOME_UNSET
     if (!NotificationRenderer::isOverlayBannerShowing() && config.lora.region == meshtastic_Config_LoRaConfig_RegionCode_UNSET) {
 #if defined(M5STACK_UNITC6L)
         menuHandler::LoraRegionPicker();
@@ -1022,7 +1022,7 @@ int32_t Screen::runOnce()
 #ifdef MESHTASTIC_PAGER_OS
     const bool pagerFastRefresh = graphics::MessageRenderer::wantsFastRefresh();
     if (pagerFastRefresh) {
-        desiredFramerate = 15;
+        desiredFramerate = 10;
     }
 
     if (screenOn && pagerFastRefresh) {
