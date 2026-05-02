@@ -40,6 +40,22 @@ If you use the packaged `release-work/firmware/<env>/` folders, also keep:
 - `latest.mt.json`
 - `mt-esp32s3-ota.bin`
 
+## Web installer (Heltec V4 OLED / `heltec-v4` only)
+
+One command refreshes binaries, regenerates `web-installer.json` (jsDelivr URLs for `.bin`), and bumps the `?v=` cache-busters on **`docs/index.html`** (manifest is loaded from raw.githubusercontent.com to avoid stale JSON on jsDelivr):
+
+```bash
+./bin/pager-web-release-heltec-v4.sh
+```
+
+If `.pio/build/heltec-v4` already matches what you want to ship:
+
+```bash
+SKIP_BUILD=1 ./bin/pager-web-release-heltec-v4.sh
+```
+
+Then commit and push **`release-work/firmware/heltec-v4/`** together with **`docs/index.html`** (GitHub Pages uses `/docs`; the installer fetches blobs via jsDelivr after `push` lands on `main`).
+
 ## Good README Expectations
 
 A useful GitHub landing page should answer:

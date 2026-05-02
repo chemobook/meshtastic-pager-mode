@@ -10,17 +10,18 @@ This file (`AGENTS.md`) is a short pointer + quick reference for agents that don
 
 ## Quick command reference
 
-| Action                           | Command                                                                             |
-| -------------------------------- | ----------------------------------------------------------------------------------- |
-| Build a firmware variant         | `pio run -e <env>` (e.g. `pio run -e rak4631`, `pio run -e heltec-v3`)              |
-| Clean + rebuild                  | `pio run -e <env> -t clean && pio run -e <env>`                                     |
-| Flash a device                   | `pio run -e <env> -t upload --upload-port <port>` (or use the `pio_flash` MCP tool) |
-| Run firmware unit tests (native) | `pio test -e native`                                                                |
-| Run MCP hardware tests           | `./mcp-server/run-tests.sh`                                                         |
-| Live TUI test runner             | `mcp-server/.venv/bin/meshtastic-mcp-test-tui`                                      |
-| Format before commit             | `trunk fmt`                                                                         |
-| Regenerate protobuf bindings     | `bin/regen-protos.sh`                                                               |
-| Generate CI matrix               | `./bin/generate_ci_matrix.py all [--level pr]`                                      |
+| Action                            | Command                                                                                    |
+| --------------------------------- | ------------------------------------------------------------------------------------------ |
+| Build a firmware variant          | `pio run -e <env>` (e.g. `pio run -e rak4631`, `pio run -e heltec-v3`)                     |
+| Clean + rebuild                   | `pio run -e <env> -t clean && pio run -e <env>`                                            |
+| Flash a device                    | `pio run -e <env> -t upload --upload-port <port>` (or use the `pio_flash` MCP tool)        |
+| Run firmware unit tests (native)  | `pio test -e native`                                                                       |
+| Run MCP hardware tests            | `./mcp-server/run-tests.sh`                                                                |
+| Live TUI test runner              | `mcp-server/.venv/bin/meshtastic-mcp-test-tui`                                             |
+| Format before commit              | `trunk fmt`                                                                                |
+| Heltec V4 OLED web-flasher bundle | `./bin/pager-web-release-heltec-v4.sh` (build + `release-work/` + `docs/index.html` `?v=`) |
+| Regenerate protobuf bindings      | `bin/regen-protos.sh`                                                                      |
+| Generate CI matrix                | `./bin/generate_ci_matrix.py all [--level pr]`                                             |
 
 ## MCP server (device + test automation)
 
